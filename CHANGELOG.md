@@ -1,6 +1,17 @@
 # Changelog
 
-Versioning: `MAJOR.MINOR.PATCH`. Every push is a new version (number in `js/version.js` + an entry here). Bug fix = PATCH, new feature = MINOR, big gameplay/save change = MAJOR.
+Versioning: `MAJOR.MINOR.PATCH`. Every push to the repository is a new version (number in `js/version.js` + an entry here).
+The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history; pushing tags from a Claude session is blocked.
+Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
+Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
+
+## [0.1.1] - 2026-10-13
+### Changed
+- English is now always the default interface language (no browser-language detection); Polish is chosen in Options > Language.
+- Documentation rewritten in English following the Capital Quarantine layout: `README.md`, `docs/ARCHITECTURE.md`, `TODO.md` (priorities P1–P3), new `docs/MULTIPLAYER.md`, `CLAUDE.md` with standing rules.
+### Added
+- Versioning guard: `.githooks/pre-push` runs `tools/check-version.mjs` and blocks a push without a version bump.
+- SEO basics: canonical URL, `robots.txt`, `sitemap.xml`.
 
 ## [0.1.0] - 2026-10-13
 ### Added

@@ -1,21 +1,44 @@
 # TODO
 
+Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.1.1. Context: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+
+## Multiplayer (plan in [`docs/MULTIPLAYER.md`](docs/MULTIPLAYER.md))
+- [ ] P2 Decision: co-op PvE and/or PvP, player count, P2P or server (the menu entry "Multiplayer" exists as "Soon")
+- [ ] P2 Refactor: pure state + `step()` without three.js, deterministic RNG (shell dispersion, AI, spawns)
+- [ ] P2 Transport layer + WebRTC (opt-in, CSP change, README note)
+- [ ] P2 Lobby (room code), snapshots, interpolation, two-client tests
+
 ## Gameplay
-- [ ] Spotting / detection ranges (concealment, smoke screens for destroyers), ships hidden on the minimap until spotted.
-- [ ] AP vs HE shell choice (penetration vs fire chance), armour angles.
-- [ ] Modules: turret/engine/rudder knock-outs, flooding from torpedoes.
-- [ ] Consumables per class: smoke (DD), hydro/radar (CA), damage control (BB).
-- [ ] Mission modes: escort convoy, capture points, boss battleship.
-- [ ] Free-look / binocular (sniper) view for long-range shots.
-- [ ] Better AI: formations, retreat when low HP, using islands as cover.
+- [ ] P1 Balance on a real GPU: class HP, reloads, dispersion, AI skill curve, wave size
+- [ ] P1 Spotting / detection ranges (concealment); ships hidden on the minimap until spotted
+- [ ] P2 Smoke screen for destroyers, hydro/radar for cruisers
+- [ ] P2 AP vs HE shells (penetration vs fire chance), armour angles
+- [ ] P2 Module damage (turrets, engine, rudder), flooding from torpedoes
+- [ ] P2 Binocular (zoomed) view for long-range shots
+- [ ] P2 Smarter AI: formations, retreat at low HP, hiding behind islands
+- [ ] P3 Mission modes: convoy escort, capture points, boss battleship
+- [ ] P3 More ship types (tiers), aircraft carriers
 
-## Presentation
-- [ ] Day/night and weather (fog, rain lowering visibility) — reuse the sky cycle from Capital Quarantine.
-- [ ] Sound mixing, distance attenuation, music.
-- [ ] More ship variety (models per tier), aircraft carriers later.
-- [ ] SEO / og-image, GitHub Pages deploy (workflow already included).
+## Look and sound
+- [ ] P2 Day/night and weather (fog, rain) — reuse the sky cycle from Capital Quarantine
+- [ ] P2 Shell trails and better splash/explosion effects at distance
+- [ ] P2 Sound: distance attenuation, engine, music
+- [ ] P3 Palette/filter themes in Options > Graphics
 
-## Multiplayer (later)
-- [ ] Co-op PvE: 2–4 players against waves; authoritative host, snapshot sync of ships, shells as events (seeded dispersion).
-- [ ] PvP: small team battles; same netcode, server-side hit validation.
-- Same approach as `docs/MULTIPLAYER.md` in Capital Quarantine (WebRTC/WebSocket), nothing implemented yet.
+## Menus and settings
+- [ ] P2 Rebindable keys (as in Capital Quarantine), gamepad
+- [ ] P3 More languages (add a dictionary in `js/i18n/` and an entry in `LANGS`)
+
+## Technical
+- [ ] P1 E2E test script in the repo (Playwright) instead of ad-hoc scripts
+- [ ] P2 Performance: profile on weaker GPUs; optional automatic lowering of `pixelH`
+- [ ] P2 Shared engine: move common files (pixel pipeline, dom, i18n, util) into one place used by both games
+- [ ] P3 Save format versioning (`salvo:save:v1` → migrations)
+
+## Operational
+- [ ] Create `vX.Y.Z` tags in GitHub Releases (owner)
+- [ ] Thumbnail `assets/og-image.png` and icon
+- [ ] Add the site to Google Search Console and submit `sitemap.xml`
+
+## Done (summary)
+Ocean shader, islands, three ship classes, ballistic gunnery with dispersion and island cover, torpedoes with warning, repair party, fires and citadels, enemy AI, endless waves, HUD with minimap, menus with ship selection, options, procedural sound, GitHub Pages deploy, English UI with Polish option. Details: `CHANGELOG.md`.

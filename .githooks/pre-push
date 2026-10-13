@@ -1,0 +1,4 @@
+#!/bin/sh
+# Blocks a push when js/version.js was not bumped or CHANGELOG.md has no entry for it.
+# Enable once per clone: git config core.hooksPath .githooks
+node tools/check-version.mjs || { echo "Push blocked: bump js/version.js and add a CHANGELOG.md entry."; exit 1; }
