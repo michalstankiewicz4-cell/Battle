@@ -5,6 +5,10 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.4.0] - 2026-10-18
+### Added
+- Binocular view for ships: in the gun camera at zoom ×1.5 and more the picture is seen through two overlapping round lenses (black mask, horizontal hairline with range ticks, short vertical mark, relative bearing), like the periscope but doubled. The gun camera now starts at ×2; zooming out to ×1 gives the wide view without the mask. Enemy labels show only inside the lenses.
+
 ## [0.3.0] - 2026-10-18
 ### Added
 - **Gun camera (C)**: perspective view from above the turret that faces the view direction (front turret when looking forward of the beam, aft turret when looking aft), high enough to clear the superstructure. The mouse turns the view with pointer lock and the screen centre is the aim point; the wheel zooms like binoculars (×1–×8); C goes back to the isometric view. Esc (which releases the pointer) pauses. Without pointer lock the cursor still aims and right-drag turns the view.

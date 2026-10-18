@@ -32,6 +32,7 @@ export default {
   'role.bb': 'Slow, tough, devastating salvos. No torpedoes.',
   'st.hp': 'Hit points', 'st.speed': 'Max speed', 'st.guns': 'Main battery', 'st.range': 'Gun range', 'st.torps': 'Torpedoes',
   'hud.wave': 'Wave {n}', 'hud.enemies': 'Enemies: {n}', 'hud.score': 'Score: {n}', 'hud.next': 'Next wave in {s}s', 'hud.you': 'you', 'hud.kn': 'kn',
+  'hud.binoOn': 'Binoculars ×{z} · wheel zoom (×1 = wide view) · C back',
   'hud.gunOn': 'Gun camera ×{z} · wheel zoom · C back', 'hud.gunClick': 'Click to aim with the mouse · C back',
   'w.depth.0': 'Surfaced', 'w.depth.1': 'Periscope depth', 'w.depth.2': 'Deep', 'w.batt': 'battery',
   'ev.depth.0': 'Surfacing', 'ev.depth.1': 'To periscope depth', 'ev.depth.2': 'Diving deep',

@@ -57,7 +57,7 @@ export function createCameraRig({ settings, input }) {
       const d = Math.max(20, Math.hypot(ax - ship.x, az - ship.z));
       gYaw = Math.atan2(ax - ship.x, az - ship.z);
       gPitch = clamp(-Math.atan2(gunHeight(ship), d), PITCH_MIN, PITCH_MAX);
-      gZoom = ship.cls.sub ? 1.5 : 1; gInit = false;
+      gZoom = ship.cls.sub ? 1.5 : 2; gInit = false;            // ships start looking through binoculars
     }
   }
 

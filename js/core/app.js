@@ -85,7 +85,7 @@ export function createApp({ appEl, uiEl }) {
     if (on && depthLevel(world.player) === 2) { hud.feed(t('ev.tooDeep'), 'rep'); return; }   // periscope under water
     rig.setView(on ? 'gun' : 'iso', world.player, aim);
     if (on) input.lock(); else if (input.locked) { ownUnlock = true; input.unlock(); }
-    hud.setGunView(on, !!world.player.cls.sub);
+    hud.setGunView(on);
   }
   // Esc releases the pointer lock in the browser before the page sees the key: treat that as "pause".
   input.onLockChange = (locked) => {
@@ -217,7 +217,11 @@ export function createApp({ appEl, uiEl }) {
     }
     if (rig.view === 'gun' && !p.alive) setGunView(false);
     if (rig.view === 'gun' && depthLevel(p) === 2) { setGunView(false); hud.feed(t('ev.tooDeep'), 'rep'); }
-    if (rig.view === 'gun') hud.setBearing((rig.gunYaw - p.th) * 180 / Math.PI);       // relative bearing from the bow
+    if (rig.view === 'gun') {
+      hud.setBearing((rig.gunYaw - p.th) * 180 / Math.PI);       // relative bearing from the bow
+      // optics: periscope on a submarine; binoculars on ships once zoomed in (×1.5 and more), wide view below that
+      hud.setOptic(p.cls.sub ? 'scope' : rig.zoom >= 1.5 ? 'bino' : null);
+    }
     rig.update(sdt || (mode === 'menu' ? dt : 0), t0, { mode, target: tgt, ship: { x: p.x, z: p.z, th: p.th, L: p.cls.L }, player: p });
     // perspective views see the horizon: closer fog hides the edge of the sea grid, the sky dome fills the rest
     const persp = rig.camera.isPerspectiveCamera;

@@ -32,6 +32,7 @@ export default {
   'role.bb': 'Wolny, wytrzymały, niszczycielskie salwy. Bez torped.',
   'st.hp': 'Punkty życia', 'st.speed': 'Prędkość maks.', 'st.guns': 'Artyleria główna', 'st.range': 'Zasięg dział', 'st.torps': 'Torpedy',
   'hud.wave': 'Fala {n}', 'hud.enemies': 'Wrogowie: {n}', 'hud.score': 'Wynik: {n}', 'hud.next': 'Następna fala za {s}s', 'hud.you': 'ty', 'hud.kn': 'w.',
+  'hud.binoOn': 'Lornetka ×{z} · kółko zoom (×1 = szeroki widok) · C powrót',
   'hud.gunOn': 'Kamera działa ×{z} · kółko zoom · C powrót', 'hud.gunClick': 'Kliknij, aby celować myszą · C powrót',
   'w.depth.0': 'Na powierzchni', 'w.depth.1': 'Peryskopowa', 'w.depth.2': 'Głęboko', 'w.batt': 'bateria',
   'ev.depth.0': 'Wynurzanie', 'ev.depth.1': 'Na głębokość peryskopową', 'ev.depth.2': 'Zanurzenie głębokie',

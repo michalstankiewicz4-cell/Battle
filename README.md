@@ -21,7 +21,7 @@ Start screen: ship selection (destroyer / cruiser / battleship / submarine with 
 - **Guns:** turrets turn toward the cursor at the class traverse speed and only inside their firing arcs. Shells fly for a few seconds, so lead moving targets — the crosshair shows the distance and the shell flight time. Low trajectories hit islands, so islands are cover.
 - **Torpedoes:** fired as a spread from the broadside; the fan on the water turns green when the tubes bear. A red warning appears when an enemy torpedo is heading for you.
 - **Repair party:** heals over 10 s and puts out fires; limited charges with a cooldown.
-- **Gun camera (C):** a view from above your turret; the mouse turns it (the screen centre is the aim point), the wheel zooms like binoculars. Click into the game if the mouse does not turn the view.
+- **Gun camera (C):** a view from above your turret through binoculars; the mouse turns it (the screen centre is the aim point), the wheel zooms (×1 = wide view without binoculars). Click into the game if the mouse does not turn the view.
 - **Salvo camera:** a small view in the top-right corner follows your newest shell (or torpedo) to the target.
 - **Submarine:** Z rises, X dives (surface → periscope depth → deep). Shells cannot reach you below the surface and torpedoes cannot reach you deep, but the battery runs down under water and destroyers drop depth charges when they find you. Torpedoes fire from the bow and stern; the deck gun only works on the surface. C gives the periscope (not when deep).
 - **Waves:** each wave is larger and the AI aims better. After a wave you get +25% HP and one repair charge back. Score = damage dealt + a bonus per ship sunk.
