@@ -1,6 +1,6 @@
 # TODO
 
-Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.1.1. Context: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.2.0. Context: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## Multiplayer (plan in [`docs/MULTIPLAYER.md`](docs/MULTIPLAYER.md))
 - [ ] P2 Decision: co-op PvE and/or PvP, player count, P2P or server (the menu entry "Multiplayer" exists as "Soon")
@@ -23,7 +23,9 @@ Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.1.1. Context: [`
 - [ ] P2 Day/night and weather (fog, rain) — reuse the sky cycle from Capital Quarantine
 - [ ] P2 Shell trails and better splash/explosion effects at distance
 - [ ] P2 Sound: distance attenuation, engine, music
-- [ ] P3 Palette/filter themes in Options > Graphics
+- [ ] P1 Realistic style on weaker GPUs: quality presets (shadow map size, MSAA, bloom taps, render scale)
+- [ ] P2 Realistic style: ship hull textures with plates/portholes, wake as a continuous ribbon, sky dome for the menu camera
+- [ ] P2 Toon/watercolour: outlines in the perspective menu camera (depth is non-linear there)
 
 ## Menus and settings
 - [ ] P2 Rebindable keys (as in Capital Quarantine), gamepad
@@ -41,4 +43,4 @@ Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.1.1. Context: [`
 - [ ] Add the site to Google Search Console and submit `sitemap.xml`
 
 ## Done (summary)
-Ocean shader, islands, three ship classes, ballistic gunnery with dispersion and island cover, torpedoes with warning, repair party, fires and citadels, enemy AI, endless waves, HUD with minimap, menus with ship selection, options, procedural sound, GitHub Pages deploy, English UI with Polish option. Details: `CHANGELOG.md`.
+Ocean shader, islands, three ship classes, ballistic gunnery with dispersion and island cover, torpedoes with warning, repair party, fires and citadels, enemy AI, endless waves, HUD with minimap, menus with ship selection, options, procedural sound, GitHub Pages deploy, English UI with Polish option. Graphics styles (realistic default, pixel art, comic, watercolour) with extra model detail. Details: `CHANGELOG.md`.

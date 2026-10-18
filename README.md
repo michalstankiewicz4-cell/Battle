@@ -1,6 +1,6 @@
 # Steel Salvo
 
-Naval battle at sea: command a destroyer, cruiser or battleship against waves of AI warships (PvE). Isometric view, low-resolution 3D with a pixel-art filter (three.js) — the same engine as [Capital Quarantine](https://github.com/michalstankiewicz4-cell/VS). Play: <https://michalstankiewicz4-cell.github.io/Battle/>
+Naval battle at sea: command a destroyer, cruiser or battleship against waves of AI warships (PvE). Isometric view, 3D with a realistic look by default (three.js) and three optional styles: pixel art (the original filter from [Capital Quarantine](https://github.com/michalstankiewicz4-cell/VS)), comic (cel shading) and watercolour. Play: <https://michalstankiewicz4-cell.github.io/Battle/>
 
 "Steel Salvo" is a working title.
 
@@ -14,7 +14,7 @@ ES modules need a web server (they do not work from `file://`):
 - or in the project folder: `py -m http.server 8000` and open `http://localhost:8000`.
 
 ## Menus and options
-Start screen: ship selection (destroyer / cruiser / battleship with their stats), Set sail (PvE), Multiplayer (coming soon), Options. Esc pauses a battle (it never ends it); in menus Esc goes back. Options: Language (English by default, Polski available), Graphics (pixel-art filter, FPS counter), Audio, Mouse. Settings are saved locally in the browser.
+Start screen: ship selection (destroyer / cruiser / battleship with their stats), Set sail (PvE), Multiplayer (coming soon), Options. Esc pauses a battle (it never ends it); in menus Esc goes back. Options: Language (English by default, Polski available), Graphics (style: Realistic / Pixel art / Comic / Watercolour — the game restarts on change; filter sliders, FPS counter), Audio, Mouse. Settings are saved locally in the browser.
 
 ## How to play
 - **Ships:** the destroyer is fast and carries torpedoes; the cruiser is an all-rounder with quick-firing guns; the battleship is slow and tough with devastating salvos and no torpedoes.
@@ -26,7 +26,7 @@ Start screen: ship selection (destroyer / cruiser / battleship with their stats)
 ## Structure
 - `js/main.js` – entry point; `js/core/` – app shell and mode state machine, camera rig, settings, storage, procedural sound,
 - `js/world/` – ocean, islands, ship models and entities, shells and torpedoes, enemy AI, particle effects, wave director,
-- `js/render/` – pixel-art pipeline (low-res target + final shader), shared with Capital Quarantine,
+- `js/render/` – graphics styles (`look.js`: style, material factory, procedural textures), full-resolution post-process (`style-pipeline.js`) and the pixel-art pipeline shared with Capital Quarantine,
 - `js/input/` – keyboard and mouse,
 - `js/i18n/` – English (default) and Polish strings,
 - `js/ui/` – menus, options and HUD,

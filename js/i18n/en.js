@@ -1,12 +1,12 @@
 // English dictionary (default and fallback).
 export default {
-  'menu.tagline': 'Naval battle in pixel-art 3D. Hold the line against wave after wave of enemy ships.',
+  'menu.tagline': 'Naval battle in 3D. Hold the line against wave after wave of enemy ships.',
   'menu.pick': 'Choose your ship',
   'menu.start': 'Set sail (PvE)',
   'menu.multi': 'Multiplayer (soon)',
   'menu.options': 'Options',
   'menu.best': 'Best: wave {wave} · {score} pts',
-  'menu.credit': 'three.js · pixel-art engine from Capital Quarantine',
+  'menu.credit': 'three.js · engine from Capital Quarantine',
   'multi.title': 'Multiplayer',
   'multi.note': 'Co-op PvE and PvP are planned. For now: single player against AI waves.',
   'common.back': 'Back',
@@ -18,6 +18,8 @@ export default {
   'dead.titleBest': 'Sunk — new record!',
   'dead.again': 'Sail again',
   'res.wave': 'Wave reached', 'res.kills': 'Ships sunk', 'res.dmg': 'Damage dealt', 'res.acc': 'Shell hit rate', 'res.time': 'Time', 'res.score': 'Score',
+  'opt.style': 'Graphics style', 'opt.styleNote': 'Changing the style restarts the game.',
+  'style.real': 'Realistic', 'style.pixel': 'Pixel art', 'style.toon': 'Comic (cel)', 'style.paint': 'Watercolour',
   'opt.title': 'Options', 'opt.lang': 'Language', 'opt.gfx': 'Graphics', 'opt.pixelH': 'Pixel resolution (height)', 'opt.levels': 'Colour levels',
   'opt.dither': 'Dithering', 'opt.edge': 'Outlines', 'opt.bright': 'Brightness', 'opt.fps': 'Show FPS', 'opt.audio': 'Audio', 'opt.vol': 'Volume',
   'opt.mouse': 'Mouse', 'opt.zoom': 'Zoom sensitivity', 'opt.rot': 'Rotate sensitivity', 'opt.reset': 'Reset to defaults',

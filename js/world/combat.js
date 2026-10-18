@@ -3,6 +3,7 @@ import * as THREE from '../../vendor/three.module.js';
 import { hullHit, toWorld, fwdOf, turretPos } from './ships.js';
 import { wrapAngle } from '../core/util.js';
 import { torpGeo } from './models.js';
+import { mat } from '../render/look.js';
 
 const MAXT = 96;
 const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), P = new THREE.Vector3(), S1 = new THREE.Vector3(1, 1, 1), E = new THREE.Euler();
@@ -26,7 +27,7 @@ export function intercept(px, pz, v, tx, tz, vx, vz) {
 export function createCombat({ scene, fx, islands, ships, onHit, sound }) {
   const shells = [];
   const torps = [];
-  const tmesh = new THREE.InstancedMesh(torpGeo(), new THREE.MeshLambertMaterial(), MAXT);
+  const tmesh = new THREE.InstancedMesh(torpGeo(), mat(0xffffff, 'fx'), MAXT);
   tmesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
   tmesh.frustumCulled = false;
   const col = new THREE.Color();

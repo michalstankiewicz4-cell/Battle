@@ -8,6 +8,7 @@ import { createShip, stepShip, aimTurrets, damage, useRepair, removeShip, fwdOf,
 import { initAi, stepAi } from './ai.js';
 import { CLASSES, EDGE, THROTTLE } from './constants.js';
 import { clamp } from '../core/util.js';
+import { LOOK, lightFor } from '../render/look.js';
 
 const NAMES = ['Kestrel', 'Varga', 'Halvard', 'Morrow', 'Teskel', 'Orsk', 'Brann', 'Velka', 'Ishmar', 'Corvin', 'Daska', 'Ruhn', 'Selvik', 'Toria', 'Karsk', 'Nemmet', 'Aldric', 'Feyn'];
 const KILL_PTS = { dd: 800, ca: 1300, bb: 2200 };
@@ -25,15 +26,22 @@ function waveRoster(n) {
 }
 
 export function createWorld(scene, { sound } = {}) {
-  /* ---- sky and light ---- */
-  scene.background = new THREE.Color(0x9fb8c8);
-  scene.fog = new THREE.Fog(0x9fb8c8, 400, 900);
-  const hemi = new THREE.HemisphereLight(0xd8e6f0, 0x2a3a48, 1.9);
-  const sun = new THREE.DirectionalLight(0xfff0d8, 2.6);
+  /* ---- sky and light (per graphics style) ---- */
+  const lt = lightFor(LOOK.style);
+  scene.background = new THREE.Color(lt.bg);
+  scene.fog = new THREE.Fog(lt.bg, 400, 900);
+  const hemi = new THREE.HemisphereLight(lt.sky, lt.ground, lt.hemi);
+  const sun = new THREE.DirectionalLight(lt.sunColor, lt.sun);
   sun.position.set(45, 80, 40);
+  if (LOOK.detail) {
+    sun.castShadow = true;
+    sun.shadow.mapSize.set(2048, 2048);
+    Object.assign(sun.shadow.camera, { left: -70, right: 70, top: 70, bottom: -70, near: 10, far: 220 });
+    sun.shadow.bias = -0.0006; sun.shadow.normalBias = 0.03;
+  }
   scene.add(hemi, sun, sun.target);
 
-  const ocean = createOcean(scene);
+  const ocean = createOcean(scene, LOOK.style);
   const islands = createIslands(scene, 11);
   ocean.setLumps(islands.lumps);
   const fx = createFx(scene);
@@ -205,7 +213,7 @@ export function createWorld(scene, { sound } = {}) {
     }
 
     combat.update(dt);
-    fx.update(dt);
+    fx.update(dt, fx.camera);
     S.threat = player.alive ? combat.torpThreat(player) : -1;
 
     /* waves */

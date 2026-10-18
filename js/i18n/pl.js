@@ -1,12 +1,12 @@
 // Polish dictionary (optional interface language).
 export default {
-  'menu.tagline': 'Bitwa morska w pixel-artowym 3D. Utrzymaj się przeciw kolejnym falom wrogich okrętów.',
+  'menu.tagline': 'Bitwa morska w 3D. Utrzymaj się przeciw kolejnym falom wrogich okrętów.',
   'menu.pick': 'Wybierz okręt',
   'menu.start': 'Wypłyń (PvE)',
   'menu.multi': 'Multiplayer (wkrótce)',
   'menu.options': 'Opcje',
   'menu.best': 'Rekord: fala {wave} · {score} pkt',
-  'menu.credit': 'three.js · silnik pixel-art z Capital Quarantine',
+  'menu.credit': 'three.js · silnik z Capital Quarantine',
   'multi.title': 'Multiplayer',
   'multi.note': 'W planach co-op PvE i PvP. Na razie: gra solo przeciw falom AI.',
   'common.back': 'Wstecz',
@@ -18,6 +18,8 @@ export default {
   'dead.titleBest': 'Zatopiony — nowy rekord!',
   'dead.again': 'Wypłyń ponownie',
   'res.wave': 'Osiągnięta fala', 'res.kills': 'Zatopione okręty', 'res.dmg': 'Zadane obrażenia', 'res.acc': 'Celność pocisków', 'res.time': 'Czas', 'res.score': 'Wynik',
+  'opt.style': 'Styl grafiki', 'opt.styleNote': 'Zmiana stylu uruchamia grę ponownie.',
+  'style.real': 'Realistyczny', 'style.pixel': 'Pixel art', 'style.toon': 'Komiksowy (cel)', 'style.paint': 'Akwarela',
   'opt.title': 'Opcje', 'opt.lang': 'Język', 'opt.gfx': 'Grafika', 'opt.pixelH': 'Rozdzielczość pikseli (wysokość)', 'opt.levels': 'Poziomy kolorów',
   'opt.dither': 'Dithering', 'opt.edge': 'Obrysy', 'opt.bright': 'Jasność', 'opt.fps': 'Pokaż FPS', 'opt.audio': 'Dźwięk', 'opt.vol': 'Głośność',
   'opt.mouse': 'Mysz', 'opt.zoom': 'Czułość zoomu', 'opt.rot': 'Czułość obrotu', 'opt.reset': 'Przywróć domyślne',

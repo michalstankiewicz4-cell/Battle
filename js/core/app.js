@@ -2,6 +2,8 @@
 // (menu -> play -> dead), pause handling and the frame loop.
 import * as THREE from '../../vendor/three.module.js';
 import { PixelPipeline } from '../render/pixel-pipeline.js';
+import { StylePipeline } from '../render/style-pipeline.js';
+import { LOOK, setStyle, STYLES } from '../render/look.js';
 import { createWorld } from '../world/index.js';
 import { Input } from '../input/input.js';
 import { createSettings } from './settings.js';
@@ -20,8 +22,14 @@ export function createApp({ appEl, uiEl }) {
   const settings = createSettings();
   setLang(settings.data.lang);
 
+  // Graphics style: ?style=… in the URL wins (previews), otherwise Options > Graphics. Applied at start-up.
+  const urlStyle = new URLSearchParams(location.search).get('style');
+  setStyle(STYLES.includes(urlStyle) ? urlStyle : settings.data.gfx.style);
+
   const renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: 'high-performance' });
   renderer.setPixelRatio(1);
+  renderer.shadowMap.enabled = LOOK.detail;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   appEl.appendChild(renderer.domElement);
   const canvas = renderer.domElement;
 
@@ -31,7 +39,7 @@ export function createApp({ appEl, uiEl }) {
   const world = createWorld(scene, { sound });
   const S = world.S;
   const input = new Input(canvas);
-  const pipe = new PixelPipeline(renderer);
+  const pipe = LOOK.style === 'pixel' ? new PixelPipeline(renderer) : new StylePipeline(renderer, LOOK.style);
   const rig = createCameraRig({ settings, input });
 
   /* ---- persistent progress ---- */
@@ -155,6 +163,7 @@ export function createApp({ appEl, uiEl }) {
       ctl = { thr: thrStep, steer, aim, fire: input.firing, weapon, repair: repairReq };
     } else if (mode === 'menu') ctl = { ...NO_CTL };
     thrStep = 0; repairReq = false;
+    world.fx.camera = rig.camera;
     world.update(sdt, t0, ctl);
     if (playing) drainEvents();
     if (mode === 'play' && !p.alive) {
