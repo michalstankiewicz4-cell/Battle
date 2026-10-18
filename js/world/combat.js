@@ -1,9 +1,10 @@
 // Shells (ballistic arcs with dispersion; islands block low trajectories) and torpedoes.
 import * as THREE from '../../vendor/three.module.js';
-import { hullHit, toWorld, fwdOf, turretPos } from './ships.js';
+import { hullHit, toWorld, fwdOf, turretPos, shellable, torpable, depthLevel } from './ships.js';
+import { CHARGE } from './constants.js';
 import { wrapAngle } from '../core/util.js';
 import { torpGeo } from './models.js';
-import { mat } from '../render/look.js';
+import { mat } from '../render/materials.js';
 
 const MAXT = 96;
 const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), P = new THREE.Vector3(), S1 = new THREE.Vector3(1, 1, 1), E = new THREE.Euler();
@@ -37,6 +38,7 @@ export function createCombat({ scene, fx, islands, ships, onHit, sound }) {
   // Fires every ready, bearing turret of `s` at (ax, az). `err` scales dispersion (AI uses > 1). Returns shells fired.
   function fireGuns(s, ax, az, err = 1) {
     const g = s.cls.guns;
+    if (!shellable(s)) return 0;                       // submerged submarine: deck gun under water
     let n = 0;
     for (const tr of s.turrets) {
       if (tr.reload > 0 || !tr.aimed) continue;
@@ -65,8 +67,10 @@ export function createCombat({ scene, fx, islands, ships, onHit, sound }) {
   }
 
   // Can the torpedo tubes bear on world angle `a` (broadside arcs 25°..155° on either side)?
+  // Broadside tubes bear 25°..155° off the bow; submarine bow/stern tubes within 35° of the bow or stern.
   function torpBears(s, a) {
     const rel = Math.abs(wrapAngle(a - s.th));
+    if (s.cls.torps?.bow) return rel < 0.61 || rel > Math.PI - 0.61;
     return rel > 0.44 && rel < 2.7;
   }
   function fireTorps(s, ax, az) {
@@ -74,8 +78,10 @@ export function createCombat({ scene, fx, islands, ships, onHit, sound }) {
     if (!tp || s.torpReload > 0) return false;
     const a = Math.atan2(ax - s.x, az - s.z);
     if (!torpBears(s, a)) return false;
+    if (s.sub && depthLevel(s) === 2) return false;     // too deep to fire
     const side = Math.sign(wrapAngle(a - s.th)) || 1;
-    const o = toWorld(s, -side * s.cls.W * 0.5, 0);
+    const aft = tp.bow && Math.abs(wrapAngle(a - s.th)) > Math.PI / 2;
+    const o = tp.bow ? toWorld(s, 0, (aft ? -0.5 : 0.5) * s.cls.L) : toWorld(s, -side * s.cls.W * 0.5, 0);
     for (let i = 0; i < tp.n; i++) {
       const th = a + (tp.n > 1 ? (i / (tp.n - 1) - 0.5) * tp.spread : 0);
       torps.push({ x: o.x, z: o.z, th, speed: tp.speed, dist: 0, range: tp.range, owner: s, dmg: tp.dmg, wake: 0 });
@@ -85,10 +91,19 @@ export function createCombat({ scene, fx, islands, ships, onHit, sound }) {
     return true;
   }
 
-  function hitShips(owner, x, z, pad) {
-    for (const s of ships) if (s.alive && s.side !== owner.side && hullHit(s, x, z, pad)) return s;
+  // kind 'shell' or 'torp': submerged submarines are out of reach of shells, deep ones also of torpedoes.
+  function hitShips(owner, x, z, pad, kind) {
+    for (const s of ships) {
+      if (!s.alive || s.side === owner.side || !hullHit(s, x, z, pad)) continue;
+      if (kind === 'shell' ? !shellable(s) : !torpable(s)) continue;
+      return s;
+    }
     return null;
   }
+
+  // Depth charges (destroyers vs submerged submarines): sink for `fuse` seconds, then explode.
+  const charges = [];
+  function dropCharge(owner, x, z) { charges.push({ owner, x, z, t: CHARGE.fuse }); fx.foam(x, z, 0.8, 1.6); sound?.torp(); }
 
   function update(dt) {
     for (let i = shells.length - 1; i >= 0; i--) {
@@ -106,7 +121,7 @@ export function createCombat({ scene, fx, islands, ships, onHit, sound }) {
       }
       if (u < 1) continue;
       shells.splice(i, 1);
-      const target = hitShips(sh.owner, sh.x1, sh.z1, 0.15);
+      const target = hitShips(sh.owner, sh.x1, sh.z1, 0.15, 'shell');
       if (target) {
         const g = sh.g;
         const cit = Math.random() < g.cit;
@@ -129,7 +144,7 @@ export function createCombat({ scene, fx, islands, ships, onHit, sound }) {
       let gone = tp.dist > tp.range;
       if (!gone && islands.isLand(tp.x, tp.z)) { fx.dirt(tp.x, 0.5, tp.z, 1); gone = true; }
       if (!gone && tp.dist > 5) {
-        const s = hitShips(tp.owner, tp.x, tp.z, 0.25);
+        const s = hitShips(tp.owner, tp.x, tp.z, 0.25, 'torp');
         if (s) {
           fx.explosion(tp.x, 0.4, tp.z, 2); fx.splash(tp.x, tp.z, 2.4);
           onHit(tp.owner, s, tp.dmg * (0.9 + Math.random() * 0.2), 'torp');
@@ -137,6 +152,19 @@ export function createCombat({ scene, fx, islands, ships, onHit, sound }) {
         }
       }
       if (gone) torps.splice(i, 1);
+    }
+    for (let i = charges.length - 1; i >= 0; i--) {
+      const c = charges[i];
+      c.t -= dt;
+      if (c.t > 0) continue;
+      charges.splice(i, 1);
+      fx.splash(c.x, c.z, 2.2); fx.foam(c.x, c.z, 4, 3);
+      sound?.hit('torp', false);
+      for (const s of ships) {
+        if (!s.alive || s.side === c.owner.side || !s.sub || s.sub.y > -0.35) continue;
+        const d = Math.hypot(s.x - c.x, s.z - c.z);
+        if (d < CHARGE.radius) onHit(c.owner, s, CHARGE.dmg * (1 - d / CHARGE.radius) * (depthLevel(s) === 2 ? 0.8 : 1), 'charge');
+      }
     }
     for (let i = 0; i < MAXT; i++) {
       const tp = torps[i];
@@ -150,7 +178,7 @@ export function createCombat({ scene, fx, islands, ships, onHit, sound }) {
     tmesh.instanceColor.needsUpdate = true;
   }
 
-  function clear() { shells.length = 0; torps.length = 0; }
+  function clear() { shells.length = 0; torps.length = 0; charges.length = 0; }
 
   // Nearest enemy torpedo that will pass close to ship `s` (for the warning). Returns distance or -1.
   function torpThreat(s) {
@@ -165,5 +193,5 @@ export function createCombat({ scene, fx, islands, ships, onHit, sound }) {
     return best;
   }
 
-  return { fireGuns, fireTorps, torpBears, update, clear, torpThreat, shells, torps };
+  return { fireGuns, fireTorps, torpBears, dropCharge, update, clear, torpThreat, shells, torps, charges };
 }

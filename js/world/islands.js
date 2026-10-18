@@ -1,9 +1,9 @@
-// Islands: clusters of flattened low-poly "lumps" (ellipsoids) with vertex-coloured sand/grass/rock and a few trees.
+// Islands: clusters of flattened "lumps" (ellipsoids) with a wobbly outline, vertex-coloured sand/grass/cliffs, trees, rocks.
 // Land test (isLand) uses the same ellipses, so shells, torpedoes and ships all agree on where the shore is.
 import * as THREE from '../../vendor/three.module.js';
 import { mulberry32 } from '../core/util.js';
 import { EDGE, SAFE_R } from './constants.js';
-import { LOOK, mat } from '../render/look.js';
+import { mat } from '../render/materials.js';
 
 const SAND = new THREE.Color(0xc9b47a), GRASS = new THREE.Color(0x4f7a3a), ROCK = new THREE.Color(0x7a7470), DARK = new THREE.Color(0x3c5a2c);
 
@@ -31,7 +31,7 @@ export function createIslands(scene, seed = 7) {
   }
 
   // Geometry: upper hemisphere, flattened, jittered, coloured by height (and by slope in detail styles).
-  if (LOOK.detail) buildDetailed(group, lumps, rnd); else buildSimple(group, lumps, rnd);
+  buildDetailed(group, lumps);
 
   // Shoreline scale of a lump in direction (dx, dz) (detailed islands have a wobbly outline).
   const scaleAt = (l, dx, dz) => (l.wob ? wobble(l.wob, Math.atan2(dz, dx)) : 1);
@@ -57,53 +57,13 @@ export function createIslands(scene, seed = 7) {
   return { lumps, isLand, heightAt, group };
 }
 
-// Outline wobble of detailed islands (shared with the ocean shader for shallows and surf).
+// Outline wobble of the islands (shared with the ocean shader for shallows and surf).
 export const wobble = (w, a) => 0.9 + 0.09 * Math.sin(3 * a + w[0]) + 0.05 * Math.sin(7 * a + w[1]) + 0.025 * Math.sin(13 * a + w[2]);
-
-function buildSimple(group, lumps, rnd) {
-  const m0 = mat(0xffffff, 'land', { vertexColors: true });
-  const treeMat = mat(0x2f5a2a, 'tree');
-  const treeGeo = new THREE.ConeGeometry(0.9, 2.6, 5);
-  const col = new THREE.Color();
-  for (const l of lumps) {
-    const g = new THREE.SphereGeometry(1, 14, 7, 0, Math.PI * 2, 0, Math.PI * 0.6);
-    const p = g.attributes.position;
-    const colors = new Float32Array(p.count * 3);
-    for (let i = 0; i < p.count; i++) {
-      let x = p.getX(i), y = p.getY(i), z = p.getZ(i);
-      const j = 0.85 + rnd() * 0.3;
-      x *= j; z *= j;
-      y = (y + 0.309) / 1.309;                     // the 0.6π cap spans y = 1 .. -0.309; remap to 0..1 so the rim sits slightly below water
-      const hy = y * l.h - 0.6;
-      p.setXYZ(i, x * l.rx, hy, z * l.rz);
-      const k = Math.max(0, hy) / l.h;
-      if (k < 0.12) col.copy(SAND); else if (k < 0.6) col.copy(GRASS).lerp(DARK, rnd() * 0.5); else col.copy(GRASS).lerp(ROCK, (k - 0.6) / 0.4);
-      colors.set([col.r, col.g, col.b], i * 3);
-    }
-    g.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-    g.computeVertexNormals();
-    const m = new THREE.Mesh(g, m0);
-    m.position.set(l.x, 0, l.z);
-    group.add(m);
-    const trees = Math.floor(l.rx * l.rz / 18);
-    for (let i = 0; i < trees; i++) {
-      const a = rnd() * Math.PI * 2, r = 0.25 + rnd() * 0.45;
-      const tx = Math.cos(a) * r, tz = Math.sin(a) * r;
-      const top = l.h * Math.sqrt(Math.max(0, 1 - r * r)) * 0.92 - 0.6;
-      if (top < 0.8) continue;
-      const tr = new THREE.Mesh(treeGeo, treeMat);
-      const s = 0.7 + rnd() * 0.6;
-      tr.scale.setScalar(s);
-      tr.position.set(l.x + tx * l.rx, top + 1.1 * s, l.z + tz * l.rz);
-      group.add(tr);
-    }
-  }
-}
 
 // Denser, smoothly deformed islands with wet sand, slope-based cliffs, instanced trees (trunk + two crowns),
 // shoreline rocks and a lighthouse on the largest island.
 const WET = new THREE.Color(0x8a7a52), CLIFF = new THREE.Color(0x6a625a), GRASS_D = new THREE.Color(0x58743c);
-function buildDetailed(group, lumps, rnd) {
+function buildDetailed(group, lumps) {
   const r2 = mulberry32(77);
   const m0 = mat(0xffffff, 'land', { vertexColors: true });
   const col = new THREE.Color(), nrm = new THREE.Vector3();

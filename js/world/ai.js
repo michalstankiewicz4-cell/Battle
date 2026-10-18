@@ -1,7 +1,8 @@
 // Enemy behaviour: approach to a preferred range, then sail broadside-ish around the player,
 // avoid islands with feeler probes, lead the player with guns and (destroyers/cruisers) torpedoes.
 import { wrapAngle, clamp } from '../core/util.js';
-import { fwdOf } from './ships.js';
+import { fwdOf, depthLevel, shellable } from './ships.js';
+import { DEPTHS, CHARGE } from './constants.js';
 import { intercept } from './combat.js';
 
 export function initAi(s, skill) {
@@ -11,6 +12,7 @@ export function initAi(s, skill) {
     pref: s.cls.guns.range * (s.cls.key === 'dd' ? 0.55 : s.cls.key === 'ca' ? 0.7 : 0.8),
     flip: 20 + Math.random() * 20,
     avoid: 0, aimErr: { x: 0, z: 0 }, errT: 0, torpT: 4 + Math.random() * 6,
+    seen: null, chargeCd: 0,                         // last known position of a hidden submarine; depth charge cooldown
   };
   s.throttle = 5;
 }
@@ -18,14 +20,25 @@ export function initAi(s, skill) {
 export function stepAi(s, dt, player, combat, isLand) {
   const ai = s.ai;
   if (!s.alive) return;
-  const dx = player.x - s.x, dz = player.z - s.z, dist = Math.hypot(dx, dz);
+  let dx = player.x - s.x, dz = player.z - s.z;
+  const dist = Math.hypot(dx, dz);
+  // submarines: only detected within the range of their current depth band
+  const lvl = depthLevel(player);
+  const spotted = !player.sub || lvl === 0 || dist < DEPTHS[lvl].detect;
+  if (spotted) ai.seen = { x: player.x, z: player.z };
+  else if (ai.seen) { dx = ai.seen.x - s.x; dz = ai.seen.z - s.z; if (Math.hypot(dx, dz) < 15) ai.seen = null; }
   const bear = Math.atan2(dx, dz);
+  const hunting = player.sub && lvl > 0 && player.alive;   // a submerged boat: destroyers hunt it, big ships keep away
+  ai.chargeCd = Math.max(0, ai.chargeCd - dt);
 
   // --- navigation ---
   ai.flip -= dt;
   if (ai.flip <= 0) { ai.side = -ai.side; ai.flip = 25 + Math.random() * 25; }
   let want;
   if (!player.alive) want = bear + Math.PI * 0.6 * ai.side;
+  else if (hunting && s.cls.key === 'dd' && (spotted || ai.seen)) want = bear;     // run straight over it
+  else if (hunting && !spotted && !ai.seen) want = s.th + 0.25 * ai.side;           // lost contact: search in circles
+  else if (hunting && s.cls.key !== 'dd') want = bear + Math.PI * 0.6 * ai.side;    // big ships turn away from a sub
   else if (dist > ai.pref * 1.15) want = bear + 0.35 * ai.side;                     // close in
   else if (dist < ai.pref * 0.6) want = bear + Math.PI * 0.75 * ai.side;            // open the range
   else want = bear + Math.PI * 0.5 * ai.side;                                       // broadside
@@ -59,7 +72,17 @@ export function stepAi(s, dt, player, combat, isLand) {
     az = player.z + player.vz * (tFly + ai.aimErr.x * 0.6) - ai.aimErr.x * 3;
   }
   s.aimX = ax; s.aimZ = az;
-  return { ax, az, canFire: player.alive && dist < g.range * 0.98, dist, err: 1.6 - ai.skill * 0.6, torp: tryTorp(s, dt, player, dist, combat) };
+  // depth charge: a destroyer passing over a detected submerged boat
+  let charge = null;
+  if (hunting && spotted && s.cls.key === 'dd' && dist < CHARGE.dropR && ai.chargeCd <= 0) {
+    ai.chargeCd = CHARGE.cd;
+    // rolled off the stern / thrown from the sides: lands about where the destroyer is now, with some spread
+    const a = Math.random() * Math.PI * 2, r = Math.random() * 3;
+    charge = { x: s.x + Math.cos(a) * r, z: s.z + Math.sin(a) * r };
+  }
+  const visible = spotted && shellable(player);
+  return { ax, az, canFire: player.alive && visible && dist < g.range * 0.98, dist, err: 1.6 - ai.skill * 0.6,
+    torp: spotted && lvl < 2 ? tryTorp(s, dt, player, dist, combat) : null, charge };
 }
 
 function tryTorp(s, dt, player, dist, combat) {

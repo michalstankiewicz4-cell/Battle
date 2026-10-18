@@ -4,11 +4,13 @@ import { createOcean } from './ocean.js';
 import { createIslands } from './islands.js';
 import { createFx } from './fx.js';
 import { createCombat } from './combat.js';
-import { createShip, stepShip, aimTurrets, damage, useRepair, removeShip, fwdOf, toWorld } from './ships.js';
+import { createShip, stepShip, aimTurrets, damage, useRepair, removeShip, fwdOf, toWorld, depthLevel } from './ships.js';
+import { setGhost } from './models.js';
+import { DEPTHS } from './constants.js';
 import { initAi, stepAi } from './ai.js';
 import { CLASSES, EDGE, THROTTLE } from './constants.js';
 import { clamp } from '../core/util.js';
-import { LOOK, lightFor } from '../render/look.js';
+import { LIGHT } from '../render/materials.js';
 
 const NAMES = ['Kestrel', 'Varga', 'Halvard', 'Morrow', 'Teskel', 'Orsk', 'Brann', 'Velka', 'Ishmar', 'Corvin', 'Daska', 'Ruhn', 'Selvik', 'Toria', 'Karsk', 'Nemmet', 'Aldric', 'Feyn'];
 const KILL_PTS = { dd: 800, ca: 1300, bb: 2200 };
@@ -26,14 +28,14 @@ function waveRoster(n) {
 }
 
 export function createWorld(scene, { sound } = {}) {
-  /* ---- sky and light (per graphics style) ---- */
-  const lt = lightFor(LOOK.style);
+  /* ---- sky and light ---- */
+  const lt = LIGHT;
   scene.background = new THREE.Color(lt.bg);
   scene.fog = new THREE.Fog(lt.bg, 400, 900);
   const hemi = new THREE.HemisphereLight(lt.sky, lt.ground, lt.hemi);
   const sun = new THREE.DirectionalLight(lt.sunColor, lt.sun);
   sun.position.set(45, 80, 40);
-  if (LOOK.detail) {
+  {
     sun.castShadow = true;
     sun.shadow.mapSize.set(2048, 2048);
     Object.assign(sun.shadow.camera, { left: -70, right: 70, top: 70, bottom: -70, near: 10, far: 220 });
@@ -41,7 +43,20 @@ export function createWorld(scene, { sound } = {}) {
   }
   scene.add(hemi, sun, sun.target);
 
-  const ocean = createOcean(scene, LOOK.style);
+  /* ---- sky dome for perspective views (gun camera, menu): horizon = fog colour, so the sea edge blends in ---- */
+  const sky = new THREE.Mesh(new THREE.SphereGeometry(420, 32, 16), new THREE.ShaderMaterial({
+    side: THREE.BackSide, depthWrite: false, fog: false,
+    uniforms: { uH: { value: new THREE.Color(lt.bg) }, uZ: { value: new THREE.Color(lt.zenith) }, uSun: { value: new THREE.Vector3(45, 80, 40).normalize() } },
+    vertexShader: 'varying vec3 vD;void main(){vD=normalize(position);gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+    fragmentShader: `uniform vec3 uH,uZ,uSun;varying vec3 vD;
+      void main(){float h=max(vD.y,0.);vec3 c=mix(uH,uZ,pow(h,.55));
+      float s=max(dot(vD,uSun),0.);c+=vec3(1.,.9,.7)*(pow(s,600.)*3.+pow(s,8.)*.18);
+      gl_FragColor=vec4(c,1.);}`,
+  }));
+  sky.renderOrder = -1; sky.frustumCulled = false; sky.visible = false;
+  scene.add(sky);
+
+  const ocean = createOcean(scene);
   const islands = createIslands(scene, 11);
   ocean.setLumps(islands.lumps);
   const fx = createFx(scene);
@@ -124,6 +139,13 @@ export function createWorld(scene, { sound } = {}) {
         if (ctl.thr) player.throttle = clamp(player.throttle + ctl.thr, 0, THROTTLE.length - 1);
         player.steer = ctl.steer;
         if (ctl.repair && useRepair(player)) { S.events.push({ type: 'repair' }); sound?.repair(); }
+        const sub = player.sub;
+        if (sub && ctl.depth) {
+          const lv = clamp(sub.level + ctl.depth, 0, DEPTHS.length - 1);
+          if (lv > sub.level && sub.batt < 0.05) S.events.push({ type: 'battLow' });
+          else if (lv !== sub.level) { sub.level = lv; S.events.push({ type: 'depth', level: lv }); sound?.click(); }
+        }
+        if (sub?.forced) { sub.forced = false; S.events.push({ type: 'battery' }); }
       }
       const aim = ctl.aim;
       if (aim) aimTurrets(player, dt, aim.x, aim.z);
@@ -143,6 +165,7 @@ export function createWorld(scene, { sound } = {}) {
       aimTurrets(s, dt, o.ax, o.az);
       if (o.canFire) combat.fireGuns(s, o.ax, o.az, o.err);
       if (o.torp) combat.fireTorps(s, o.torp.x, o.torp.z);
+      if (o.charge) combat.dropCharge(s, o.charge.x, o.charge.z);
     }
     S.enemiesLeft = left;
 
@@ -151,6 +174,7 @@ export function createWorld(scene, { sound } = {}) {
     for (let i = 0; i < ships.length; i++) for (let j = i + 1; j < ships.length; j++) {
       const a = ships[i], b = ships[j];
       if (!a.alive || !b.alive) continue;
+      if ((a.sub && a.sub.y < -2) || (b.sub && b.sub.y < -2)) continue;     // a deep submarine passes under ships
       const dx = b.x - a.x, dz = b.z - a.z, d = Math.hypot(dx, dz), min = (a.cls.L + b.cls.L) * 0.3;
       if (d < min && d > 0.01) {
         const p = (min - d) / 2, ux = dx / d, uz = dz / d;
@@ -184,6 +208,13 @@ export function createWorld(scene, { sound } = {}) {
     for (const s of ships) {
       s.wakeT -= dt; s.smokeT -= dt;
       const sp = Math.abs(s.speed) / s.cls.speed;
+      const lvl = depthLevel(s);
+      if (s.sub) {
+        // under water: translucent silhouette (player only — enemies never see it); periscope feather at periscope depth
+        if (s.side === 'player') { const g = s.sub.y < -0.35; if (g !== s.sub.ghost) { setGhost(s.model, g); s.sub.ghost = g; } }
+        if (lvl === 1 && s.wakeT <= 0 && sp > 0.05) { s.wakeT = 0.12; const pp = toWorld(s, 0, 0.75); fx.foam(pp.x, pp.z, 0.35 + sp * 0.3, 1.6); }
+        if (lvl > 0 && s.alive) { s.smokeT = 1; s.fires.length = 0; continue; }   // diving puts fires out
+      }
       if (s.wakeT <= 0 && sp > 0.05 && s.alive) {
         s.wakeT = 0.09 / (0.4 + sp);
         const st = toWorld(s, (Math.random() - 0.5) * s.cls.W * 0.6, -s.cls.L * 0.5);
@@ -196,8 +227,8 @@ export function createWorld(scene, { sound } = {}) {
       if (s.smokeT <= 0) {
         s.smokeT = s.alive ? 0.35 : 0.12;
         const f = toWorld(s, 0, s.cls.key === 'bb' ? -0.4 : 0);
-        if (s.alive) fx.smoke(f.x, s.cls.H + 1.8 + s.model.body.position.y, f.z, 1, 0.5 + s.cls.W * 0.15, false);
-        else fx.smoke(f.x, 1.2, f.z, 2, 1.4, true);
+        if (!s.alive) fx.smoke(f.x, 1.2, f.z, 2, 1.4, true);
+        else if (!s.sub) fx.smoke(f.x, s.cls.H + 1.8 + s.model.body.position.y, f.z, 1, 0.5 + s.cls.W * 0.15, false);
       }
       for (const fr of s.fires) {
         if (Math.random() < dt * 25) {
@@ -255,7 +286,9 @@ export function createWorld(scene, { sound } = {}) {
   }
 
   return {
-    S, ships, islands, combat, fx, reset, update,
+    S, ships, islands, combat, fx, sky, reset, update,
+    // Live graphics settings: particle density (0.25–1) and sea detail (ripples, broken foam).
+    setQuality({ fx: density, water }) { fx.density = density; ocean.setDetail(water); },
     get player() { return player; },
   };
 }

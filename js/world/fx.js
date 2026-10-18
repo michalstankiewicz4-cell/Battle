@@ -1,9 +1,9 @@
 // Particle effects on two instanced pools: "glow" (unlit: fire, muzzle flashes, explosions, tracers)
-// and "lit" (shaded: smoke, water splashes, wake foam). Every effect is a burst of boxes.
+// and "lit" (smoke, water splashes, wake foam). Particles are soft camera-facing billboards; flat ones lie on the water.
 import * as THREE from '../../vendor/three.module.js';
-import { LOOK, mat, fxGeometry } from '../render/look.js';
 
-const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), P = new THREE.Vector3(), S = new THREE.Vector3(), E = new THREE.Euler();
+
+const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), P = new THREE.Vector3(), S = new THREE.Vector3();
 const C = new THREE.Color();
 
 // Soft puff texture (noisy radial gradient) for billboard particles.
@@ -34,13 +34,12 @@ function billboardMat(additive) {
   };
   return m;
 }
-const BILLBOARD = () => LOOK.style === 'real' || LOOK.style === 'paint';
 const camQ = new THREE.Quaternion(), FLAT = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2), QY = new THREE.Quaternion(), UPV = new THREE.Vector3(0, 1, 0);
 
-function pool(scene, n, material, bb = false) {
-  const mesh = new THREE.InstancedMesh(bb ? new THREE.PlaneGeometry(1.5, 1.5) : fxGeometry(), material, n);
-  const alpha = bb ? new THREE.InstancedBufferAttribute(new Float32Array(n), 1) : null;
-  if (bb) { alpha.setUsage(THREE.DynamicDrawUsage); mesh.geometry.setAttribute('aAlpha', alpha); }
+function pool(scene, n, material) {
+  const mesh = new THREE.InstancedMesh(new THREE.PlaneGeometry(1.5, 1.5), material, n);
+  const alpha = new THREE.InstancedBufferAttribute(new Float32Array(n), 1);
+  alpha.setUsage(THREE.DynamicDrawUsage); mesh.geometry.setAttribute('aAlpha', alpha);
   mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
   mesh.frustumCulled = false;
   const zero = new THREE.Matrix4().makeScale(0, 0, 0);
@@ -51,6 +50,7 @@ function pool(scene, n, material, bb = false) {
   return {
     mesh,
     add(o) {
+      if (o.keep !== true && fxRef.density < 1 && Math.random() > fxRef.density) return;   // Options: effects density
       const p = { x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, g: 0, drag: 0, life: 1, t: 0, s0: 1, s1: 1, sy: 1, c0: 0xffffff, c1: null, ry: Math.random() * 6.28, ...o };
       p.i = next; next = (next + 1) % n;
       if (slots[p.i]) slots[p.i].dead = true;        // pool full: recycle the oldest slot
@@ -69,12 +69,12 @@ function pool(scene, n, material, bb = false) {
         p.vx *= d; p.vy *= d; p.vz *= d;
         p.x += p.vx * dt; p.y += p.vy * dt; p.z += p.vz * dt;
         const s = p.s0 + (p.s1 - p.s0) * u;
-        if (bb) {
+        {
           // flat particles (foam, rings) lie on the water; the rest face the camera
           if (p.sy < 0.3) { Q.copy(QY.setFromAxisAngle(UPV, p.ry)).multiply(FLAT); S.set(s * 1.3, s * 1.3, 1); }
           else { Q.copy(camQ); S.set(s * 1.25, s * 1.25 * Math.max(1, p.sy * 0.8), 1); }
           alpha.array[p.i] = Math.min(1, u * 10) * Math.pow(1 - u, 1.3) * (p.a ?? 1);
-        } else { E.set(0, p.ry, 0); Q.setFromEuler(E); S.set(s, s * p.sy, s); }
+        }
         M.compose(P.set(p.x, p.y, p.z), Q, S);
         mesh.setMatrixAt(p.i, M);
         C.set(p.c0); if (p.c1 !== null) C.lerp(TMP.set(p.c1), u);
@@ -82,25 +82,26 @@ function pool(scene, n, material, bb = false) {
       }
       mesh.instanceMatrix.needsUpdate = true;
       if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
-      if (alpha) alpha.needsUpdate = true;
+      alpha.needsUpdate = true;
     },
     clear() { for (const p of ps) mesh.setMatrixAt(p.i, zero); ps.length = 0; slots.fill(null); mesh.instanceMatrix.needsUpdate = true; },
   };
 }
 const TMP = new THREE.Color();
-// Height of flat foam: above the highest wave crest in detail styles so waves never cut it.
-const SURF = LOOK.detail ? 0.47 : 0.14;
+const fxRef = { density: 1 };
+// Height of flat foam: above the highest wave crest so waves never cut it.
+const SURF = 0.47;
 const R = (a = 1) => (Math.random() * 2 - 1) * a;
 
 export function createFx(scene) {
-  const bb = BILLBOARD();
-  const glowMat = bb ? billboardMat(true) : new THREE.MeshBasicMaterial();
-  if (LOOK.style === 'real') glowMat.color.setRGB(3.2, 2.6, 2.0);       // HDR so the bloom picks up fire and flashes
-  const glow = pool(scene, 900, glowMat, bb);
-  const lit = pool(scene, 2600, bb ? billboardMat(false) : mat(0xffffff, 'fx'), bb);
-  lit.mesh.castShadow = LOOK.style === 'toon';
+  const glowMat = billboardMat(true);
+  glowMat.color.setRGB(3.2, 2.6, 2.0);                                  // HDR so the bloom picks up fire and flashes
+  const glow = pool(scene, 900, glowMat);
+  const lit = pool(scene, 2600, billboardMat(false));
 
   const fx = {
+    get density() { return fxRef.density; },
+    set density(v) { fxRef.density = v; },
     // cam: the active camera (billboards face it)
     update(dt, cam) { if (cam) camQ.copy(cam.quaternion); glow.update(dt); lit.update(dt); },
     camera: null,

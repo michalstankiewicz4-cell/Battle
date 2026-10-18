@@ -1,6 +1,6 @@
 # Architecture and project context
 
-Browser game **Steel Salvo** (working title): naval battle at sea, PvE against waves of AI warships, isometric view (orthographic projection), 3D with four graphics styles (realistic by default, pixel art, comic, watercolour). No dependencies except three.js (vendored locally), no network requests. The engine (pixel pipeline, camera approach, UI builder, i18n) comes from Capital Quarantine (repo VS).
+Browser game **Steel Salvo** (working title): naval battle at sea, PvE against waves of AI warships, isometric view (orthographic projection), realistic 3D (PBR materials, procedural water). No dependencies except three.js (vendored locally), no network requests. The project started from the engine of Capital Quarantine (repo VS: camera approach, UI builder, i18n); **the game is developed for the realistic look only** (other styles were tried and removed in 0.3.0).
 
 Published at: repo <https://github.com/michalstankiewicz4-cell/Battle>, site <https://michalstankiewicz4-cell.github.io/Battle/> (GitHub Pages, workflow `.github/workflows/static.yml`).
 
@@ -18,15 +18,15 @@ Published at: repo <https://github.com/michalstankiewicz4-cell/Battle>, site <ht
 | `js/main.js` | Entry point: `createApp()` |
 | `js/version.js` | `VERSION` (semver) — must stay at this path (the check script reads it) |
 | `js/core/app.js` | App shell: renderer, pipeline, world, camera rig, mode state machine (`menu`/`play`/`dead`), pause, aim ray, world events → HUD, frame loop |
-| `js/core/cameras.js` | Camera rig: isometric ortho follow camera, menu showcase (perspective orbit) |
+| `js/core/cameras.js` | Camera rig: isometric ortho follow camera, gun camera / periscope (C), menu showcase (perspective orbit) |
+| `js/core/salvo-cam.js` | Salvo camera: picture-in-picture behind the newest player shell/torpedo, second small post pipeline |
 | `js/core/settings.js`, `storage.js`, `util.js` | Sanitised settings store, localStorage wrappers, small helpers (`clamp`, `wrapAngle`, `mulberry32`) |
 | `js/core/sound.js` | Procedural Web Audio effects (no sound files) |
-| `js/render/look.js` | Graphics style (`LOOK.style`, `setStyle`), material factory `mat(color, kind)`, procedural canvas textures (deck planks, grime), `mergeBoxes`, light settings per style |
-| `js/render/style-pipeline.js` | `StylePipeline`: full-resolution MSAA target + post shader for `real` (bloom, ACES, grain), `toon` (ink outlines) and `paint` (Kuwahara, paper) |
-| `js/render/pixel-pipeline.js` | `PixelPipeline`: low-res target + final shader (palette, dither, depth outline, vignette) — **identical to Capital Quarantine** |
+| `js/render/materials.js` | Material factory `mat(color, kind)` (PBR), procedural canvas textures (deck planks, weathering), `mergeBoxes`, `LIGHT` |
+| `js/render/post.js` | `PostPipeline`: half-float target (optional MSAA, render scale) + post shader (bloom, ACES, gamma, vignette, grain); optional viewport for picture-in-picture |
 | `js/input/input.js` | Keys by `KeyboardEvent.code`, mouse NDC, LMB fire, RMB/MMB drag, wheel |
 | `js/world/index.js` | World facade (`createWorld`): light, ocean, islands, fx, combat, ships, wave director, water indicators |
-| `js/world/constants.js` | `CLASSES` (dd/ca/bb stats and turret layouts), `THROTTLE`, `EDGE`, `FIRE` |
+| `js/world/constants.js` | `CLASSES` (dd/ca/bb/ss stats and turret layouts), `THROTTLE`, `EDGE`, `FIRE`, `DEPTHS`, `DIVE_RATE`, `CHARGE` |
 | `js/world/ocean.js` | `waveAt()` (JS) and its GLSL twin; ocean shader with shallows and surf from the island list |
 | `js/world/islands.js` | Procedural islands from ellipsoid lumps; `isLand()`, `heightAt()` |
 | `js/world/models.js` | Ship meshes: extruded hull, superstructure per class, rotating turrets |
@@ -54,25 +54,22 @@ Screens (`js/ui/menu.js`): `main` (ship cards + buttons), `multi`, `pause`, `dea
 HUD (`js/ui/hud.js`): top line (wave, enemies, score, time, next-wave countdown), kill feed, banners, torpedo warning, ship panel (HP, telegraph, speed in knots, rudder), weapon panel (main battery, torpedoes, repair), crosshair (distance in km, flight time), enemy labels with HP bars, damage popups, minimap. Text updates about 10×/s; positions every frame.
 
 ## Settings (`js/core/settings.js`)
-Stored in `localStorage` key `salvo:settings:v1`: `lang` (`en` default, `pl`), `gfx` (style `real`/`pixel`/`toon`/`paint`, pixelH 140–540, levels, dither, edge, bright, showFps), `vol`, `mouse` (zoomSens, rotSens). Everything passes through `sanitize()` (clamps, whitelists). Change settings only via `settings.update(draft => …)`; listeners via `settings.onChange`.
+Stored in `localStorage` key `salvo:settings:v1`: `lang` (`en` default, `pl`), `gfx` (style `real`/`pixel`/`toon`/`paint`, pip (salvo camera), pixelH 140–540, levels, dither, edge, bright, showFps), `vol`, `mouse` (zoomSens, rotSens). Everything passes through `sanitize()` (clamps, whitelists). Change settings only via `settings.update(draft => …)`; listeners via `settings.onChange`.
 
-## Graphics styles (`js/render/look.js`)
-The style is read at start-up (`?style=` in the URL, else `settings.gfx.style`, default `real`) **before the world is built**, because it decides materials, geometry detail, particle shapes, the ocean branch and the post-process; changing it in Options saves the setting and reloads the page.
-| Style | Pipeline | Materials | Extras |
-|---|---|---|---|
-| `real` (default) | `StylePipeline` mode 1 | `MeshStandardMaterial` (grime map on paint/hull, plank map on decks) | Shadows, HDR glow particles + bloom, billboard smoke/foam |
-| `pixel` | `PixelPipeline` | `MeshLambertMaterial`, flat shading | Original look; simple islands, box particles |
-| `toon` | `StylePipeline` mode 2 | `MeshToonMaterial`, 3-step ramp | Ink outlines from depth/colour edges, sphere particles |
-| `paint` | `StylePipeline` mode 3 | Rougher `MeshStandardMaterial` | Kuwahara, sepia ink, granulation, paper |
-`LOOK.detail` (every style except `pixel`) adds model detail (`addDetail` in `models.js`), detailed islands (`buildDetailed` in `islands.js`) and billboard particles. Ocean colours per style are in `PAL` (`ocean.js`), light per style in `lightFor()`.
-Detailed islands have a wobbly outline (`wobble()` in `islands.js`); the same function feeds the ocean shader (`uWob`) and `isLand()` / `heightAt()`, so surf, collisions and shell impacts match the visible shore.
+## Graphics settings (Options > Graphics, all live)
+One realistic look, tuned by settings instead of separate styles: render resolution (`scale`, post target size), anti-aliasing (`aa`, 4× MSAA), glow (`bloom` uniform), shadows (`renderer.shadowMap.enabled`; switching marks every material `needsUpdate`), effects density (`fx`, share of particles spawned), detailed water (`water`: ripple normals and noise-broken foam in the ocean shader, `uDetail`), salvo camera (`pip`). Presets in `GFX_PRESETS` (`settings.js`): **High** (default) and **Light** (70% resolution, no shadows/AA/glow, half the effects, simple water, no salvo camera).
+Islands have a wobbly outline (`wobble()` in `islands.js`); the same function feeds the ocean shader (`uWob`) and `isLand()` / `heightAt()`, so surf, collisions and shell impacts match the visible shore.
 
-## Rendering (`js/render/pixel-pipeline.js`, `style-pipeline.js`)
-- Pixel style: three.js scene → `WebGLRenderTarget` of height `pixelH` (default 270 px here) with a `DepthTexture` → full-screen shader: brightness, quantisation to `levels` with 4×4 Bayer dithering, outline from depth differences (`edge`), vignette.
+## Rendering (`js/render/post.js`)
+- three.js scene → half-float `WebGLRenderTarget` (render scale, MSAA) → full-screen shader: brightness, bloom (16 taps above 0.9), ACES tone mapping, gamma, vignette, film grain. Fire, flashes and the lighthouse lamp are HDR (> 1) so the bloom catches them.
 - Works with orthographic (play) and perspective (menu showcase) cameras.
 - The ocean is a custom `ShaderMaterial`: a 900×900 grid that follows the camera target snapped to its cell size, displaced by four directional sine waves (`waveAt` in JS is the same function, used for ship bobbing). Shallow water and surf are computed per fragment from up to 64 island lumps (`uLumps`).
 
-## Cameras (`js/core/cameras.js`)
+## Cameras (`js/core/cameras.js`, `js/core/salvo-cam.js`)
+- **Gun camera** (C during play): perspective; position above and 3.2×turret size behind the most forward turret (view forward of the beam) or the most aft one (view aft), at deck + superstructure height (`TOP` per class) + 0.9. Yaw/pitch from mouse movement under pointer lock (`input.onLook`), or right-drag without lock; pitch −0.6…+0.08 rad; wheel zoom ×1–×8 (FOV 52°/zoom). Entering starts the view looking at the current aim point. Aim = centre ray onto the sea when locked (else the cursor ray); above the horizon it goes to max range along the view. Esc releases pointer lock before the page sees the key, so a lock loss that the game did not cause pauses the run.
+- **Periscope** (submarine): same mode, eye at the top of the attack periscope (≈0.4 u above the waves at periscope depth), slight sway, ×1.5 default zoom, CSS mask overlay (`#scope`), relative bearing. Refused / left automatically when the boat is deep.
+- **Salvo camera**: follows the newest player shell already in flight (else the newest torpedo) from 6 u behind along its arc, holds 1.8 s on the impact; a new salvo takes over once its shells are 0.25 s out. Rendered into a 320×180 viewport (top right) by a second pipeline instance; `gfx.pip` toggles it.
+- Perspective views get a sky dome (`world.sky`, horizon = fog colour) and fog 170–410 so the 900 u sea grid edge never shows; the iso view keeps 400–900.
 - **Iso** (play, results): orthographic, offset `(0, 70, 52)` rotated by `yaw`, visible height 60 u at zoom 1, user zoom 0.4–2.2× (wheel), rotate with Q/E or right/middle-mouse drag. The target is the player ship shifted toward the aim point (up to 26 u) so the gunner sees further ahead.
 - **Showcase** (menu): perspective camera orbiting the player ship slowly; the ship sits right of centre because the menu is on the left.
 
@@ -87,6 +84,7 @@ Detailed islands have a wobbly outline (`wobble()` in `islands.js`); the same fu
 | Destroyer (dd) | 1700 | 38 kn | 2×1, 2.8 s | 1.15 km | 4, 24 s |
 | Cruiser (ca) | 3600 | 31 kn | 3×2, 6.5 s | 1.55 km | 2, 45 s |
 | Battleship (bb) | 7800 | 25 kn | 4×3, 13 s | 1.95 km | — |
+| Submarine (ss) | 1500 | 29 kn surfaced | 1×1, 3.6 s (surfaced only) | 0.8 km | 4 bow/stern, 16 s |
 
 - **Movement** (`ships.js`): telegraph `THROTTLE` = astern −¼, stop, ¼, ½, ¾, full; acceleration per class; rudder moves toward the input at `1/rudderT` per second and returns to centre when released; turn rate scales with speed. Bow probe against `isLand()` → grounding (speed reverses at −25%). Ships push each other apart; enemy contact causes ramming damage.
 - **Turrets**: arc `{c, w}` relative to the bow (forward turrets c = 0, aft c = π, half-width 150°). Traverse is clamped inside the arc, so a turret never swings through its dead zone. A turret fires only when aimed within ~2° and reloaded.
@@ -95,7 +93,14 @@ Detailed islands have a wobbly outline (`wobble()` in `islands.js`); the same fu
 - **Lead**: `intercept()` solves the meeting time for a constant-speed projectile and a constant-velocity target; used by the AI for both shells and torpedoes.
 - **AI** (`ai.js`): preferred range 55% (dd) / 70% (ca) / 80% (bb) of gun range; closes in when far, sails broadside in range, opens the range when too close, switches circling side every 25–50 s. Feelers ahead and ±35° steer away from islands. Lead error and extra dispersion shrink with `skill`.
 - **Waves** (`index.js`): fixed first five waves (2 dd; dd + ca; ca + 2 dd; bb + 2 dd; 2 ca + 2 dd), then `3 + n/2` ships (max 7) with more battleships later. Skill `0.2 + 0.1·n` (max 1). Spawn 170–230 u from the player, off islands. Between waves: 9 s pause, +25% HP, +1 repair charge. Score: damage dealt + kill bonus (dd 800, ca 1300, bb 2200, ×(1 + 0.1·wave)).
-- **Effects** (`fx.js`): two instanced pools, 900 glow + 2600 lit, ring-buffer slots (oldest is recycled when full). Pixel: boxes; toon: spheres; real/paint: camera-facing soft billboards with per-instance alpha (`aAlpha`), flat ones (foam, splash rings) lie on the water above the highest crest.
+- **Effects** (`fx.js`): two instanced pools, 900 glow + 2600 lit, ring-buffer slots (oldest is recycled when full). Camera-facing soft billboards with per-instance alpha (`aAlpha`), flat ones (foam, splash rings) lie on the water above the highest crest.
+
+## Submarine (`ss`)
+- `ship.sub = { level, y, batt, ghost }`: `level` is the ordered depth (Z −1 / X +1), `y` the keel offset moving toward `DEPTHS[level].y` at `DIVE_RATE`; `depthLevel()` gives the band actually reached (surface > −0.35, periscope > −2.6, deep). Speed × `DEPTHS[band].speed`; battery drain per band (charges on the surface); a flat battery forces `level = 0`.
+- Reach: `shellable()` (y > −0.6) for shells and the deck gun, `torpable()` (y > −2.6) for torpedoes; deep boats skip ship–ship collisions. Diving clears fires.
+- Torpedo tubes (`torps.bow`): bow and stern, ±35°; launched from the bow or stern; not when deep.
+- AI (`ai.js`): detection radius per band (`DEPTHS[].detect`); `seen` keeps the last known position; destroyers steer straight at a detected submerged boat and drop depth charges (around their own position, ±3 u) within `CHARGE.dropR` (6 u) every `CHARGE.cd` (2.6 s; fuse 1.6 s, radius 8 u, falloff, ×0.8 when deep); cruisers and battleships turn away; no gunfire at submerged boats, no torpedoes at deep ones.
+- Rendering: under water the player's boat swaps to a translucent depth-test-off material (`setGhost` in `models.js`), periscope meshes (`name = 'scope'`) keep their own; enemies never see a ghost because they are never submarines.
 
 ## Persistence (localStorage)
 - `salvo:save:v1` — `{ best, bestWave, cls }` (best score, best wave, last selected ship)
@@ -111,7 +116,7 @@ Every push to `main` is a new semver version: bump `js/version.js`, add an entry
 When the remote `main` is ahead (e.g. a workflow change): `git pull --rebase origin main`.
 
 ## Testing (headless)
-Playwright (Python) with Chromium and `--use-gl=angle --use-angle=swiftshader --enable-unsafe-swiftshader --ignore-gpu-blocklist` gives working WebGL2 without a GPU (about 2 fps). Pattern: `py -m http.server` on a copy of the site whose `js/main.js` gets `window.__app = app;` appended (the app object exposes `world`, `settings`, `input`, `rig`, `menu`, `progress`, `mode`, `paused`, `startRun(cls)`…). Fast-forward by calling `__app.world.update(0.05, t, ctl)` in a loop inside `page.evaluate`, then take screenshots. For identical comparison shots across styles, seed `Math.random` and drive the frame loop with a fake clock from an init script (queue only the callback named `frame`, and restore the real `performance.now` before `page.screenshot`, which needs it). Heavy styles need a long screenshot timeout under SwiftShader. Listen to `pageerror` and `console` errors. Scope button selectors to `.screen:not([hidden])`.
+Playwright (Python) with Chromium and `--use-gl=angle --use-angle=swiftshader --enable-unsafe-swiftshader --ignore-gpu-blocklist` gives working WebGL2 without a GPU (about 2 fps). Pattern: `py -m http.server` on a copy of the site whose `js/main.js` gets `window.__app = app;` appended (the app object exposes `world`, `settings`, `input`, `rig`, `menu`, `progress`, `mode`, `paused`, `startRun(cls)`…). Fast-forward by calling `__app.world.update(0.05, t, ctl)` in a loop inside `page.evaluate`, then take screenshots. For identical comparison shots, seed `Math.random` and drive the frame loop with a fake clock from an init script (queue only the callback named `frame`, and restore the real `performance.now` before `page.screenshot`, which needs it). Full-resolution frames are slow under SwiftShader: use a small viewport (e.g. 800×450) and a long screenshot timeout. Listen to `pageerror` and `console` errors. Scope button selectors to `.screen:not([hidden])`.
 
 ## Attributions
 three.js (MIT), vendored in `vendor/`. All models, textures, effects and sounds are generated in code.

@@ -1,7 +1,7 @@
 // Ship entity: movement (telegraph throttle, rudder), wave bobbing, turret traverse within arcs,
 // firing solutions, damage, fires, repair party and sinking.
 import * as THREE from '../../vendor/three.module.js';
-import { CLASSES, THROTTLE, THROTTLE_STOP, FIRE, EDGE } from './constants.js';
+import { CLASSES, THROTTLE, THROTTLE_STOP, FIRE, EDGE, DEPTHS, DIVE_RATE } from './constants.js';
 import { buildShip } from './models.js';
 import { waveAt } from './ocean.js';
 import { clamp, wrapAngle } from '../core/util.js';
@@ -23,10 +23,22 @@ export function createShip(scene, clsKey, side, x, z, th) {
     fires: [],
     wakeT: 0, smokeT: 0, hitFlash: 0,
     stats: { dmg: 0, kills: 0, hits: 0, shots: 0 },
+    // submarines: depth level (0 surface, 1 periscope, 2 deep), current keel offset y (<= 0) and battery 0..1
+    sub: cls.sub ? { level: 0, y: 0, batt: 1, ghost: false } : null,
   };
   place(ship, 0);
   return ship;
 }
+
+// Depth band a submarine is actually in (from its current keel offset): 0 surface, 1 periscope, 2 deep.
+export function depthLevel(s) {
+  if (!s.sub) return 0;
+  const y = s.sub.y;
+  return y > -0.35 ? 0 : y > -2.6 ? 1 : 2;
+}
+// Can shells hit / torpedoes hit / guns fire? (submarines only partly; everyone else always)
+export const shellable = (s) => !s.sub || s.sub.y > -0.6;
+export const torpable = (s) => !s.sub || s.sub.y > -2.6;
 
 // Forward and starboard unit vectors.
 export const fwdOf = (th) => ({ x: Math.sin(th), z: Math.cos(th) });
@@ -55,8 +67,9 @@ function place(s, t) {
   const f = fwdOf(s.th);
   const hb = waveAt(s.x + f.x * L * 0.4, s.z + f.z * L * 0.4, t), hs = waveAt(s.x - f.x * L * 0.4, s.z - f.z * L * 0.4, t);
   const sink = s.sinkT;
-  b.position.y = (hb + hs) * 0.5 * 0.7 - sink * 0.45;
-  b.rotation.x = -Math.atan2(hb - hs, L * 0.8) * 0.6 + sink * 0.05;
+  const sy = s.sub ? s.sub.y : 0, ride = s.sub ? clamp(1 + sy / 1.3, 0, 1) : 1;   // submerged boats stop riding the waves
+  b.position.y = (hb + hs) * 0.5 * 0.7 * ride + sy - sink * 0.45;
+  b.rotation.x = -Math.atan2(hb - hs, L * 0.8) * 0.6 * ride + sink * 0.05;
   b.rotation.z = s.rudder * clamp(s.speed / s.cls.speed, -1, 1) * 0.07 + sink * 0.12;
 }
 
@@ -71,7 +84,15 @@ export function stepShip(s, dt, t, land) {
     if (s.sinkT > 9) s.removed = true;
     return false;
   }
-  const target = cls.speed * THROTTLE[s.throttle];
+  const sub = s.sub;
+  if (sub) {
+    // dive / surface toward the chosen level; battery drains under water and charges on the surface
+    const want = DEPTHS[sub.level].y;
+    sub.y += clamp(want - sub.y, -DIVE_RATE * dt, DIVE_RATE * dt);
+    sub.batt = clamp(sub.batt - DEPTHS[depthLevel(s)].drain * dt, 0, 1);
+    if (sub.batt <= 0 && sub.level > 0) { sub.level = 0; sub.forced = true; }   // flat battery: forced to surface
+  }
+  const target = cls.speed * THROTTLE[s.throttle] * (sub ? DEPTHS[depthLevel(s)].speed : 1);
   const acc = cls.accel * (Math.sign(target - s.speed) !== Math.sign(s.speed) ? 1.4 : 1);
   s.speed += clamp(target - s.speed, -acc * dt, acc * dt);
   s.rudder += clamp(s.steer - s.rudder, -dt / cls.rudderT, dt / cls.rudderT);

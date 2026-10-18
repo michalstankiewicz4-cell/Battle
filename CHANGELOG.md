@@ -5,6 +5,26 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.3.0] - 2026-10-18
+### Added
+- **Gun camera (C)**: perspective view from above the turret that faces the view direction (front turret when looking forward of the beam, aft turret when looking aft), high enough to clear the superstructure. The mouse turns the view with pointer lock and the screen centre is the aim point; the wheel zooms like binoculars (×1–×8); C goes back to the isometric view. Esc (which releases the pointer) pauses. Without pointer lock the cursor still aims and right-drag turns the view.
+- **Submarine** (fourth ship class): low profile, bow and stern torpedo tubes (4 torpedoes, 16 s, fired within 35° of the bow or stern), a small deck gun usable only on the surface.
+  - Diving with **Z** (rise) / **X** (dive): surface, periscope depth and deep. Depth changes take time; speed drops under water.
+  - Battery: drains at periscope depth and when deep, charges on the surface; a flat battery forces the boat up.
+  - Shells cannot hit a boat below the surface, torpedoes cannot hit a deep one; diving puts fires out; deep boats pass under ships.
+  - Detection: enemies see a submerged boat only within 55 u (periscope depth) or 26 u (deep); when they lose contact they search the last known position. Destroyers run over a detected boat and drop depth charges; cruisers and battleships turn away.
+  - Under water the player's boat is drawn as a dark translucent silhouette; periscopes stay visible and leave a small feather of foam.
+  - **Periscope view** (C) instead of binoculars: round view in a black mask, hairlines with range ticks, relative bearing readout, zoom ×1.5 by default; not available when deep.
+- **Salvo camera**: picture-in-picture in the top-right corner that rides behind the newest shell of the player's salvo (or torpedo) and holds on the impact for a moment; rendered in the same look as the main view. Can be turned off in Options > Graphics. Renders through a second small post pipeline.
+- Sky dome and closer fog for perspective views (gun camera, periscope, salvo camera, menu) so the horizon blends in.
+- Graphics settings, applied immediately: presets **High** / **Light** (for weaker computers), render resolution (50–100%), effects density, shadows, anti-aliasing, glow, detailed water, salvo camera.
+### Removed
+- Alternative graphics styles (pixel art, comic, watercolour) and the style picker: the game is developed for the realistic look only. The pixel-art pipeline and style code are in the git history (v0.2.0).
+### Changed
+- Shadow map updates once per frame (the scene can be rendered twice).
+- Kill feed moves below the salvo camera while it is shown; the main menu has four ship cards.
+- The salvo camera picture is copied into its HUD frame, so it stays visible above the periscope mask; it shrinks to 200×113 on windows up to 900 px wide.
+
 ## [0.2.0] - 2026-10-18
 ### Added
 - Graphics styles, chosen in Options > Graphics (the game restarts on change; `?style=real|pixel|toon|paint` in the URL overrides it for previews):
