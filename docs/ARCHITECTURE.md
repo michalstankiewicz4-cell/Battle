@@ -13,7 +13,9 @@ Published at: repo <https://github.com/michalstankiewicz4-cell/Battle>, site <ht
 ## File map
 | Path | Role |
 |---|---|
-| `index.html` | Skeleton, CSP, SEO meta; empty `#app` (canvas) and `#ui` (all UI is built from JS) |
+| `index.html` | Skeleton, CSP, SEO (English: title, description, Open Graph, Twitter card, JSON-LD `VideoGame`, `noscript` text); empty `#app` (canvas) and `#ui` (all UI is built from JS) |
+| `assets/` | `og-image.jpg` (1200×630 start-screen thumbnail), `icon.png` (512), `apple-touch-icon.png` (180), `favicon-32.png` |
+| `site.webmanifest` | Web app manifest (name, icons, colours) |
 | `css/base.css`, `css/menu.css`, `css/hud.css` | Base styles; menu/options overlay; in-game HUD |
 | `js/main.js` | Entry point: `createApp()` |
 | `js/version.js` | `VERSION` (semver) — must stay at this path (the check script reads it) |
@@ -117,7 +119,7 @@ Every push to `main` is a new semver version: bump `js/version.js`, add an entry
 When the remote `main` is ahead (e.g. a workflow change): `git pull --rebase origin main`.
 
 ## Testing (headless)
-Playwright (Python) with Chromium and `--use-gl=angle --use-angle=swiftshader --enable-unsafe-swiftshader --ignore-gpu-blocklist` gives working WebGL2 without a GPU (about 2 fps). Pattern: `py -m http.server` on a copy of the site whose `js/main.js` gets `window.__app = app;` appended (the app object exposes `world`, `settings`, `input`, `rig`, `menu`, `progress`, `mode`, `paused`, `startRun(cls)`…). Fast-forward by calling `__app.world.update(0.05, t, ctl)` in a loop inside `page.evaluate`, then take screenshots. For identical comparison shots, seed `Math.random` and drive the frame loop with a fake clock from an init script (queue only the callback named `frame`, and restore the real `performance.now` before `page.screenshot`, which needs it). Full-resolution frames are slow under SwiftShader: use a small viewport (e.g. 800×450) and a long screenshot timeout. Listen to `pageerror` and `console` errors. Scope button selectors to `.screen:not([hidden])`.
+Playwright (Python) with Chromium and `--use-gl=angle --use-angle=swiftshader --enable-unsafe-swiftshader --ignore-gpu-blocklist` gives working WebGL2 without a GPU (about 2 fps). Pattern: `py -m http.server` on a copy of the site whose `js/main.js` gets `window.__app = app;` appended (the app object exposes `world`, `settings`, `input`, `rig`, `menu`, `progress`, `mode`, `paused`, `startRun(cls)`…). Fast-forward by calling `__app.world.update(0.05, t, ctl)` in a loop inside `page.evaluate`, then take screenshots. For identical comparison shots, seed `Math.random` and drive the frame loop with a fake clock from an init script (queue only the callback named `frame`, and restore the real `performance.now` before `page.screenshot`, which needs it). Full-resolution frames are slow under SwiftShader: use a small viewport (e.g. 800×450) and a long screenshot timeout. Thumbnail: render the start screen at a 1200×630 viewport (fake clock, ~160 frames so the showcase settles, battleship selected via `salvo:save:v1`, hide the `.info` best-score line), save as `assets/og-image.jpg`. Listen to `pageerror` and `console` errors. Scope button selectors to `.screen:not([hidden])`.
 
 ## Attributions
 three.js (MIT), vendored in `vendor/`. All models, textures, effects and sounds are generated in code.

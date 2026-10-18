@@ -41,7 +41,6 @@ Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.3.0. Context: [`
 
 ## Operational
 - [ ] Create `vX.Y.Z` tags in GitHub Releases (owner)
-- [ ] Thumbnail `assets/og-image.png` and icon
 - [ ] Add the site to Google Search Console and submit `sitemap.xml`
 
 ## Done (summary)

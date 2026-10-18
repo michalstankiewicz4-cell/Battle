@@ -26,7 +26,7 @@ export function createApp({ appEl, uiEl }) {
   const renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: 'high-performance' });
   renderer.setPixelRatio(1);
   renderer.shadowMap.enabled = settings.data.gfx.shadows;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
   renderer.shadowMap.autoUpdate = false;                 // updated once per frame (the salvo camera renders the scene twice)
   appEl.appendChild(renderer.domElement);
   const canvas = renderer.domElement;
@@ -157,7 +157,7 @@ export function createApp({ appEl, uiEl }) {
   settings.onChange(applySettings);
   onLang(() => menu.refresh());
   applySettings();
-  document.title = `Steel Salvo — Naval Battle Browser Game v${VERSION}`;
+  document.title = `Steel Salvo — Free Naval Battle Browser Game v${VERSION}`;
 
   function resize() {
     const w = innerWidth, h = innerHeight;

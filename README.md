@@ -45,4 +45,4 @@ The version lives in `js/version.js` (shown in the main menu and the FPS counter
 Before every push: bump the version, add a changelog entry and run `node tools/check-version.mjs`.
 
 ## SEO
-Tags in `index.html`, `robots.txt`, `sitemap.xml`. A thumbnail (`assets/og-image.png`) is still to do. After deployment add the site in Google Search Console ("URL prefix" type) and submit the sitemap.
+Everything in English: title, description, keywords, Open Graph / Twitter cards and JSON-LD (`VideoGame`) in `index.html`; thumbnail `assets/og-image.jpg` (1200×630, start screen); icons in `assets/`; `site.webmanifest`; `robots.txt`; `sitemap.xml` (with the image). After deployment add the site in Google Search Console ("URL prefix" type) and submit the sitemap. When the start screen changes noticeably, regenerate the thumbnail (see "Testing" in `docs/ARCHITECTURE.md`).

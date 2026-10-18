@@ -5,6 +5,13 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.4.1] - 2026-10-18
+### Added
+- Social/search thumbnail `assets/og-image.jpg` (1200×630) of the start screen, and icons: `assets/icon.png` (512), `assets/apple-touch-icon.png` (180), `assets/favicon-32.png`.
+- Web app manifest `site.webmanifest` (name, icons, colours, fullscreen landscape); CSP allows `manifest-src 'self'`.
+### Changed
+- SEO in English: new title and description, keywords, robots directives, Open Graph and Twitter cards with the thumbnail and alt text, richer JSON-LD `VideoGame` data (screenshot, genres, offer, repository), `noscript` text with a short description and the controls, sitemap with the image entry and a fresh date.
+
 ## [0.4.0] - 2026-10-18
 ### Added
 - Binocular view for ships: in the gun camera at zoom ×1.5 and more the picture is seen through two overlapping round lenses (black mask, horizontal hairline with range ticks, short vertical mark, relative bearing), like the periscope but doubled. The gun camera now starts at ×2; zooming out to ×1 gives the wide view without the mask. Enemy labels show only inside the lenses.

@@ -1,0 +1,16 @@
+{
+  "name": "Steel Salvo — Naval Battle Browser Game",
+  "short_name": "Steel Salvo",
+  "description": "Free naval battle game in the browser: destroyers, cruisers, battleships and submarines against waves of AI warships.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#050b10",
+  "theme_color": "#0a1a26",
+  "lang": "en",
+  "icons": [
+    { "src": "assets/icon.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "assets/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}
