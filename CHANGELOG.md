@@ -5,6 +5,15 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.4.2] - 2026-10-18
+### Added
+- `docs/HANDOFF.md`: context-recovery note for resuming work without the previous conversation (state, the owner's decisions, working preferences, workflow, gotchas, next steps, open questions); `CLAUDE.md` and the README point to it first.
+- `tools/e2e.py`: headless end-to-end smoke test (fake clock; load, language, all four classes, gun camera + binoculars, salvo camera, periscope + torpedoes, deep dive, depth charges, results screen); screenshots to `tools/out/`.
+- `tools/og-image.py`: regenerates the start-screen thumbnail.
+- `.gitignore` for test output.
+### Changed
+- Documentation brought up to date: README (submarine, testing, tools), ARCHITECTURE (file map, controls, HUD, settings, cameras, islands, testing), TODO (done items removed, new ones), MULTIPLAYER (submarines and cameras), CLAUDE.md (test and handoff rules).
+
 ## [0.4.1] - 2026-10-18
 ### Added
 - Social/search thumbnail `assets/og-image.jpg` (1200×630) of the start screen, and icons: `assets/icon.png` (512), `assets/apple-touch-icon.png` (180), `assets/favicon-32.png`.

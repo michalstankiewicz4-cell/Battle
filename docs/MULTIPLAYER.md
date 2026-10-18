@@ -1,6 +1,6 @@
 # Multiplayer — plan and decisions
 
-Status: **idea / not started**. The game is single-player today, fully client-side (static hosting on GitHub Pages, no backend). The main menu lists "Multiplayer" as "Soon".
+Status: **idea / not started** (as of v0.4.2). The game is single-player today, fully client-side (static hosting on GitHub Pages, no backend). The main menu lists "Multiplayer" as "Soon".
 
 ## Starting constraints
 - Static hosting → no game server; networking needs either P2P (WebRTC) or an external relay/server.
@@ -25,6 +25,8 @@ Status: **idea / not started**. The game is single-player today, fully client-si
 5. **Message protocol** (versioned JSON): `hello`, `snapshot` (10–20 Hz: ship positions, headings, speed, HP, turret yaw), `input`, `event` (salvo fired with seed, torpedo launched, hit, sunk), `ping`. Validate every message.
 6. **Shells as events**: send the salvo (origin, aim point, seed, time), not each shell; clients simulate the flight locally; the host decides hits.
 7. **Interpolation**: local ship predicted, remote ships interpolated (~100 ms buffer). Ships are slow, so this is forgiving.
+8. **Submarines**: sync `sub.level`, `sub.y` and `sub.batt`; detection (`DEPTHS[].detect`) must be decided by the host per viewer, and a hidden boat must not be sent to clients that cannot see it (otherwise PvP is trivially cheatable). Depth charges are events like salvos.
+9. **Cameras**: the gun camera, periscope and salvo camera are local only (no sync needed); the salvo camera follows the local player's shells.
 
 ## Open questions (for the owner)
 - Co-op PvE, PvP, or both? How many players?
