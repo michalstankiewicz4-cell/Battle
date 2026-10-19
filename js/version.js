@@ -1,2 +1,2 @@
 // Game version (semver). Bump on every push and add a CHANGELOG entry.
-export const VERSION = '0.6.0';
+export const VERSION = '0.7.0';

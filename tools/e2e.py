@@ -76,6 +76,8 @@ def main():
             check('page loads', 'Steel Salvo' in pg.title() and not errs, pg.title())
             shot('01-menu')
 
+            hrefs = pg.evaluate("[...document.querySelectorAll('.labs a')].map(a=>a.getAttribute('href'))")
+            check('labs links in the main menu', hrefs == ['labs/ship.html', 'labs/water.html', 'labs.html'], str(hrefs))
             # language switch (Options > Language) and back
             pg.click('.screen:not([hidden]) .stack button >> nth=2')
             pg.click('.screen:not([hidden]) >> text=Polski'); pg.click('.screen:not([hidden]) .stack button >> nth=0')

@@ -5,6 +5,13 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.7.0] - 2026-10-19
+### Added
+- **Water Lab** (`labs/water.html`): ORP Błyskawica at 1:1 on a Gerstner sea. Two variants side by side (split screen with a divider): sea state presets from calm to gale and long swell or custom (wave height, wavelength, choppiness, spread, direction, wave count); looks (North Atlantic, Baltic grey, tropical, storm slate or custom colours, sun glitter, ripples, crest foam, reflection, planar reflection of the ship, translucent water); ship interaction (speed up to 39 kn, heave/pitch/roll, bow wave and Kelvin waves, wake foam, hull foam, wet band on the hull, bow spray). Seven cameras incl. the bridge riding with the ship; light and time controls; water mesh detail, per-pixel normals and render settings; "Measure the cost of each effect"; settings remembered and copyable as JSON. Docs: `docs/water.md`.
+- **WaterKit** (`js/labs/waterkit.js`): sea-state wave sets, one Gerstner function in GLSL and JS, polar water grid, water shader, ship wake/bow-wave/foam, wet hull material hook.
+- Main menu: links to the ship lab, the water lab and all labs (EN/PL); labs start screen tile and Ship Lab link for the water lab; sitemap entry.
+- `tools/e2e.py` checks the menu's lab links; `tools/lab-check.py` also opens the water lab (split screen, every effect, presets, bridge camera).
+
 ## [0.6.0] - 2026-10-19
 ### Added
 - **Model Doctor** (`labs/doctor.html`, `js/labs/modeldoctor.js`, `js/labs/doctor.js`): examines every lab ship and every game class model for 11 kinds of mistakes — nan, inside-out shapes, **gun lines of fire blocked by the own ship inside the training arc**, flicker (coplanar faces), floating pieces, pieces below the waterline, fittings through the hull side, over the in-game budget, hidden pieces, specks, needle triangles. Findings name the piece and the source line that added it; clicking one lights the pieces up (and trains the mount to the blocked bearing with the line of fire drawn). Check filter, touch tolerance, budget sliders, allow-list (`userData.doctorOk`), JSON report, test bench with one mistake per check. Ported from the Space repo's ModelDoctor and adapted to the game. Docs: `docs/doctor.md`.

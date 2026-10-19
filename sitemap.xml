@@ -22,4 +22,12 @@
       <image:loc>https://michalstankiewicz4-cell.github.io/Battle/assets/labs/ship.jpg</image:loc>
     </image:image>
   </url>
+  <url>
+    <loc>https://michalstankiewicz4-cell.github.io/Battle/labs/water.html</loc>
+    <lastmod>2026-10-19</lastmod>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://michalstankiewicz4-cell.github.io/Battle/assets/labs/water.jpg</image:loc>
+    </image:image>
+  </url>
 </urlset>
