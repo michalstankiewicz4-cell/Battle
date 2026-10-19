@@ -7,7 +7,7 @@ what the project is, what the owner decided, how work is done and what comes nex
 **Keep this file current:** when a decision is made, a feature lands or the next steps change, update the sections
 below in the same push (it is part of every release, like the changelog).
 
-## Snapshot (state as of v0.7.1, 2026-10-19)
+## Snapshot (state as of v0.7.3, 2026-10-20)
 - **What:** *Steel Salvo* (working title) — free naval battle browser game, PvE against endless waves of AI warships.
   Live: <https://michalstankiewicz4-cell.github.io/Battle/> · repo: <https://github.com/michalstankiewicz4-cell/Battle> (branch `main`,
   GitHub Pages deploys every push via `.github/workflows/static.yml`).
@@ -20,7 +20,7 @@ below in the same push (it is part of every release, like the changelog).
 - **Labs** (`labs.html`, linked from the main menu): **Ship Lab** (`labs/ship.html`) — ORP Błyskawica as built 1937, 1:1
   from published figures (ShipKit `js/shipkit/`, research `docs/ships/blyskawica.md`; positions reconstructed from text,
   image hosts are blocked in the sandbox). **Model Doctor** (`labs/doctor.html`, `py tools/doctor.py`, golden
-  `tools/doctor.golden.json`, `docs/doctor.md`) — 11 checks incl. gun arcs, waterline, hull side, budget; every lab and
+  `tools/doctor.golden.json`, `docs/doctor.md`) — 12 checks incl. inward-facing surfaces, gun arcs, waterline, hull side, budget; every lab and
   game model is clean, Błyskawica only exceeds the in-game budget (33k triangles, 99 draw calls). **Water Lab**
   (`labs/water.html`, WaterKit, `docs/water.md`) — Gerstner sea, variants A/B side by side, cost of each effect.
 - **Origin:** started from the engine of the owner's other game *Capital Quarantine* (repo `VS`), then diverged:
@@ -80,6 +80,8 @@ below in the same push (it is part of every release, like the changelog).
   `new_page(bypass_csp=True)` as `tools/doctor.py` does. The labs expose `window.__lab`, `window.__water`, `window.__doctor`.
 - ShipKit merges pieces per material; the doctor needs `KIT.unmerged = true` (one mesh per piece + source line). After a
   model change run `py tools/doctor.py`; update the golden file (`--update`) only for intended changes.
+- Generated geometry must be wound counter-clockwise seen from outside (normals out). The doctor's `facing` check catches
+  open shells wound inward (`inverted` only sees closed shapes); check new ShipKit generators with it.
 - The e2e "look at the enemy" helper must close the gap in several passes: look sensitivity drops with the optics zoom.
 - Commits made from the Claude sandbox use `Claude <noreply@anthropic.com>` as author/committer (the sandbox flags other identities as unverified).
 

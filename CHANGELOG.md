@@ -5,6 +5,12 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.7.3] - 2026-10-20
+### Fixed
+- ORP Błyskawica's hull was see-through from outside (you looked at its inside): the lofted hull and the transom were wound inward and the deck surface faced down. Windings fixed in `js/shipkit/hull.js` (normals out and up), so the hull is lit correctly too. Forecastle-break bulkhead set 4 cm inside the plating (flicker), anchors stowed against the flared plating instead of buried in it. Lab thumbnail refreshed.
+### Added
+- Model doctor: **facing** check (error) for open one-sided surfaces whose faces point inward — what `inverted` could not see because it only tests closed shapes; a matching mistake on the test bench; golden file updated.
+
 ## [0.7.2] - 2026-10-19
 ### Changed
 - Documentation tidied for a fresh start: `docs/HANDOFF.md` (one labs summary, current decisions, next steps led by the ship transformer, new gotchas: CSP vs Playwright on lab pages, unmerged ShipKit for the doctor, zoom-aware e2e aiming, no parallel test runs) and `TODO.md` (labs list deduplicated and ordered, done summary includes the labs).
