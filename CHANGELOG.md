@@ -5,6 +5,16 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.6.0] - 2026-10-19
+### Added
+- **Model Doctor** (`labs/doctor.html`, `js/labs/modeldoctor.js`, `js/labs/doctor.js`): examines every lab ship and every game class model for 11 kinds of mistakes — nan, inside-out shapes, **gun lines of fire blocked by the own ship inside the training arc**, flicker (coplanar faces), floating pieces, pieces below the waterline, fittings through the hull side, over the in-game budget, hidden pieces, specks, needle triangles. Findings name the piece and the source line that added it; clicking one lights the pieces up (and trains the mount to the blocked bearing with the line of fire drawn). Check filter, touch tolerance, budget sliders, allow-list (`userData.doctorOk`), JSON report, test bench with one mistake per check. Ported from the Space repo's ModelDoctor and adapted to the game. Docs: `docs/doctor.md`.
+- `tools/doctor.py`: headless doctor with golden fingerprints and finding counts (`tools/doctor.golden.json`, `--update`, `--shots`); fails when a check stops finding its test-bench mistake.
+- ShipKit `KIT.unmerged`: one mesh per piece with its source line (for the doctor). Mounts carry their group and real training arcs.
+- Labs start screen: Tools section with the Model Doctor; Ship Lab bar links to it.
+### Fixed
+- ORP Błyskawica after the doctor's analysis: ventilators out of A's and Y's lines of fire; B mount on a barbette so it clears A's roof; mount training arcs limited where the barrels would hit the ship; torpedo tubes 1 clear of the 40 mm platform; wheelhouse windows follow the rounded front; flicker removed (deck plates, house bases, tube rings, searchlight lenses, shield hatch, shelter window, 40 mm pedestal, doors).
+- `tools/lab-check.py` restores the detail level before the screenshots and the thumbnail.
+
 ## [0.5.0] - 2026-10-19
 ### Added
 - **Labs**: `labs.html` start screen and the **Ship Lab** (`labs/ship.html`) — a model workshop separate from the game.

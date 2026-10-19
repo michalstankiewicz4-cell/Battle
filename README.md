@@ -27,10 +27,10 @@ Start screen: ship selection (destroyer / cruiser / battleship / submarine with 
 - **Waves:** each wave is larger and the AI aims better. After a wave you get +25% HP and one repair charge back. Score = damage dealt + a bonus per ship sunk.
 
 ## Labs
-[`labs.html`](https://michalstankiewicz4-cell.github.io/Battle/labs.html) — model workshop: detailed 1:1 reconstructions of real warships built from code. First: **ORP Błyskawica (1937)** in the [Ship Lab](https://michalstankiewicz4-cell.github.io/Battle/labs/ship.html) (orbit, presets, dimensions, part toggles, trainable mounts, sources). Research: `docs/ships/`.
+[`labs.html`](https://michalstankiewicz4-cell.github.io/Battle/labs.html) — model workshop: detailed 1:1 reconstructions of real warships built from code. First: **ORP Błyskawica (1937)** in the [Ship Lab](https://michalstankiewicz4-cell.github.io/Battle/labs/ship.html) (orbit, presets, dimensions, part toggles, trainable mounts, sources). Research: `docs/ships/`. The [Model Doctor](https://michalstankiewicz4-cell.github.io/Battle/labs/doctor.html) examines every lab and game ship for repeating model mistakes (inside-out shapes, flicker, floating pieces, guns firing into their own ship, fittings through the hull, over budget) — see `docs/doctor.md`.
 
 ## Testing
-`py tools/e2e.py` runs a headless smoke test of the whole game (needs `pip install playwright` and `playwright install chromium`); `py tools/og-image.py` regenerates the thumbnail; `py tools/lab-check.py` checks the labs. Details: "Testing" in `docs/ARCHITECTURE.md`.
+`py tools/e2e.py` runs a headless smoke test of the whole game (needs `pip install playwright` and `playwright install chromium`); `py tools/og-image.py` regenerates the thumbnail; `py tools/lab-check.py` checks the labs; `py tools/doctor.py` runs the model doctor against `tools/doctor.golden.json`. Details: "Testing" in `docs/ARCHITECTURE.md`.
 
 ## Structure
 - `js/main.js` – entry point; `js/core/` – app shell and mode state machine, camera rig, settings, storage, procedural sound,

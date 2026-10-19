@@ -7,7 +7,7 @@ what the project is, what the owner decided, how work is done and what comes nex
 **Keep this file current:** when a decision is made, a feature lands or the next steps change, update the sections
 below in the same push (it is part of every release, like the changelog).
 
-## Snapshot (state as of v0.5.0, 2026-10-19)
+## Snapshot (state as of v0.6.0, 2026-10-19)
 - **What:** *Steel Salvo* (working title) — free naval battle browser game, PvE against endless waves of AI warships.
   Live: <https://michalstankiewicz4-cell.github.io/Battle/> · repo: <https://github.com/michalstankiewicz4-cell/Battle> (branch `main`,
   GitHub Pages deploys every push via `.github/workflows/static.yml`).
@@ -18,6 +18,7 @@ below in the same push (it is part of every release, like the changelog).
   (Z/X), battery, periscope, depth charges; salvo camera (picture-in-picture); procedural sound; EN/PL UI; graphics
   settings with High/Light presets; SEO + thumbnail.
 - **Labs (v0.5.0):** `labs.html` + `labs/ship.html` — model lab like the owner's *Space* repo labs. First model: ORP Błyskawica as built 1937, 1:1 from published figures (ShipKit in `js/shipkit/`, research sheet `docs/ships/blyskawica.md`). Positions are reconstructed from text sources (image hosts are blocked in the sandbox). The owner said the lab's **water will be dealt with later** — do not change it unasked.
+- **Model doctor (v0.6.0):** `labs/doctor.html` + `py tools/doctor.py` (golden file `tools/doctor.golden.json`), port of the *Space* repo's ModelDoctor/kitcheck with naval checks (gun arcs, waterline, hull side, budget). Błyskawica is clean except the budget; the game models' findings are listed in `docs/doctor.md` and not fixed yet. **After any model change run `py tools/doctor.py`.**
 - **Origin:** started from the engine of the owner's other game *Capital Quarantine* (repo `VS`), then diverged:
   the pixel-art pipeline was dropped, the look is now realistic only.
 
@@ -32,6 +33,7 @@ below in the same push (it is part of every release, like the changelog).
 | 2026-10-18 | Gun camera on C ("view above the gun"), binoculars as a double round view; submarine with diving and a periscope instead of binoculars; salvo camera top-right. |
 | 2026-10-18 | SEO and all metadata in English; start-screen thumbnail. |
 | 2026-10-19 | Model lab ("like the Space labs"): detailed 1:1 real warships; first ORP Błyskawica (1937, the configuration known from warship games). Lab water: later. |
+| 2026-10-19 | Model doctor like in Space, adapted to the game, with all options; Błyskawica analysed and fixed. |
 
 ## How the owner works (preferences)
 - Talks in **Polish, short messages**; reply in Polish, concisely, and say what was and was not verified.
