@@ -5,6 +5,14 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.7.1] - 2026-10-19
+### Fixed
+- Game ship models, after the model doctor (all four now clean): AA mounts no longer stand inside the destroyer's bridge or overlap torpedo mounts, boats and the battleship's secondaries (they are placed where the whole mount fits, on deck or on a deckhouse roof); no flicker where deckhouses, funnels and torpedo mounts met the deck; no windlass under the forward turret; flagstaff out of the aft gun's line of fire; submarine sail nose flicker.
+- Turret training arcs where the barrels reached the own bridge or a pedestal: destroyer A ±145°, cruiser B ±130°, battleship B ±135° and Y ±145°.
+- `tools/e2e.py`: turning the camera toward the target now works at any optics zoom (the periscope torpedo check failed intermittently).
+### Changed
+- Model doctor: needle triangles of a single box (a wire) and of the hull's flat cap no longer count as slivers; golden file updated.
+
 ## [0.7.0] - 2026-10-19
 ### Added
 - **Water Lab** (`labs/water.html`): ORP Błyskawica at 1:1 on a Gerstner sea. Two variants side by side (split screen with a divider): sea state presets from calm to gale and long swell or custom (wave height, wavelength, choppiness, spread, direction, wave count); looks (North Atlantic, Baltic grey, tropical, storm slate or custom colours, sun glitter, ripples, crest foam, reflection, planar reflection of the ship, translucent water); ship interaction (speed up to 39 kn, heave/pitch/roll, bow wave and Kelvin waves, wake foam, hull foam, wet band on the hull, bow spray). Seven cameras incl. the bridge riding with the ship; light and time controls; water mesh detail, per-pixel normals and render settings; "Measure the cost of each effect"; settings remembered and copyable as JSON. Docs: `docs/water.md`.

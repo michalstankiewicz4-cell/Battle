@@ -1,6 +1,6 @@
 # TODO
 
-Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.7.0. Context: [`docs/HANDOFF.md`](docs/HANDOFF.md), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.7.1. Context: [`docs/HANDOFF.md`](docs/HANDOFF.md), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## Multiplayer (plan in [`docs/MULTIPLAYER.md`](docs/MULTIPLAYER.md))
 - [ ] P2 Decision: co-op PvE and/or PvP, player count, P2P or server (the menu entry "Multiplayer" exists as "Soon")
@@ -14,7 +14,7 @@ Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.7.0. Context: [`
 - [ ] P2 Water lab: ship shadows on water, persistent foam map, underwater view, shore interaction
 - [ ] P2 Check Błyskawica positions against a profile drawing; 1941/1942 configurations as variants
 - [ ] P2 Use ShipKit models in the game (LOD from the lab model; the doctor's budget check says 33k triangles / 99 draw calls now)
-- [ ] P2 Fix the game models' doctor findings (gun arcs into the bridge, flicker) — list in `docs/doctor.md`
+- [ ] P1 Ship "transformer": optimize a ShipKit model for the game (merge, LOD levels, instancing, culling of tiny parts, texture atlas) with before/after stats and the doctor's budget
 - [ ] P3 Doctor: mount sweep check, elevation/blast zones, unused materials
 - [ ] P3 More real ships in the lab
 

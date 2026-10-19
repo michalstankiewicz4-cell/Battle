@@ -46,9 +46,10 @@ NEAR = """(d) => { const w = __app.world, p = w.player;
   w.ships.filter(s => s.side === 'enemy' && s.alive).forEach((s, i) => { const a = p.th + .15 + i * .35;
     s.x = p.x + Math.sin(a) * (d + i * 20); s.z = p.z + Math.cos(a) * (d + i * 20); s.th = p.th + 1.6; }); }"""
 # Turn the gun camera toward the first enemy (simulated mouse movement).
+# (the look sensitivity drops with the optics' zoom, so close the gap in a few passes)
 LOOK = """() => { const A = __app, w = A.world, p = w.player; const e = w.ships.find(s => s.side === 'enemy' && s.alive);
-  const a = Math.atan2(e.x - p.x, e.z - p.z), d = Math.atan2(Math.sin(a - A.rig.gunYaw), Math.cos(a - A.rig.gunYaw));
-  A.input.onLook(-d / 0.0022, 0); }"""
+  for (let k = 0; k < 10; k++) { const a = Math.atan2(e.x - p.x, e.z - p.z), d = Math.atan2(Math.sin(a - A.rig.gunYaw), Math.cos(a - A.rig.gunYaw));
+    A.input.onLook(-d / 0.0022, 0); } }"""
 
 results = []
 def check(name, ok, info=''):
