@@ -5,6 +5,10 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.7.2] - 2026-10-19
+### Changed
+- Documentation tidied for a fresh start: `docs/HANDOFF.md` (one labs summary, current decisions, next steps led by the ship transformer, new gotchas: CSP vs Playwright on lab pages, unmerged ShipKit for the doctor, zoom-aware e2e aiming, no parallel test runs) and `TODO.md` (labs list deduplicated and ordered, done summary includes the labs).
+
 ## [0.7.1] - 2026-10-19
 ### Fixed
 - Game ship models, after the model doctor (all four now clean): AA mounts no longer stand inside the destroyer's bridge or overlap torpedo mounts, boats and the battleship's secondaries (they are placed where the whole mount fits, on deck or on a deckhouse roof); no flicker where deckhouses, funnels and torpedo mounts met the deck; no windlass under the forward turret; flagstaff out of the aft gun's line of fire; submarine sail nose flicker.

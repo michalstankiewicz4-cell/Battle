@@ -17,9 +17,12 @@ below in the same push (it is part of every release, like the changelog).
   repair; fires and citadels; islands as cover; enemy AI with waves; gun camera with binoculars (C); submarine diving
   (Z/X), battery, periscope, depth charges; salvo camera (picture-in-picture); procedural sound; EN/PL UI; graphics
   settings with High/Light presets; SEO + thumbnail.
-- **Labs (v0.5.0):** `labs.html` + `labs/ship.html` — model lab like the owner's *Space* repo labs. First model: ORP Błyskawica as built 1937, 1:1 from published figures (ShipKit in `js/shipkit/`, research sheet `docs/ships/blyskawica.md`). Positions are reconstructed from text sources (image hosts are blocked in the sandbox). The owner said the lab's **water will be dealt with later** — do not change it unasked.
-- **Model doctor (v0.6.0):** `labs/doctor.html` + `py tools/doctor.py` (golden file `tools/doctor.golden.json`), port of the *Space* repo's ModelDoctor/kitcheck with naval checks (gun arcs, waterline, hull side, budget). Błyskawica is clean except the budget; the four game models are clean since v0.7.1 (AA placement, deck planes, narrower turret arcs). **After any model change run `py tools/doctor.py`.**
-- **Water lab (v0.7.0):** `labs/water.html` (`docs/water.md`): Błyskawica on a Gerstner sea, variants A/B in split screen, cost of each effect. The owner will pick a variant ("Copy settings (JSON)"); then the sea goes into the game. Main menu links to the ship lab, water lab and all labs.
+- **Labs** (`labs.html`, linked from the main menu): **Ship Lab** (`labs/ship.html`) — ORP Błyskawica as built 1937, 1:1
+  from published figures (ShipKit `js/shipkit/`, research `docs/ships/blyskawica.md`; positions reconstructed from text,
+  image hosts are blocked in the sandbox). **Model Doctor** (`labs/doctor.html`, `py tools/doctor.py`, golden
+  `tools/doctor.golden.json`, `docs/doctor.md`) — 11 checks incl. gun arcs, waterline, hull side, budget; every lab and
+  game model is clean, Błyskawica only exceeds the in-game budget (33k triangles, 99 draw calls). **Water Lab**
+  (`labs/water.html`, WaterKit, `docs/water.md`) — Gerstner sea, variants A/B side by side, cost of each effect.
 - **Origin:** started from the engine of the owner's other game *Capital Quarantine* (repo `VS`), then diverged:
   the pixel-art pipeline was dropped, the look is now realistic only.
 
@@ -33,10 +36,10 @@ below in the same push (it is part of every release, like the changelog).
 | 2026-10-18 | **Realistic graphics only.** Alternative styles (pixel, comic, watercolour) were tried and removed. Performance goes through settings (resolution, shadows, AA, glow, effects, water) and High/Light presets, not new styles. |
 | 2026-10-18 | Gun camera on C ("view above the gun"), binoculars as a double round view; submarine with diving and a periscope instead of binoculars; salvo camera top-right. |
 | 2026-10-18 | SEO and all metadata in English; start-screen thumbnail. |
-| 2026-10-19 | Model lab ("like the Space labs"): detailed 1:1 real warships; first ORP Błyskawica (1937, the configuration known from warship games). Lab water: later. |
+| 2026-10-19 | Model lab ("like the Space labs"): detailed 1:1 real warships; first ORP Błyskawica (1937, the configuration known from warship games). |
 | 2026-10-19 | Model doctor like in Space, adapted to the game, with all options; Błyskawica analysed and fixed. |
-| 2026-10-19 | Fix the ships with the doctor first, then a "transformer" that optimizes a ship so it does not choke the GPU and the browser (next). |
-| 2026-10-19 | Water lab first (variants of look and ship–water interaction), Błyskawica into the game after. Labs linked from the main menu. |
+| 2026-10-19 | Water lab before putting Błyskawica into the game; labs linked from the main menu. |
+| 2026-10-19 | Ships fixed with the doctor (done, v0.7.1); next a **"transformer"** that optimizes a ship so it does not choke the GPU and the browser. |
 
 ## How the owner works (preferences)
 - Talks in **Polish, short messages**; reply in Polish, concisely, and say what was and was not verified.
@@ -48,7 +51,7 @@ below in the same push (it is part of every release, like the changelog).
 ## How to work in this repo
 1. `git pull --rebase origin main` (the owner sometimes edits workflows on GitHub).
 2. Make the change; keep the folder structure (file map in `ARCHITECTURE.md`); new UI strings in **both** `js/i18n/en.js` and `pl.js`.
-3. Test: `py tools/e2e.py` (headless, ~10–20 min without a GPU; light graphics by default). For a new feature add a check there.
+3. Test: `py tools/e2e.py` (game, headless, ~10–20 min without a GPU); `py tools/lab-check.py` (labs); `py tools/doctor.py` (models). Do not run them in parallel (CPU contention makes timing checks flaky). For a new feature add a check.
 4. Bump `js/version.js` (PATCH fix, MINOR feature, MAJOR big change), add the `CHANGELOG.md` entry, update docs
    (`README.md` for players, `ARCHITECTURE.md` for code, `TODO.md`, **this file**), run `node tools/check-version.mjs`.
 5. Commit (end the message with the Co-Authored-By line used in history) and push to `main`; wait for the Pages workflow
@@ -73,15 +76,22 @@ below in the same push (it is part of every release, like the changelog).
 - CSP forbids inline styles: set sizes via `el.style.*` (CSSOM), never `style=` attributes; no `innerHTML`.
 - GitHub push from the Claude sandbox needs the Claude GitHub App on the repo; a 403 means access lapsed — ask the owner to
   reconnect GitHub in claude.ai settings (Connectors), do not work around it.
+- Lab pages (strict CSP) refuse Playwright's string predicates (`wait_for_function('…')` → "unsafe-eval"): open them with
+  `new_page(bypass_csp=True)` as `tools/doctor.py` does. The labs expose `window.__lab`, `window.__water`, `window.__doctor`.
+- ShipKit merges pieces per material; the doctor needs `KIT.unmerged = true` (one mesh per piece + source line). After a
+  model change run `py tools/doctor.py`; update the golden file (`--update`) only for intended changes.
+- The e2e "look at the enemy" helper must close the gap in several passes: look sensitivity drops with the optics zoom.
 - Commits made from the Claude sandbox use `Claude <noreply@anthropic.com>` as author/committer (the sandbox flags other identities as unverified).
 
 ## Next steps (from TODO, highest first)
-1. **P1** Balance on a real GPU (class HP, reloads, dispersion, AI skill curve, wave size); real-GPU performance check.
-   Hint from `tools/e2e.py`: a destroyer or a surfaced submarine placed 0.7 km from wave 1 (two destroyers) sinks within ~15 s while hitting little — early AI is probably too accurate / too deadly at close range.
-2. **P1** Spotting / detection for surface ships (concealment, minimap shows only spotted ships).
-3. **P1** Graphics: shadow-map size option, automatic Light preset when FPS stays low.
-4. **P2** Destroyer smoke screen, cruiser hydro/radar; AP/HE shells; module damage; smarter AI.
-5. **P2** Enemy submarines, sonar ping; gun-camera lead indicator.
+1. **P1 Ship "transformer"** (owner's next request): turn a ShipKit lab model into a game-ready one — merge per material,
+   LOD levels by distance, drop pieces too small to see, instancing of repeated fittings, maybe a texture atlas; show
+   before/after triangles, draw calls and fps, and check the result with the doctor's budget.
+2. **P1** The owner picks a sea in the Water Lab ("Copy settings (JSON)") → that sea goes into the game.
+3. **P1** Błyskawica as the player's destroyer (transformer output, scale 1 u ≈ 10 m, mounts and tubes mapped to the game).
+4. **P1** Balance on a real GPU (class HP, reloads, dispersion, AI skill curve, wave size); real-GPU performance check.
+   Hint from `tools/e2e.py`: early AI seems too accurate / too deadly at close range.
+5. **P1** Spotting / detection for surface ships; graphics: shadow-map size option, auto Light preset at low FPS.
 6. Owner tasks: Google Search Console + sitemap; `vX.Y.Z` tags in Releases.
 
 ## Open questions for the owner

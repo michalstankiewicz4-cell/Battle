@@ -9,12 +9,11 @@ Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.7.1. Context: [`
 - [ ] P2 Lobby (room code), snapshots, interpolation, two-client tests
 
 ## Labs
+- [ ] P1 Ship "transformer": optimize a ShipKit model for the game (merge, LOD levels, instancing, culling of tiny parts, texture atlas) with before/after stats and the doctor's budget (now 33k triangles / 99 draw calls)
 - [ ] P1 Owner picks a water variant in the water lab → put that sea into the game (Gerstner waves shared by ships and the shader, wake, bow wave, foam; cheaper settings for Light)
-- [ ] P1 Błyskawica as the player's destroyer in the game (LOD from the doctor's budget, scale, mounts, tubes)
+- [ ] P1 Błyskawica as the player's destroyer in the game (transformer output, scale, mounts, tubes)
 - [ ] P2 Water lab: ship shadows on water, persistent foam map, underwater view, shore interaction
 - [ ] P2 Check Błyskawica positions against a profile drawing; 1941/1942 configurations as variants
-- [ ] P2 Use ShipKit models in the game (LOD from the lab model; the doctor's budget check says 33k triangles / 99 draw calls now)
-- [ ] P1 Ship "transformer": optimize a ShipKit model for the game (merge, LOD levels, instancing, culling of tiny parts, texture atlas) with before/after stats and the doctor's budget
 - [ ] P3 Doctor: mount sweep check, elevation/blast zones, unused materials
 - [ ] P3 More real ships in the lab
 
@@ -53,4 +52,4 @@ Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.7.1. Context: [`
 - [ ] Final game name ("Steel Salvo" is a working title) — then update title/SEO/manifest/thumbnail
 
 ## Done (summary)
-Ocean shader, islands, four ship classes, ballistic gunnery with dispersion and island cover, torpedoes with warning, repair party, fires and citadels, enemy AI, endless waves, HUD with minimap, menus with ship selection, options, procedural sound, GitHub Pages deploy, English UI with Polish option. Realistic graphics with detailed models and graphics settings (presets High/Light), gun camera with binoculars, submarine with diving, battery, periscope and depth charges, salvo camera, English SEO with thumbnail and icons, headless e2e test. Details: `CHANGELOG.md`.
+Ocean shader, islands, four ship classes, ballistic gunnery with dispersion and island cover, torpedoes with warning, repair party, fires and citadels, enemy AI, endless waves, HUD with minimap, menus with ship selection, options, procedural sound, GitHub Pages deploy, English UI with Polish option. Realistic graphics with detailed models and graphics settings (presets High/Light), gun camera with binoculars, submarine with diving, battery, periscope and depth charges, salvo camera, English SEO with thumbnail and icons, headless e2e test. Labs: Ship Lab (ORP Błyskawica 1:1, ShipKit), Model Doctor (all models clean), Water Lab (Gerstner sea, A/B compare); labs linked from the main menu. Details: `CHANGELOG.md`.
