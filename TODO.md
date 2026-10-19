@@ -1,12 +1,18 @@
 # TODO
 
-Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.4.2. Context: [`docs/HANDOFF.md`](docs/HANDOFF.md), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.5.0. Context: [`docs/HANDOFF.md`](docs/HANDOFF.md), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## Multiplayer (plan in [`docs/MULTIPLAYER.md`](docs/MULTIPLAYER.md))
 - [ ] P2 Decision: co-op PvE and/or PvP, player count, P2P or server (the menu entry "Multiplayer" exists as "Soon")
 - [ ] P2 Refactor: pure state + `step()` without three.js, deterministic RNG (shell dispersion, AI, spawns)
 - [ ] P2 Transport layer + WebRTC (opt-in, CSP change, README note)
 - [ ] P2 Lobby (room code), snapshots, interpolation, two-client tests
+
+## Labs
+- [ ] P1 Lab water (owner: "later")
+- [ ] P2 Check Błyskawica positions against a profile drawing; 1941/1942 configurations as variants
+- [ ] P2 Use ShipKit models in the game (LOD from the lab model)
+- [ ] P3 More real ships in the lab
 
 ## Gameplay
 - [ ] P1 Balance on a real GPU: class HP, reloads, dispersion, AI skill curve, wave size

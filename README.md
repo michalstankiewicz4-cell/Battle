@@ -26,8 +26,11 @@ Start screen: ship selection (destroyer / cruiser / battleship / submarine with 
 - **Submarine:** Z rises, X dives (surface → periscope depth → deep). Shells cannot reach you below the surface and torpedoes cannot reach you deep, but the battery runs down under water and destroyers drop depth charges when they find you. Torpedoes fire from the bow and stern; the deck gun only works on the surface. C gives the periscope (not when deep).
 - **Waves:** each wave is larger and the AI aims better. After a wave you get +25% HP and one repair charge back. Score = damage dealt + a bonus per ship sunk.
 
+## Labs
+[`labs.html`](https://michalstankiewicz4-cell.github.io/Battle/labs.html) — model workshop: detailed 1:1 reconstructions of real warships built from code. First: **ORP Błyskawica (1937)** in the [Ship Lab](https://michalstankiewicz4-cell.github.io/Battle/labs/ship.html) (orbit, presets, dimensions, part toggles, trainable mounts, sources). Research: `docs/ships/`.
+
 ## Testing
-`py tools/e2e.py` runs a headless smoke test of the whole game (needs `pip install playwright` and `playwright install chromium`); `py tools/og-image.py` regenerates the thumbnail. Details: "Testing" in `docs/ARCHITECTURE.md`.
+`py tools/e2e.py` runs a headless smoke test of the whole game (needs `pip install playwright` and `playwright install chromium`); `py tools/og-image.py` regenerates the thumbnail; `py tools/lab-check.py` checks the labs. Details: "Testing" in `docs/ARCHITECTURE.md`.
 
 ## Structure
 - `js/main.js` – entry point; `js/core/` – app shell and mode state machine, camera rig, settings, storage, procedural sound,
@@ -36,7 +39,8 @@ Start screen: ship selection (destroyer / cruiser / battleship / submarine with 
 - `js/input/` – keyboard and mouse,
 - `js/i18n/` – English (default) and Polish strings,
 - `js/ui/` – menus, options and HUD,
-- `tools/` – version check, end-to-end test, thumbnail generator; `assets/` – thumbnail and icons,
+- `labs.html`, `labs/`, `js/labs/`, `js/shipkit/`, `css/lab.css` – model labs and the ShipKit model builder,
+- `tools/` – version check, lab check, end-to-end test, thumbnail generator; `assets/` – thumbnail and icons,
 - `vendor/` – three.js 0.186.1 (MIT) vendored locally; SHA-256 sums in `vendor/SHA256.txt`.
 
 ## Security and privacy

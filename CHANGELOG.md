@@ -5,6 +5,14 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.5.0] - 2026-10-19
+### Added
+- **Labs**: `labs.html` start screen and the **Ship Lab** (`labs/ship.html`) — a model workshop separate from the game.
+- First model: **ORP Błyskawica as built in 1937**, reconstructed 1:1 (114 m × 11.26 m) from published figures: lofted hull with forecastle break, raked stem, boot-top and anti-fouling; A/X/Y twin and B single 120 mm Bofors mounts, two triple torpedo mounts, 40 mm and 13.2 mm AA, bridge with rangefinder and searchlight towers, raked funnel with cap, tripod foremast and mainmast with rigging, boats, rails, mine rails, depth-charge racks, propellers, rudder, ensign and stern name. Research sheet with sources: `docs/ships/blyskawica.md`.
+- Viewer: orbit camera with presets, sea or dry dock, dimension labels, 10 m grid, wireframe, sun and exposure controls, part toggles, train/elevate the mounts and "Action stations", detail level, model stats.
+- **ShipKit** (`js/shipkit/`): hull lofting from line functions, reusable fittings, per-material merged parts.
+- `tools/lab-check.py`: headless lab check with screenshots (`--thumb` regenerates `assets/labs/ship.jpg`); labs in the sitemap.
+
 ## [0.4.2] - 2026-10-18
 ### Added
 - `docs/HANDOFF.md`: context-recovery note for resuming work without the previous conversation (state, the owner's decisions, working preferences, workflow, gotchas, next steps, open questions); `CLAUDE.md` and the README point to it first.
