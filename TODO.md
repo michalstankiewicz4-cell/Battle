@@ -14,7 +14,8 @@ Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.8.1 Context: [`d
 - [x] Rain (streaks, rings on the sea, wet ship, curtains on the horizon, squalls) and sea fog with visibility in km (v0.10.0)
 - [x] Time of day: dawn, dusk, night with stars and the moon; colour saturation in the game's options, vibrance in the Look Lab (v0.11.0)
 - [x] Lightning and thunder, navigation lights, gun flashes lighting ship and sea, SOS by searchlight shutters (Look Lab, Ship Lab) (v0.12.0)
-- [ ] P1 **Land and terrain lab** (owner, next): procedural land mixed with the sea (coasts, beaches, cliffs, shallows), choice of a wrap-around map (torus: sail out on one side, in on the other) or a map bounded by barriers
+- [x] Land Lab v0.13.0: procedural land and sea (0–100 %), five shapes, erosion, beaches, shallows and surf, wrap-around (torus) or bounded map (buoys, mountains, wall), sailing with grounding
+- [ ] P1 Land Lab next: rivers and lakes, cliffs and rocky shores (overhang-free cliff faces), harbours and towns, vegetation (trees as instanced impostors), ground vehicles / free walk for the 100 % land case; terrain LOD beyond the far grid
 - [ ] P2 Environment: fog banks, spray in high wind; sky and weather panels in the water lab
 - [ ] P1 Owner picks an ageing level and a look → into the game's materials and graphics settings (lens effects for first-person views)
 - [ ] P1 Procedural destruction on the transformer's hitboxes: damage model, spread to neighbours, debris, fire and smoke

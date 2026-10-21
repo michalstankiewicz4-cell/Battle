@@ -43,4 +43,12 @@
       <image:loc>https://michalstankiewicz4-cell.github.io/Battle/assets/labs/look.jpg</image:loc>
     </image:image>
   </url>
+  <url>
+    <loc>https://michalstankiewicz4-cell.github.io/Battle/labs/land.html</loc>
+    <lastmod>2026-10-21</lastmod>
+    <priority>0.5</priority>
+    <image:image>
+      <image:loc>https://michalstankiewicz4-cell.github.io/Battle/assets/labs/land.jpg</image:loc>
+    </image:image>
+  </url>
 </urlset>

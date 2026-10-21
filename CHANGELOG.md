@@ -5,6 +5,11 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.13.0] - 2026-10-21
+### Added
+- **Land Lab** (`labs/land.html`, owner's request): procedural land and sea from a seed, **0 to 100 % land** (exact share), shapes Islands / Archipelago / Coast / Fjords / Highlands, highest peaks, sea depth, roughness, droplet **erosion**; map 4–32 km, 256²–1024²; **wrap-around (torus)** map — sail out of one edge and in at the other, land and waves continue without a seam — or a **bounded** map with a buoy line, a mountain range or an invisible wall. Beaches, wet sand, muted grass, heather, scrub, rock, snow; turquoise shallows, surf, waves dying on the shore. Chart (click to move), ORP Błyskawica from the transformer with engine orders, rudder, grounding and barriers; cameras Chase, Bridge, Overview, Free flight; sky and weather; fog thinning with height. Docs: `docs/land.md`.
+- **LandKit** (`js/labs/landkit.js`): `generateTerrain`, `heightTexture`, `terrainMeshes` (two camera-centred grids snapped to the heightmap, displaced in the shader, two draw calls), `sampleHeight`, `barrierBuoys`, `GLSL_LAND`; WaterKit `waterMaterial(u, { land })` for shallows and surf.
+- Labs page: Land and coast tile; sky, weather and time of day point to the Look Lab. `tools/lab-check.py` checks the land lab (seam, land share, 100 % land, barrier, wrap).
 ## [0.12.0] - 2026-10-21
 ### Added
 - **Signal lamp** (owner's request): the searchlight behind ORP Błyskawica's bridge keys Morse with a round venetian shutter fitted to the lamp — a ring on the lens rim and horizontal slats cut to the circle, swinging open and shut (~60 ms) with the operator's lever, a glow and a beam ahead only while open. Ship Lab: "Signal with the searchlight" (SOS or any short text, camera moves in front of the lamp); Look Lab: "Signal SOS".
