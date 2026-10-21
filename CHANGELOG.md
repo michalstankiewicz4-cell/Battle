@@ -5,6 +5,16 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.12.0] - 2026-10-21
+### Added
+- **Signal lamp** (owner's request): the searchlight behind ORP Błyskawica's bridge keys Morse with a round venetian shutter fitted to the lamp — a ring on the lens rim and horizontal slats cut to the circle, swinging open and shut (~60 ms) with the operator's lever, a glow and a beam ahead only while open. Ship Lab: "Signal with the searchlight" (SOS or any short text, camera moves in front of the lamp); Look Lab: "Signal SOS".
+- **Navigation lights** (masthead, green starboard / red port side lights, stern light, each only over its arc), on from sunset to sunrise or on/off.
+- **Gun flashes**: "Fire a salvo (F)" trains the 120 mm mounts to one side and fires; flash and burning-gas cone at every muzzle, a short orange light on the ship and the sea.
+- **Lightning and thunder**: bolts with branches and return strokes 1.5–6 km away lighting the clouds, the scene and the sea; frequency slider (Storm has it), "Lightning strike now", optional thunder sound after distance ÷ 343 m/s.
+- `js/shipkit/lights.js` (`navLights`, `gunFlashes`, `signalLamp`, `morse`); ORP Błyskawica returns light `anchors` (no geometry change); WaterKit `uFlash`; SkyKit `uSkyBolt`; lab checks for the signal shutters, the salvo and a strike.
+### Changed
+- Plans: fixed simulation tick + render interpolation noted for multiplayer (`docs/MULTIPLAYER.md` §7, TODO P2); next lab: land and terrain (torus map or barriers).
+
 ## [0.11.0] - 2026-10-21
 ### Added
 - **Time of day** in the Look Lab: a time slider (solar time at 55° N in late October) and Dawn / Morning / Noon / Afternoon / Dusk / Night buttons; the sun can go below the horizon (−18°). Dawn and dusk glow along the horizon, rose-lit clouds; stars from nautical twilight (hidden by cloud); the **moon** (new … full) with disc, halo, moonlit cloud edges, a moon path on the sea and blue moonlight with shadows; water, foam and fog darken with the daylight; searchlights glow at night; eye adaptation with manual exposure.

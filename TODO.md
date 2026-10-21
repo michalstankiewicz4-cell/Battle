@@ -6,13 +6,16 @@ Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.8.1 Context: [`d
 - [ ] P2 Decision: co-op PvE and/or PvP, player count, P2P or server (the menu entry "Multiplayer" exists as "Soon")
 - [ ] P2 Refactor: pure state + `step()` without three.js, deterministic RNG (shell dispersion, AI, spawns)
 - [ ] P2 Transport layer + WebRTC (opt-in, CSP change, README note)
+- [ ] P2 Fixed simulation tick (30/60 Hz accumulator) + render interpolation between ticks; state hash for desync checks (see MULTIPLAYER.md §7)
 - [ ] P2 Lobby (room code), snapshots, interpolation, two-client tests
 
 ## Labs (map: [`docs/labs.md`](docs/labs.md))
 - [x] Look Lab v0.9.0: procedural ageing with baked shading, cloudy sky and weather (wind → sea), tone/exposure/bloom, lens effects, bodycam look, automatic resolution
 - [x] Rain (streaks, rings on the sea, wet ship, curtains on the horizon, squalls) and sea fog with visibility in km (v0.10.0)
 - [x] Time of day: dawn, dusk, night with stars and the moon; colour saturation in the game's options, vibrance in the Look Lab (v0.11.0)
-- [ ] P1 Environment: fog banks, thunder and lightning, spray in high wind, ship lights at night (navigation lights, gun flashes lighting the scene); sky and weather panels in the water lab
+- [x] Lightning and thunder, navigation lights, gun flashes lighting ship and sea, SOS by searchlight shutters (Look Lab, Ship Lab) (v0.12.0)
+- [ ] P1 **Land and terrain lab** (owner, next): procedural land mixed with the sea (coasts, beaches, cliffs, shallows), choice of a wrap-around map (torus: sail out on one side, in on the other) or a map bounded by barriers
+- [ ] P2 Environment: fog banks, spray in high wind; sky and weather panels in the water lab
 - [ ] P1 Owner picks an ageing level and a look → into the game's materials and graphics settings (lens effects for first-person views)
 - [ ] P1 Procedural destruction on the transformer's hitboxes: damage model, spread to neighbours, debris, fire and smoke
 - [ ] P2 Transformer: instancing of repeated fittings and merged mount materials on LOD0 (~30 draw calls)
