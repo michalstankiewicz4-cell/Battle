@@ -86,6 +86,12 @@ def main():
             pg.click('.screen:not([hidden]) .stack button >> nth=2'); pg.click('.screen:not([hidden]) >> text=English'); pg.click('.screen:not([hidden]) .stack button >> nth=0')
             check('language switch', pl.startswith('Wypłyń') and pg.inner_text('.screen:not([hidden]) .stack button >> nth=0').startswith('Set sail'), pl)
 
+            # colour saturation (Options > Graphics) reaches the post shader
+            pg.evaluate("__app.settings.update((x) => { x.gfx.sat = 0.5; })"); pg.evaluate('__step(2)')
+            sat = pg.evaluate('__app.pipe.mat.uniforms.sat.value')
+            pg.evaluate("__app.settings.update((x) => { x.gfx.sat = 1; })")
+            check('colour saturation setting', abs(sat - 0.5) < 1e-6, str(sat))
+
             # every class fights a wave
             for cls in ['dd', 'ca', 'bb', 'ss']:
                 pg.evaluate(f"__app.startRun('{cls}')"); pg.evaluate(SIM, [70, {}]); pg.evaluate(NEAR, 70)

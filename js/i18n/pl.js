@@ -27,7 +27,7 @@ export default {
   'opt.scale': 'Rozdzielczość renderu', 'opt.fx': 'Gęstość efektów', 'opt.shadows': 'Cienie', 'opt.aa': 'Wygładzanie krawędzi',
   'opt.bloom': 'Poświata (bloom)', 'opt.water': 'Szczegółowa woda (zmarszczki, piana)',
   'opt.title': 'Opcje', 'opt.lang': 'Język', 'opt.gfx': 'Grafika', 
-  'opt.bright': 'Jasność', 'opt.fps': 'Pokaż FPS', 'opt.audio': 'Dźwięk', 'opt.vol': 'Głośność',
+  'opt.bright': 'Jasność', 'opt.sat': 'Nasycenie barw', 'opt.fps': 'Pokaż FPS', 'opt.audio': 'Dźwięk', 'opt.vol': 'Głośność',
   'opt.mouse': 'Mysz', 'opt.zoom': 'Czułość zoomu', 'opt.rot': 'Czułość obrotu', 'opt.reset': 'Przywróć domyślne',
   'cls.dd': 'Niszczyciel', 'cls.ca': 'Krążownik', 'cls.bb': 'Pancernik',
   'cls.short.dd': 'DD', 'cls.short.ca': 'CA', 'cls.short.bb': 'BB',

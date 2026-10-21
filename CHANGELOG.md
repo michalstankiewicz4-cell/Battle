@@ -5,6 +5,12 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.11.0] - 2026-10-21
+### Added
+- **Time of day** in the Look Lab: a time slider (solar time at 55° N in late October) and Dawn / Morning / Noon / Afternoon / Dusk / Night buttons; the sun can go below the horizon (−18°). Dawn and dusk glow along the horizon, rose-lit clouds; stars from nautical twilight (hidden by cloud); the **moon** (new … full) with disc, halo, moonlit cloud edges, a moon path on the sea and blue moonlight with shadows; water, foam and fog darken with the daylight; searchlights glow at night; eye adaptation with manual exposure.
+- **Colour saturation** in the game's Options > Graphics (0–160 %, Polish "Nasycenie barw"); **Vibrance** slider in the Look Lab.
+- SkyKit: `sunAt(hour, lat, day)`; WaterKit: `uLight`. e2e checks that the saturation setting reaches the post shader.
+
 ## [0.10.0] - 2026-10-21
 ### Added
 - **Rain** in the Look Lab (`js/labs/rainkit.js`): falling streaks around the camera in one draw call (up to 24k drops, slanted by the wind), rings from drops on the sea, a rougher sea with a duller glitter, the ship gets wet (darker paint, glossy upward faces, water running down the sides, sheltered spots stay dry), dark rain curtains on the horizon (also in the sea's reflections), the sun hidden; **squalls** make the rain come and go; **rain on the lens** adds droplets.

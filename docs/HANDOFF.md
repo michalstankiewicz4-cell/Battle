@@ -7,7 +7,7 @@ what the project is, what the owner decided, how work is done and what comes nex
 **Keep this file current:** when a decision is made, a feature lands or the next steps change, update the sections
 below in the same push (it is part of every release, like the changelog).
 
-## Snapshot (state as of v0.10.0, 2026-10-21)
+## Snapshot (state as of v0.11.0, 2026-10-21)
 - **What:** *Steel Salvo* (working title) — free naval battle browser game, PvE against endless waves of AI warships.
   Live: <https://michalstankiewicz4-cell.github.io/Battle/> · repo: <https://github.com/michalstankiewicz4-cell/Battle> (branch `main`,
   GitHub Pages deploys every push via `.github/workflows/static.yml`).
@@ -16,7 +16,7 @@ below in the same push (it is part of every release, like the changelog).
 - **Playable:** 4 classes (destroyer, cruiser, battleship, submarine); ballistic gunnery with lead and dispersion; torpedoes;
   repair; fires and citadels; islands as cover; enemy AI with waves; gun camera with binoculars (C); submarine diving
   (Z/X), battery, periscope, depth charges; salvo camera (picture-in-picture); procedural sound; EN/PL UI; graphics
-  settings with High/Light presets; SEO + thumbnail.
+  settings with High/Light presets (and colour saturation); SEO + thumbnail.
 - **Labs map:** `docs/labs.md` — five areas (models, environment, graphics and filters, special effects, tools); current
   focus: water and weather, graphics and filters, Błyskawica; the rest is "soon" on the labs page.
 - **Labs** (`labs.html`, linked from the main menu): **Ship Lab** (`labs/ship.html`) — ORP Błyskawica as built 1937, 1:1
@@ -27,8 +27,8 @@ below in the same push (it is part of every release, like the changelog).
   (`labs/water.html`, WaterKit, `docs/water.md`) — Gerstner sea, variants A/B side by side, cost of each effect. **Transformer** (`labs/transform.html`,
   `js/shipkit/transform.js`, `docs/transform.md`) — LOD0/1/2 (65 / 31 / 7 draw calls), 458 hitboxes for procedural
   destruction (the owner wants many), damage texture read by the materials; fleet of 24: 144 draw calls vs 1,741. **Look Lab** (`labs/look.html`, `docs/look.md`) — procedural ageing by surface
-  (`js/shipkit/ageing.js`, baked occlusion/edges, no textures), cloudy sky with seven weathers that also set the sea, rain with squalls and sea fog
-  (`js/labs/skykit.js`, `js/labs/rainkit.js`), camera look with presets Game clean / Cinematic / Bodycam (`js/render/look.js`), split compare, auto resolution.
+  (`js/shipkit/ageing.js`, baked occlusion/edges, no textures), cloudy sky with seven weathers that also set the sea, rain with squalls and sea fog,
+  time of day from dawn to a moonlit night (`js/labs/skykit.js`, `js/labs/rainkit.js`), camera look with presets Game clean / Cinematic / Bodycam (`js/render/look.js`), split compare, auto resolution.
 - **Origin:** started from the engine of the owner's other game *Capital Quarantine* (repo `VS`), then diverged:
   the pixel-art pipeline was dropped, the look is now realistic only.
 
@@ -102,7 +102,7 @@ below in the same push (it is part of every release, like the changelog).
 
 ## Next steps (from TODO, highest first)
 0. **P1** Owner looks at the Look Lab on a real GPU: which wear level and look go into the game, confirm lens effects only
-   for first-person views, which weathers the game gets; then time of day (dusk, night) in the environment.
+   for first-person views, which weathers and times of day the game gets; then night lighting (navigation lights, gun flashes) and lightning.
 1. **P1** Procedural destruction on top of the transformer's hitboxes (damage model, spread to neighbours, falling
    debris, fire/smoke emitters) — owner's plan; scale decision: game to metres or model ×0.1 (asked 2026-10-21).
 2. **P1** The owner picks a sea in the Water Lab ("Copy settings (JSON)") → that sea goes into the game.
