@@ -5,6 +5,13 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.7.4] - 2026-10-21
+### Fixed
+- ORP Błyskawica: V-shaped hole in the stern — the transom fan now closes across the top from deck edge to deck edge; the transom has its own vertices (flat shading, no rings from the sides' normals).
+- Cowl ventilators: the bend now starts on the pipe and the mouth faces the intended way (it pointed backwards and sat beside the pipe); flared bell mouth with a dark inside.
+### Added
+- Model doctor: **seethrough** check (error) — views the model from 26 directions with ray grids and reports pieces whose back side is visible from outside (holes, missing caps, gaps); test bench case (a box with a missing side); golden file updated.
+
 ## [0.7.3] - 2026-10-20
 ### Fixed
 - ORP Błyskawica's hull was see-through from outside (you looked at its inside): the lofted hull and the transom were wound inward and the deck surface faced down. Windings fixed in `js/shipkit/hull.js` (normals out and up), so the hull is lit correctly too. Forecastle-break bulkhead set 4 cm inside the plating (flicker), anchors stowed against the flared plating instead of buried in it. Lab thumbnail refreshed.
