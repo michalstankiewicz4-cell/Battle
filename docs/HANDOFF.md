@@ -7,7 +7,7 @@ what the project is, what the owner decided, how work is done and what comes nex
 **Keep this file current:** when a decision is made, a feature lands or the next steps change, update the sections
 below in the same push (it is part of every release, like the changelog).
 
-## Snapshot (state as of v0.8.1, 2026-10-21)
+## Snapshot (state as of v0.9.0, 2026-10-21)
 - **What:** *Steel Salvo* (working title) — free naval battle browser game, PvE against endless waves of AI warships.
   Live: <https://michalstankiewicz4-cell.github.io/Battle/> · repo: <https://github.com/michalstankiewicz4-cell/Battle> (branch `main`,
   GitHub Pages deploys every push via `.github/workflows/static.yml`).
@@ -26,7 +26,9 @@ below in the same push (it is part of every release, like the changelog).
   game model is clean, Błyskawica only exceeds the in-game budget (33k triangles, 99 draw calls). **Water Lab**
   (`labs/water.html`, WaterKit, `docs/water.md`) — Gerstner sea, variants A/B side by side, cost of each effect. **Transformer** (`labs/transform.html`,
   `js/shipkit/transform.js`, `docs/transform.md`) — LOD0/1/2 (65 / 31 / 7 draw calls), 458 hitboxes for procedural
-  destruction (the owner wants many), damage texture read by the materials; fleet of 24: 144 draw calls vs 1,741.
+  destruction (the owner wants many), damage texture read by the materials; fleet of 24: 144 draw calls vs 1,741. **Look Lab** (`labs/look.html`, `docs/look.md`) — procedural ageing by surface
+  (`js/shipkit/ageing.js`, baked occlusion/edges, no textures), cloudy sky with five weathers that also set the sea
+  (`js/labs/skykit.js`), camera look with presets Game clean / Cinematic / Bodycam (`js/render/look.js`), split compare, auto resolution.
 - **Origin:** started from the engine of the owner's other game *Capital Quarantine* (repo `VS`), then diverged:
   the pixel-art pipeline was dropped, the look is now realistic only.
 
@@ -83,7 +85,7 @@ below in the same push (it is part of every release, like the changelog).
 - GitHub push from the Claude sandbox needs the Claude GitHub App on the repo; a 403 means access lapsed — ask the owner to
   reconnect GitHub in claude.ai settings (Connectors), do not work around it.
 - Lab pages (strict CSP) refuse Playwright's string predicates (`wait_for_function('…')` → "unsafe-eval"): open them with
-  `new_page(bypass_csp=True)` as `tools/doctor.py` does. The labs expose `window.__lab`, `window.__water`, `window.__doctor`.
+  `new_page(bypass_csp=True)` as `tools/doctor.py` does. The labs expose `window.__lab`, `window.__water`, `window.__doctor`, `window.__tf`, `window.__look`.
 - ShipKit merges pieces per material; the doctor needs `KIT.unmerged = true` (one mesh per piece + source line). After a
   model change run `py tools/doctor.py`; update the golden file (`--update`) only for intended changes.
 - Generated geometry must be wound counter-clockwise seen from outside (normals out). The doctor's `facing` check catches
@@ -92,9 +94,13 @@ below in the same push (it is part of every release, like the changelog).
 - `py tools/doctor.py` takes ~8 min headless (see-through ray grids on the 1:1 ship and its LOD levels); run it in the
   background. Adding a model to the doctor means new golden entries (`--update`, or copy the printed fingerprint).
 - The e2e "look at the enemy" helper must close the gap in several passes: look sensitivity drops with the optics zoom.
+- Shader uniforms shared between kits must have distinct names (SkyKit's `uSkyLow` once clashed with WaterKit's sea colour). Sparse
+  bloom taps speckle; the look pipeline samples bloom from mipmaps of the scene target.
 - Commits made from the Claude sandbox use `Claude <noreply@anthropic.com>` as author/committer (the sandbox flags other identities as unverified).
 
 ## Next steps (from TODO, highest first)
+0. **P1** Owner looks at the Look Lab on a real GPU: which wear level and look go into the game, confirm lens effects only
+   for first-person views; then rain/fog/time of day in the environment.
 1. **P1** Procedural destruction on top of the transformer's hitboxes (damage model, spread to neighbours, falling
    debris, fire/smoke emitters) — owner's plan; scale decision: game to metres or model ×0.1 (asked 2026-10-21).
 2. **P1** The owner picks a sea in the Water Lab ("Copy settings (JSON)") → that sea goes into the game.

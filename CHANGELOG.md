@@ -5,6 +5,14 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.9.0] - 2026-10-21
+### Added
+- **Look Lab** (`labs/look.html`): ORP Błyskawica on the sea under a cloudy sky with procedural ageing and a camera look; every effect switchable, split compare (clean on the left), cost of each effect, settings saved and copied as JSON. Docs: `docs/look.md`.
+- **Procedural ageing** (`js/shipkit/ageing.js`): baked occlusion and edge exposure per vertex (`aWear`, ~0.3 s for the 1:1 ship) and per-surface rules from the material key — chalky paint, grime in corners, chipped edges, rust spots and streaks, hull plating and a salt band, greyed wood, faded canvas, brass patina, dark rope; one wear slider plus one per effect.
+- **SkyKit** (`js/labs/skykit.js`): procedural cloud sky, five weathers (clear, fair, broken, overcast, storm), sun height and bearing, haze; the same sky drives the sea's reflections and the PMREM environment; the wind can set the sea state.
+- **LookPipeline** (`js/render/look.js`): tone mapping ACES / AgX / Hable, automatic exposure, bloom from mipmaps, colour grading, vignette, grain, chromatic aberration, lens distortion, droplets and dirt, sun glare, sharpen; presets Game clean, Cinematic, Bodycam; automatic resolution (~60 fps). Bodycam camera with hand-held shake.
+- WaterKit: `waterMaterial(u, { sky })` takes another sky function. Labs tile "Graphics and filters" opens the Look Lab; sitemap entry; `tools/lab-check.py` covers the Look Lab.
+
 ## [0.8.1] - 2026-10-21
 ### Changed
 - Labs start screen grouped into five areas: **Models** (ORP Błyskawica; cruiser, submarine, aircraft and shore soon), **Environment** (water and weather; sky and clouds, weather in progress; time of day, land and coast, night sky and space soon), **Graphics and filters** (Look Lab next), **Special effects** (fire, water effects, smoke, destruction soon), **Tools** (Transformer, Model Doctor).

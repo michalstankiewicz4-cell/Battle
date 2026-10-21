@@ -9,8 +9,9 @@ Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.8.1 Context: [`d
 - [ ] P2 Lobby (room code), snapshots, interpolation, two-client tests
 
 ## Labs (map: [`docs/labs.md`](docs/labs.md))
-- [ ] P1 Environment: weather and sky in the water lab (procedural clouds, wind → sea state, rain, fog)
-- [ ] P1 Look Lab: materials with wear and baked shading, colour/exposure, lens effects, bodycam look, automatic resolution
+- [x] Look Lab v0.9.0: procedural ageing with baked shading, cloudy sky and weather (wind → sea), tone/exposure/bloom, lens effects, bodycam look, automatic resolution
+- [ ] P1 Environment: rain, fog banks, squalls, time of day; sky and weather panels in the water lab
+- [ ] P1 Owner picks an ageing level and a look → into the game's materials and graphics settings (lens effects for first-person views)
 - [ ] P1 Procedural destruction on the transformer's hitboxes: damage model, spread to neighbours, debris, fire and smoke
 - [ ] P2 Transformer: instancing of repeated fittings and merged mount materials on LOD0 (~30 draw calls)
 - [ ] P1 Owner picks a water variant in the water lab → put that sea into the game (Gerstner waves shared by ships and the shader, wake, bow wave, foam; cheaper settings for Light)
