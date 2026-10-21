@@ -5,6 +5,15 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.14.0] - 2026-10-21
+### Added
+- **Water bodies** in the Water Lab: *Open ocean*, *Fjord* (dark still water, walls ~650 m mirrored in the planar reflection), *Lake* (fresh, peaty water, low hills), *River* (silty, 240 m wide, a **current** — the banks stream past at the speed over the ground, foam streaks along the flow); width, walls/banks and current sliders; *Harbour* and *Ice* listed as coming. Each variant A/B can be a different body.
+- LandKit `generateWaterway` (a wrap-around channel: width, walls, steepness, depth, meander) and `uLandOff` (the map can stream under a fixed ship; terrain grids stay snapped to the map's lattice); WaterKit `WATER_BODIES`, looks Fjord / Lake / River, sea states for still water, `uCurrent`.
+- **Labs guide** `docs/GUIDE.md` (how to open and drive every lab, what to try); linked from the labs page and the README.
+### Changed
+- **Folder layout**: environment kits moved to `js/env/` (`skykit`, `waterkit`, `rainkit`, `landkit`), the model doctor to `js/tools/`; `js/labs/` keeps one controller per lab page. Folder rules in `docs/ARCHITECTURE.md`.
+- Short waves fade with distance in the wave shader (no more rings and moiré far away), shallows take the water's own colour, snow only on real heights, darker rock.
+
 ## [0.13.0] - 2026-10-21
 ### Added
 - **Land Lab** (`labs/land.html`, owner's request): procedural land and sea from a seed, **0 to 100 % land** (exact share), shapes Islands / Archipelago / Coast / Fjords / Highlands, highest peaks, sea depth, roughness, droplet **erosion**; map 4–32 km, 256²–1024²; **wrap-around (torus)** map — sail out of one edge and in at the other, land and waves continue without a seam — or a **bounded** map with a buoy line, a mountain range or an invisible wall. Beaches, wet sand, muted grass, heather, scrub, rock, snow; turquoise shallows, surf, waves dying on the shore. Chart (click to move), ORP Błyskawica from the transformer with engine orders, rudder, grounding and barriers; cameras Chase, Bridge, Overview, Free flight; sky and weather; fog thinning with height. Docs: `docs/land.md`.

@@ -7,7 +7,7 @@ what the project is, what the owner decided, how work is done and what comes nex
 **Keep this file current:** when a decision is made, a feature lands or the next steps change, update the sections
 below in the same push (it is part of every release, like the changelog).
 
-## Snapshot (state as of v0.13.0, 2026-10-21)
+## Snapshot (state as of v0.14.0, 2026-10-21)
 - **What:** *Steel Salvo* (working title) — free naval battle browser game, PvE against endless waves of AI warships.
   Live: <https://michalstankiewicz4-cell.github.io/Battle/> · repo: <https://github.com/michalstankiewicz4-cell/Battle> (branch `main`,
   GitHub Pages deploys every push via `.github/workflows/static.yml`).
@@ -24,12 +24,13 @@ below in the same push (it is part of every release, like the changelog).
   image hosts are blocked in the sandbox). **Model Doctor** (`labs/doctor.html`, `py tools/doctor.py`, golden
   `tools/doctor.golden.json`, `docs/doctor.md`) — 13 checks incl. inward-facing surfaces, holes (see-through), gun arcs, waterline, hull side, budget; every lab and
   game model is clean, Błyskawica only exceeds the in-game budget (33k triangles, 99 draw calls). **Water Lab**
-  (`labs/water.html`, WaterKit, `docs/water.md`) — Gerstner sea, variants A/B side by side, cost of each effect. **Transformer** (`labs/transform.html`,
+  (`labs/water.html`, WaterKit, `docs/water.md`) — Gerstner sea, variants A/B side by side, cost of each effect; water
+  bodies ocean / fjord / lake / river (shores from LandKit, current). **Transformer** (`labs/transform.html`,
   `js/shipkit/transform.js`, `docs/transform.md`) — LOD0/1/2 (65 / 31 / 7 draw calls), 458 hitboxes for procedural
   destruction (the owner wants many), damage texture read by the materials; fleet of 24: 144 draw calls vs 1,741. **Look Lab** (`labs/look.html`, `docs/look.md`) — procedural ageing by surface
   (`js/shipkit/ageing.js`, baked occlusion/edges, no textures), cloudy sky with seven weathers that also set the sea, rain with squalls and sea fog,
   time of day from dawn to a moonlit night, lightning, navigation lights, gun flashes, SOS by searchlight shutters
-  (`js/labs/skykit.js`, `js/labs/rainkit.js`, `js/shipkit/lights.js`), **Land Lab** (`labs/land.html`, `js/labs/landkit.js`,
+  (`js/env/skykit.js`, `js/env/rainkit.js`, `js/shipkit/lights.js`), **Land Lab** (`labs/land.html`, `js/env/landkit.js`,
   `docs/land.md`) — procedural land and sea 0–100 %, wrap-around (torus) or bounded map, sailing with grounding, camera look with presets Game clean / Cinematic / Bodycam (`js/render/look.js`), split compare, auto resolution.
 - **Origin:** started from the engine of the owner's other game *Capital Quarantine* (repo `VS`), then diverged:
   the pixel-art pipeline was dropped, the look is now realistic only.
@@ -49,6 +50,7 @@ below in the same push (it is part of every release, like the changelog).
 | 2026-10-19 | Water lab before putting Błyskawica into the game; labs linked from the main menu. |
 | 2026-10-19 | Ships fixed with the doctor (done, v0.7.1); then a **"transformer"** that optimizes a ship so it does not choke the GPU and the browser (done, v0.8.0). |
 | 2026-10-21 | Labs grouped into areas (models, environment incl. land/water/sky/weather/time of day/space, graphics and filters, special effects, tools). Now: water and weather, graphics and filters, Błyskawica; the rest soon. Bodycam/photoreal look via a Look Lab (proposed; lens effects mainly for first-person views — owner to confirm). |
+| 2026-10-21 | Water types: one WaterKit, each body (ocean, fjord, lake, river, then harbour, ice) a preset + its own feature in the Water Lab; the Land Lab later mixes them by region. Keep a professional folder layout (`js/env` kits, `js/tools`, `js/labs` = one controller per page) and a user guide (`docs/GUIDE.md`). |
 | 2026-10-21 | Next lab: land and terrain (procedural, sea and land mixed), map as a torus (wrap-around) or bounded by barriers — to choose in the lab. |
 | 2026-10-21 | Labs continue first; their results will later be merged into another project (owner's plan). Fixed simulation tick + render interpolation noted for multiplayer (later, `MULTIPLAYER.md` §7); no frame generation. |
 | 2026-10-21 | LOD yes; **many hitboxes**, because procedural destruction is planned. Primitives only as the far level, never instead of the detailed model. |
@@ -107,8 +109,7 @@ below in the same push (it is part of every release, like the changelog).
 - Commits made from the Claude sandbox use `Claude <noreply@anthropic.com>` as author/committer (the sandbox flags other identities as unverified).
 
 ## Next steps (from TODO, highest first)
-00. Land Lab first version done (v0.13.0); owner to try it and say what next (rivers, cliffs, harbours, vegetation,
-   land vehicles for the 100 % land case?).
+00. Water bodies: harbour and ice next, then mixing bodies by region in the Land Lab (rivers/lakes from the generator).
 0. **P1** Owner looks at the Look Lab on a real GPU: which wear level and look go into the game, confirm lens effects only
    for first-person views, which weathers and times of day the game gets; then night lighting (navigation lights, gun flashes) and lightning.
 1. **P1** Procedural destruction on top of the transformer's hitboxes (damage model, spread to neighbours, falling

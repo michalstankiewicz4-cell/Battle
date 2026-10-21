@@ -16,6 +16,8 @@ Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.8.1 Context: [`d
 - [x] Lightning and thunder, navigation lights, gun flashes lighting ship and sea, SOS by searchlight shutters (Look Lab, Ship Lab) (v0.12.0)
 - [x] Land Lab v0.13.0: procedural land and sea (0–100 %), five shapes, erosion, beaches, shallows and surf, wrap-around (torus) or bounded map (buoys, mountains, wall), sailing with grounding
 - [ ] P1 Land Lab next: rivers and lakes, cliffs and rocky shores (overhang-free cliff faces), harbours and towns, vegetation (trees as instanced impostors), ground vehicles / free walk for the 100 % land case; terrain LOD beyond the far grid
+- [x] Water bodies in the Water Lab: ocean, fjord, lake, river (current, shore streaming over the ground, mirrored walls) (v0.14.0)
+- [ ] P1 Water bodies next: harbour (breakwater, quays, oil sheen), ice (floes, pack ice, ice edge, a track behind the ship); then the Land Lab mixes the bodies by region (rivers and lakes from the terrain generator, estuaries)
 - [ ] P2 Environment: fog banks, spray in high wind; sky and weather panels in the water lab
 - [ ] P1 Owner picks an ageing level and a look → into the game's materials and graphics settings (lens effects for first-person views)
 - [ ] P1 Procedural destruction on the transformer's hitboxes: damage model, spread to neighbours, debris, fire and smoke
