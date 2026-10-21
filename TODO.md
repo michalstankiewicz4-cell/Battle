@@ -1,6 +1,6 @@
 # TODO
 
-Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.7.1. Context: [`docs/HANDOFF.md`](docs/HANDOFF.md), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.8.0. Context: [`docs/HANDOFF.md`](docs/HANDOFF.md), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## Multiplayer (plan in [`docs/MULTIPLAYER.md`](docs/MULTIPLAYER.md))
 - [ ] P2 Decision: co-op PvE and/or PvP, player count, P2P or server (the menu entry "Multiplayer" exists as "Soon")
@@ -9,7 +9,8 @@ Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.7.1. Context: [`
 - [ ] P2 Lobby (room code), snapshots, interpolation, two-client tests
 
 ## Labs
-- [ ] P1 Ship "transformer": optimize a ShipKit model for the game (merge, LOD levels, instancing, culling of tiny parts, texture atlas) with before/after stats and the doctor's budget (now 33k triangles / 99 draw calls)
+- [ ] P1 Procedural destruction on the transformer's hitboxes: damage model, spread to neighbours, debris, fire and smoke
+- [ ] P2 Transformer: instancing of repeated fittings and merged mount materials on LOD0 (~30 draw calls)
 - [ ] P1 Owner picks a water variant in the water lab → put that sea into the game (Gerstner waves shared by ships and the shader, wake, bow wave, foam; cheaper settings for Light)
 - [ ] P1 Błyskawica as the player's destroyer in the game (transformer output, scale, mounts, tubes)
 - [ ] P2 Water lab: ship shadows on water, persistent foam map, underwater view, shore interaction

@@ -7,7 +7,7 @@ what the project is, what the owner decided, how work is done and what comes nex
 **Keep this file current:** when a decision is made, a feature lands or the next steps change, update the sections
 below in the same push (it is part of every release, like the changelog).
 
-## Snapshot (state as of v0.7.4, 2026-10-21)
+## Snapshot (state as of v0.8.0, 2026-10-21)
 - **What:** *Steel Salvo* (working title) — free naval battle browser game, PvE against endless waves of AI warships.
   Live: <https://michalstankiewicz4-cell.github.io/Battle/> · repo: <https://github.com/michalstankiewicz4-cell/Battle> (branch `main`,
   GitHub Pages deploys every push via `.github/workflows/static.yml`).
@@ -22,7 +22,9 @@ below in the same push (it is part of every release, like the changelog).
   image hosts are blocked in the sandbox). **Model Doctor** (`labs/doctor.html`, `py tools/doctor.py`, golden
   `tools/doctor.golden.json`, `docs/doctor.md`) — 13 checks incl. inward-facing surfaces, holes (see-through), gun arcs, waterline, hull side, budget; every lab and
   game model is clean, Błyskawica only exceeds the in-game budget (33k triangles, 99 draw calls). **Water Lab**
-  (`labs/water.html`, WaterKit, `docs/water.md`) — Gerstner sea, variants A/B side by side, cost of each effect.
+  (`labs/water.html`, WaterKit, `docs/water.md`) — Gerstner sea, variants A/B side by side, cost of each effect. **Transformer** (`labs/transform.html`,
+  `js/shipkit/transform.js`, `docs/transform.md`) — LOD0/1/2 (65 / 31 / 7 draw calls), 458 hitboxes for procedural
+  destruction (the owner wants many), damage texture read by the materials; fleet of 24: 144 draw calls vs 1,741.
 - **Origin:** started from the engine of the owner's other game *Capital Quarantine* (repo `VS`), then diverged:
   the pixel-art pipeline was dropped, the look is now realistic only.
 
@@ -39,7 +41,8 @@ below in the same push (it is part of every release, like the changelog).
 | 2026-10-19 | Model lab ("like the Space labs"): detailed 1:1 real warships; first ORP Błyskawica (1937, the configuration known from warship games). |
 | 2026-10-19 | Model doctor like in Space, adapted to the game, with all options; Błyskawica analysed and fixed. |
 | 2026-10-19 | Water lab before putting Błyskawica into the game; labs linked from the main menu. |
-| 2026-10-19 | Ships fixed with the doctor (done, v0.7.1); next a **"transformer"** that optimizes a ship so it does not choke the GPU and the browser. |
+| 2026-10-19 | Ships fixed with the doctor (done, v0.7.1); then a **"transformer"** that optimizes a ship so it does not choke the GPU and the browser (done, v0.8.0). |
+| 2026-10-21 | LOD yes; **many hitboxes**, because procedural destruction is planned. Primitives only as the far level, never instead of the detailed model. |
 
 ## How the owner works (preferences)
 - Talks in **Polish, short messages**; reply in Polish, concisely, and say what was and was not verified.
@@ -83,13 +86,14 @@ below in the same push (it is part of every release, like the changelog).
 - Generated geometry must be wound counter-clockwise seen from outside (normals out). The doctor's `facing` check catches
   open shells wound inward (`inverted` only sees closed shapes) and `seethrough` finds holes (missing caps); check new
   ShipKit generators with both. Orientation by intent (which way a vent faces) is not checkable: look at close-ups.
+- `py tools/doctor.py` takes ~8 min headless (see-through ray grids on the 1:1 ship and its LOD levels); run it in the
+  background. Adding a model to the doctor means new golden entries (`--update`, or copy the printed fingerprint).
 - The e2e "look at the enemy" helper must close the gap in several passes: look sensitivity drops with the optics zoom.
 - Commits made from the Claude sandbox use `Claude <noreply@anthropic.com>` as author/committer (the sandbox flags other identities as unverified).
 
 ## Next steps (from TODO, highest first)
-1. **P1 Ship "transformer"** (owner's next request): turn a ShipKit lab model into a game-ready one — merge per material,
-   LOD levels by distance, drop pieces too small to see, instancing of repeated fittings, maybe a texture atlas; show
-   before/after triangles, draw calls and fps, and check the result with the doctor's budget.
+1. **P1** Procedural destruction on top of the transformer's hitboxes (damage model, spread to neighbours, falling
+   debris, fire/smoke emitters) — owner's plan; scale decision: game to metres or model ×0.1 (asked 2026-10-21).
 2. **P1** The owner picks a sea in the Water Lab ("Copy settings (JSON)") → that sea goes into the game.
 3. **P1** Błyskawica as the player's destroyer (transformer output, scale 1 u ≈ 10 m, mounts and tubes mapped to the game).
 4. **P1** Balance on a real GPU (class HP, reloads, dispersion, AI skill curve, wave size); real-GPU performance check.

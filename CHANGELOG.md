@@ -5,6 +5,14 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.8.0] - 2026-10-21
+### Added
+- **Transformer** (`js/shipkit/transform.js`): turns a ShipKit lab ship into a game-ready `THREE.LOD` — LOD0 full detail merged per material (65 draw calls instead of 99), LOD1 from 170 m (12k triangles, 31 draw calls), LOD2 from 650 m made of primitives (2.7k triangles, 7 draw calls); mounts and guns stay their own groups and are driven on every level by `aim()`.
+- **458 hitboxes** for ORP Błyskawica, ready for procedural destruction: hull compartments (4 m × side × bottom/belt/upper), superstructure, funnel, masts, platforms and fittings in a 3 m grid, one box per mount and per gun; volume, hit points, removable flag, neighbours; `raycast()` against the current pose.
+- Damage drawn by the materials: every vertex knows its hitbox; a damage texture gives scorching, dented hull plating, buckling and collapse of superstructure, embers — no extra draw calls.
+- **Transformer lab** (`labs/transform.html`): level table, show a level or by distance, LOD distances, fleet test up to 24 ships (24 ships: 144 draw calls and 57k triangles against 1,741 and 625k with lab models), hitbox overlay by kind, click to hit, salvo, repair, mount training. Docs: `docs/transform.md`.
+- Model doctor examines LOD0–2 with per-level budgets; `tools/lab-check.py` checks the transformer (levels get cheaper, ≥ 300 hitboxes, a ray damages the hull); labs tile and sitemap entry.
+
 ## [0.7.4] - 2026-10-21
 ### Fixed
 - ORP Błyskawica: V-shaped hole in the stern — the transom fan now closes across the top from deck edge to deck edge; the transom has its own vertices (flat shading, no rings from the sides' normals).
