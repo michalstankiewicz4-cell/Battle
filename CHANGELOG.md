@@ -5,6 +5,14 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.10.0] - 2026-10-21
+### Added
+- **Rain** in the Look Lab (`js/labs/rainkit.js`): falling streaks around the camera in one draw call (up to 24k drops, slanted by the wind), rings from drops on the sea, a rougher sea with a duller glitter, the ship gets wet (darker paint, glossy upward faces, water running down the sides, sheltered spots stay dry), dark rain curtains on the horizon (also in the sea's reflections), the sun hidden; **squalls** make the rain come and go; **rain on the lens** adds droplets.
+- **Sea fog and visibility** (km): one exponential-squared fog shared by the ship, the sea and the sky (a 260 m fog layer: lighter overhead, the sun a pale disc); fog and rain dim the sun and take away its glitter.
+- Weathers **Rain** and **Sea fog**; Storm now rains. Visibility in the stats; "Rain off" in the cost measurement.
+### Changed
+- WaterKit: `uFogDen` (exponential fog, the old linear fog stays when 0) and `uRain`; SkyKit `applySky()` returns visibility, fog density and how much of the sun gets through.
+
 ## [0.9.0] - 2026-10-21
 ### Added
 - **Look Lab** (`labs/look.html`): ORP Błyskawica on the sea under a cloudy sky with procedural ageing and a camera look; every effect switchable, split compare (clean on the left), cost of each effect, settings saved and copied as JSON. Docs: `docs/look.md`.

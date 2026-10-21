@@ -7,7 +7,7 @@ what the project is, what the owner decided, how work is done and what comes nex
 **Keep this file current:** when a decision is made, a feature lands or the next steps change, update the sections
 below in the same push (it is part of every release, like the changelog).
 
-## Snapshot (state as of v0.9.0, 2026-10-21)
+## Snapshot (state as of v0.10.0, 2026-10-21)
 - **What:** *Steel Salvo* (working title) — free naval battle browser game, PvE against endless waves of AI warships.
   Live: <https://michalstankiewicz4-cell.github.io/Battle/> · repo: <https://github.com/michalstankiewicz4-cell/Battle> (branch `main`,
   GitHub Pages deploys every push via `.github/workflows/static.yml`).
@@ -27,8 +27,8 @@ below in the same push (it is part of every release, like the changelog).
   (`labs/water.html`, WaterKit, `docs/water.md`) — Gerstner sea, variants A/B side by side, cost of each effect. **Transformer** (`labs/transform.html`,
   `js/shipkit/transform.js`, `docs/transform.md`) — LOD0/1/2 (65 / 31 / 7 draw calls), 458 hitboxes for procedural
   destruction (the owner wants many), damage texture read by the materials; fleet of 24: 144 draw calls vs 1,741. **Look Lab** (`labs/look.html`, `docs/look.md`) — procedural ageing by surface
-  (`js/shipkit/ageing.js`, baked occlusion/edges, no textures), cloudy sky with five weathers that also set the sea
-  (`js/labs/skykit.js`), camera look with presets Game clean / Cinematic / Bodycam (`js/render/look.js`), split compare, auto resolution.
+  (`js/shipkit/ageing.js`, baked occlusion/edges, no textures), cloudy sky with seven weathers that also set the sea, rain with squalls and sea fog
+  (`js/labs/skykit.js`, `js/labs/rainkit.js`), camera look with presets Game clean / Cinematic / Bodycam (`js/render/look.js`), split compare, auto resolution.
 - **Origin:** started from the engine of the owner's other game *Capital Quarantine* (repo `VS`), then diverged:
   the pixel-art pipeline was dropped, the look is now realistic only.
 
@@ -96,11 +96,13 @@ below in the same push (it is part of every release, like the changelog).
 - The e2e "look at the enemy" helper must close the gap in several passes: look sensitivity drops with the optics zoom.
 - Shader uniforms shared between kits must have distinct names (SkyKit's `uSkyLow` once clashed with WaterKit's sea colour). Sparse
   bloom taps speckle; the look pipeline samples bloom from mipmaps of the scene target.
+- Fog is one exponential-squared density shared by three.js `FogExp2`, the water shader (`uFogDen`) and the sky
+  (`uSkyFog`); change it in `applySky()` only, or ship, sea and sky stop agreeing.
 - Commits made from the Claude sandbox use `Claude <noreply@anthropic.com>` as author/committer (the sandbox flags other identities as unverified).
 
 ## Next steps (from TODO, highest first)
 0. **P1** Owner looks at the Look Lab on a real GPU: which wear level and look go into the game, confirm lens effects only
-   for first-person views; then rain/fog/time of day in the environment.
+   for first-person views, which weathers the game gets; then time of day (dusk, night) in the environment.
 1. **P1** Procedural destruction on top of the transformer's hitboxes (damage model, spread to neighbours, falling
    debris, fire/smoke emitters) — owner's plan; scale decision: game to metres or model ×0.1 (asked 2026-10-21).
 2. **P1** The owner picks a sea in the Water Lab ("Copy settings (JSON)") → that sea goes into the game.

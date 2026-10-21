@@ -10,7 +10,8 @@ Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.8.1 Context: [`d
 
 ## Labs (map: [`docs/labs.md`](docs/labs.md))
 - [x] Look Lab v0.9.0: procedural ageing with baked shading, cloudy sky and weather (wind → sea), tone/exposure/bloom, lens effects, bodycam look, automatic resolution
-- [ ] P1 Environment: rain, fog banks, squalls, time of day; sky and weather panels in the water lab
+- [x] Rain (streaks, rings on the sea, wet ship, curtains on the horizon, squalls) and sea fog with visibility in km (v0.10.0)
+- [ ] P1 Environment: time of day (dusk, night, moon), fog banks, thunder, spray in high wind; sky and weather panels in the water lab
 - [ ] P1 Owner picks an ageing level and a look → into the game's materials and graphics settings (lens effects for first-person views)
 - [ ] P1 Procedural destruction on the transformer's hitboxes: damage model, spread to neighbours, debris, fire and smoke
 - [ ] P2 Transformer: instancing of repeated fittings and merged mount materials on LOD0 (~30 draw calls)
