@@ -5,6 +5,13 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.17.0] - 2026-10-22
+### Added
+- **Quay walls** in the Waterside Structures Lab: gravity block wall (precast blocks in courses on a rubble bed), steel sheet-pile wall (U-profile piles) or open piled deck (deck on Ø 1 m steel piles over a rock revetment); capping beam with a safety kerb, tee-head bollards every 15 m, cylindrical rubber fenders on chains, recessed ladders, crane rails, lighting masts, paved apron; length and cope level. **ORP Błyskawica moored alongside** on the fenders with bow and stern lines and springs.
+- **Breakwaters**: rubble mound armoured with two layers of **tetrapods** (rock on the lee side) or of **rock**, toe berm, crown wall with a recurved parapet; or **caissons** on a rubble bed with a superstructure, wave wall and a tetrapod berm (the mixed type built at Gdańsk); round head with a red harbour light (IALA A); length, crest level, armour unit mass 2–25 t. Thousands of units instanced (a 180 m breakwater: ~2,200 tetrapods, ~4,600 rocks, nine draw calls).
+- The sea reads each structure's heights (baked to a texture): turquoise shallows and surf along slopes and toes, calm water and no water over quays and crests. Each structure keeps its own water depth; structure settings come from `PARAMS`; camera presets per structure.
+- StructKit `coastal.js` (tetrapod and rock geometry, `layUnits`, `instanced`, bollards, fenders, ladders, masts, `sweepZ`) and a splash-zone material (wet and weedy below the water). Research sheet `docs/structures/coastal.md`; the lab check builds every type.
+
 ## [0.16.0] - 2026-10-21
 ### Added
 - **Waterside Structures Lab** (`labs/structures.html`) and **StructKit** (`js/structkit/`): static structures in the water built from code at real scale (quays, piers, breakwaters, harbours and lighthouses next — owner: everything built that touches the water).

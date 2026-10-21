@@ -7,7 +7,7 @@ what the project is, what the owner decided, how work is done and what comes nex
 **Keep this file current:** when a decision is made, a feature lands or the next steps change, update the sections
 below in the same push (it is part of every release, like the changelog).
 
-## Snapshot (state as of v0.16.0, 2026-10-21)
+## Snapshot (state as of v0.17.0, 2026-10-22)
 - **What:** *Steel Salvo* (working title) — free naval battle browser game, PvE against endless waves of AI warships.
   Live: <https://michalstankiewicz4-cell.github.io/Battle/> · repo: <https://github.com/michalstankiewicz4-cell/Battle> (branch `main`,
   GitHub Pages deploys every push via `.github/workflows/static.yml`).
@@ -27,7 +27,8 @@ below in the same push (it is part of every release, like the changelog).
   (`labs/water.html`, WaterKit, `docs/water.md`) — Gerstner sea, variants A/B side by side, cost of each effect; water
   bodies ocean / fjord / lake / river (shores from LandKit, current) / harbour water (oil) / ice (floes, lane).
   **Waterside Structures Lab** (`labs/structures.html`, `js/structkit/`, `docs/structures.md`) — jack-up drilling rig
-  (Super 300 class, researched: `docs/structures/super300.md`), jacking, cantilever, cranes, underwater view. **Transformer** (`labs/transform.html`,
+  (Super 300 class, researched: `docs/structures/super300.md`), jacking, cantilever, cranes, underwater view; quays and
+  breakwaters (`docs/structures/coastal.md`) with tetrapods/rock instanced, Błyskawica alongside. **Transformer** (`labs/transform.html`,
   `js/shipkit/transform.js`, `docs/transform.md`) — LOD0/1/2 (65 / 31 / 7 draw calls), 458 hitboxes for procedural
   destruction (the owner wants many), damage texture read by the materials; fleet of 24: 144 draw calls vs 1,741. **Look Lab** (`labs/look.html`, `docs/look.md`) — procedural ageing by surface
   (`js/shipkit/ageing.js`, baked occlusion/edges, no textures), cloudy sky with seven weathers that also set the sea, rain with squalls and sea fog,
@@ -113,8 +114,8 @@ below in the same push (it is part of every release, like the changelog).
 - Commits made from the Claude sandbox use `Claude <noreply@anthropic.com>` as author/committer (the sandbox flags other identities as unverified).
 
 ## Next steps (from TODO, highest first)
-00. Owner's order (2026-10-21/22): structures lab started with the jack-up rig → quays and breakwaters (then piers,
-   harbours, lighthouses) → **ORP Orzeł** (submarine, solid research, Ship Lab) → mixing water bodies by region in the Land Lab; small fixes (ice look, fjord walls) later.
+00. Owner's order (2026-10-21/22): structures lab: jack-up rig, quays and breakwaters done (piers, harbours, lighthouses
+   later) → next **ORP Orzeł** (submarine, solid research, Ship Lab) → mixing water bodies by region in the Land Lab; small fixes (ice look, fjord walls) later.
    More labs are welcome where they make sense.
 0. **P1** Owner looks at the Look Lab on a real GPU: which wear level and look go into the game, confirm lens effects only
    for first-person views, which weathers and times of day the game gets; then night lighting (navigation lights, gun flashes) and lightning.

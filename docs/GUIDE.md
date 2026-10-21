@@ -59,7 +59,17 @@ The ship on a procedural sea; two variants **A** and **B** side by side.
 
 ## Waterside Structures Lab — `labs/structures.html`
 
-Static structures in the water at real scale; first a jack-up drilling rig (Super 300 class).
+Static structures in the water at real scale: a jack-up drilling rig (Super 300 class), quay walls, breakwaters. Pick
+one in the top bar; *Water depth* is kept per structure.
+
+- **Quay wall**: *Construction* (gravity block wall, steel sheet-pile wall, open piled deck), *Quay length*, *Cope
+  level*, *ORP Błyskawica moored alongside*; cameras Overview, From the sea, Along the quay, Bollard and fender,
+  Underwater, High.
+- **Breakwater**: *Type* (rubble mound with tetrapods, with rock, caissons with a tetrapod berm), *Length*, *Crest level*,
+  *Armour unit* (2–25 t); cameras Overview, Seaward slope, Head and light, On the crest, Underwater, High.
+
+The jack-up rig:
+
 
 - **Jacking**: *Afloat (under tow)* and *Jack up* run the whole sequence (legs down to the seabed, hull up to the air
   gap — or the reverse); *Jacking speed* multiplies the real ≈ 90 ft per hour; *Water depth* and *Air gap*.

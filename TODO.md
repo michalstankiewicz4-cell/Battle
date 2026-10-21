@@ -21,7 +21,8 @@ Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.8.1 Context: [`d
 - [x] Waterside Structures Lab with a jack-up drilling rig, Super 300 class (v0.16.0)
 - [ ] P2 **Paint Lab** (owner, for later): ship paint schemes and camouflage as their own data — design a scheme, fit it to a ship, assign it to another one (dazzle, Admiralty disruptive, peacetime grey, period markings)
 - [ ] P1 **ORP Orzeł** (submarine, 1939) in the Ship Lab with solid research — owner's request, after quays and breakwaters
-- [ ] P1 Structures next: quays, piers and jetties, breakwaters (armour stone, tetrapods), harbours, lighthouses; rig details (rack teeth, deck lighting, well-test flame); structures in the model doctor
+- [x] Quays (gravity, sheet-pile, piled deck; Błyskawica alongside) and breakwaters (rock, tetrapods, caissons + tetrapod berm; round head with a light) (v0.17.0)
+- [ ] P2 Structures next: piers and jetties, harbours (cranes, sheds), lighthouses; rig details (rack teeth, deck lighting, well-test flame); structures in the model doctor
 - [ ] P1 Land Lab mixes the water bodies by region (rivers and lakes from the terrain generator, estuaries, ice edge)
 - [ ] P2 Environment: fog banks, spray in high wind; sky and weather panels in the water lab
 - [ ] P1 Owner picks an ageing level and a look → into the game's materials and graphics settings (lens effects for first-person views)
