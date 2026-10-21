@@ -18,7 +18,10 @@ Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.8.1 Context: [`d
 - [ ] P1 Land Lab next: rivers and lakes, cliffs and rocky shores (overhang-free cliff faces), harbours and towns, vegetation (trees as instanced impostors), ground vehicles / free walk for the 100 % land case; terrain LOD beyond the far grid
 - [x] Water bodies in the Water Lab: ocean, fjord, lake, river (current, shore streaming over the ground, mirrored walls) (v0.14.0)
 - [x] Harbour water with oil sheen, ice and pack ice with the ship's lane (v0.15.0)
-- [ ] P1 Waterside-buildings lab (owner: everything built that touches the water): quays, piers, breakwaters, harbours, lighthouses
+- [x] Waterside Structures Lab with a jack-up drilling rig, Super 300 class (v0.16.0)
+- [ ] P2 **Paint Lab** (owner, for later): ship paint schemes and camouflage as their own data — design a scheme, fit it to a ship, assign it to another one (dazzle, Admiralty disruptive, peacetime grey, period markings)
+- [ ] P1 **ORP Orzeł** (submarine, 1939) in the Ship Lab with solid research — owner's request, after quays and breakwaters
+- [ ] P1 Structures next: quays, piers and jetties, breakwaters (armour stone, tetrapods), harbours, lighthouses; rig details (rack teeth, deck lighting, well-test flame); structures in the model doctor
 - [ ] P1 Land Lab mixes the water bodies by region (rivers and lakes from the terrain generator, estuaries, ice edge)
 - [ ] P2 Environment: fog banks, spray in high wind; sky and weather panels in the water lab
 - [ ] P1 Owner picks an ageing level and a look → into the game's materials and graphics settings (lens effects for first-person views)

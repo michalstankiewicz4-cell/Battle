@@ -5,6 +5,12 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.16.0] - 2026-10-21
+### Added
+- **Waterside Structures Lab** (`labs/structures.html`) and **StructKit** (`js/structkit/`): static structures in the water built from code at real scale (quays, piers, breakwaters, harbours and lighthouses next — owner: everything built that touches the water).
+- **Jack-up drilling rig, Super 300 class** (researched from the operator's published specification sheet; layout reconstructed, every assumption in `docs/structures/super300.md`): triangular 82 × 82 × 8.5 m hull, three 157 m square truss legs with rack plates and 16.8 m spud cans, jack houses with pinion units, cantilevered drill floor with a 48.8 m derrick, top drive and BOP, three pedestal cranes (42.7 / 42.7 / 30.5 m booms), four-tier quarters, helideck (22.2 m, standard markings and perimeter lights), three enclosed lifeboats, silos, pipe deck, engine and mud modules, burner booms, railings and stairs; leg paint with marine growth below the splash zone.
+- Lab: jack up / float for tow at the real LeTourneau rate × a speed factor, water depth 12–114 m, air gap, cantilever skid, working cranes, weather and day / dusk / night, cameras including an underwater view; specifications, sources and part toggles. Labs page tile, sitemap, guide section; `tools/lab-check.py` floats and jacks the rig.
+
 ## [0.15.0] - 2026-10-21
 ### Added
 - Water Lab: **Ice and pack ice** — floes drifting with the water (snow-covered or bare ice, wet rims, irregular outlines), the waves damped under them, floes standing above the water, turquoise ice beside them; at full cover and large floes, pack ice with thin leads; the ship breaks a **lane** of brash ice behind its bow, widening astern. Sliders: ice cover, floe size, ice above water.

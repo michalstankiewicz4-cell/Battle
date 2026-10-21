@@ -57,6 +57,19 @@ The ship on a procedural sea; two variants **A** and **B** side by side.
 - Try: Ice at 100 % cover with 60 m floes (pack ice) from the Wake camera; harbour water at a low sun; Fjord at 5 kn with planar reflection; River at 3 kn against a 1.8 m/s current (the shore barely moves);
   the same gale in A and B with different looks.
 
+## Waterside Structures Lab — `labs/structures.html`
+
+Static structures in the water at real scale; first a jack-up drilling rig (Super 300 class).
+
+- **Jacking**: *Afloat (under tow)* and *Jack up* run the whole sequence (legs down to the seabed, hull up to the air
+  gap — or the reverse); *Jacking speed* multiplies the real ≈ 90 ft per hour; *Water depth* and *Air gap*.
+- **Drilling**: *Cantilever out* skids the derrick over the stern; *Cranes working* animates the three cranes.
+- **Camera**: Overview, Helideck, Drill floor, Leg and jack house, From the sea, Underwater, High.
+- **Sea and light**: weather; Day, Low sun, Dusk, Night (obstruction and helideck lights).
+- **Left panel**: specifications, sources, the reconstruction note and part toggles.
+- Try: float the rig, then jack it up in 110 m of water at ×2000; the Underwater camera with the legs on the seabed;
+  Night with a storm.
+
 ## Look Lab — `labs/look.html`
 
 How the image is made: ageing of the ship, sky and weather, time of day, lights, and the camera's look.
