@@ -44,15 +44,17 @@ The ship on a procedural sea; two variants **A** and **B** side by side.
 - **Compare**: *Split screen* shows A left and B right (drag the divider); *Edit A / Edit B* chooses which one the
   panel changes; *Copy A → B*, *Swap*.
 - **Water body**: *Open ocean*, *Fjord* (dark still water between high walls, mirrored), *Lake* (fresh, peaty water,
-  low shores), *River* (silty, narrow, with a **current** that slows the ship over the ground — watch the banks);
-  *Harbour* and *Ice* are coming. *Width*, *Walls / banks* and *Current* adjust the chosen body.
+  low shores), *River* (silty, narrow, with a **current** that slows the ship over the ground — watch the banks),
+  *Harbour water* (murky, with oil sheen), *Ice and pack ice* (floes, the lane the ship breaks). *Width*,
+  *Walls / banks*, *Current*, *Oil sheen*, *Ice cover*, *Floe size* and *Ice above water* adjust it (oil and ice work
+  on any body). Quays, piers, breakwaters and harbours will be in the waterside-buildings lab.
 - **Sea state**: presets from calm to gale or each value (wave height, length, choppiness, spread, direction, count).
 - **Look**: water colours, sun glitter, ripples, crest foam, reflection, planar reflection (ship and shores mirrored),
   translucent water.
 - **Ship and water**: speed, ship motion, bow wave, wake, foam along the hull, wet band, spray.
 - **Performance**: render scale, anti-aliasing, glow, shadows, water mesh, per-pixel normals, time scale,
   *Measure the cost of each effect*.
-- Try: Fjord at 5 kn with planar reflection; River at 3 kn against a 1.8 m/s current (the shore barely moves);
+- Try: Ice at 100 % cover with 60 m floes (pack ice) from the Wake camera; harbour water at a low sun; Fjord at 5 kn with planar reflection; River at 3 kn against a 1.8 m/s current (the shore barely moves);
   the same gale in A and B with different looks.
 
 ## Look Lab — `labs/look.html`

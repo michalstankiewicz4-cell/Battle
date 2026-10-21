@@ -5,6 +5,14 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.15.0] - 2026-10-21
+### Added
+- Water Lab: **Ice and pack ice** — floes drifting with the water (snow-covered or bare ice, wet rims, irregular outlines), the waves damped under them, floes standing above the water, turquoise ice beside them; at full cover and large floes, pack ice with thin leads; the ship breaks a **lane** of brash ice behind its bow, widening astern. Sliders: ice cover, floe size, ice above water.
+- **Harbour water** (murky) with **oil sheen**: drifting patches that calm the ripples and show thin-film colours changing with the viewing angle; the *Oil sheen* slider works on any water body.
+- WaterKit: `GLSL_ICE` (`iceAt`), `uIce`, `uOil`; sea states and looks for harbour and arctic water. Lab check covers both bodies.
+### Changed
+- Owner's decision: everything built that touches the water (quays, piers, breakwaters, harbours, lighthouses) goes to a waterside-buildings lab (tile "soon" on the labs page); the Water Lab keeps the water itself.
+
 ## [0.14.0] - 2026-10-21
 ### Added
 - **Water bodies** in the Water Lab: *Open ocean*, *Fjord* (dark still water, walls ~650 m mirrored in the planar reflection), *Lake* (fresh, peaty water, low hills), *River* (silty, 240 m wide, a **current** — the banks stream past at the speed over the ground, foam streaks along the flow); width, walls/banks and current sliders; *Harbour* and *Ice* listed as coming. Each variant A/B can be a different body.
