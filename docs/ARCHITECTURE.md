@@ -144,6 +144,7 @@ How it works (reuse for new checks):
 - Thumbnail: **`py tools/og-image.py`** renders the start screen at 1200×630 (High settings, battleship selected, ~160 frames) and writes `assets/og-image.jpg`.
 
 ## Labs
+Map of the areas, labs, kits and status: `docs/labs.md`.
 `labs.html` lists the model labs (the game's main menu links to the ship lab, the water lab and the list); `labs/ship.html` is the Ship Lab. Models are built by ShipKit at real scale from published dimensions; each ship file has `info` (specs, sources), `lines` (hull line functions) and `build()`. Each ship gets a research sheet in `docs/ships/` with sources and the reconstruction assumptions. The labs are standalone pages (own CSS; from the game they reuse only `js/render/post.js` and the procedural textures in `js/render/materials.js`). Check: `py tools/lab-check.py`; model quality: `py tools/doctor.py` (the model doctor, `docs/doctor.md`) — run it after every model change and update the golden file only for intended changes. ShipKit's `KIT.unmerged` builds one mesh per piece with its source line, for the doctor.
 
 ## Attributions

@@ -7,7 +7,7 @@ what the project is, what the owner decided, how work is done and what comes nex
 **Keep this file current:** when a decision is made, a feature lands or the next steps change, update the sections
 below in the same push (it is part of every release, like the changelog).
 
-## Snapshot (state as of v0.8.0, 2026-10-21)
+## Snapshot (state as of v0.8.1, 2026-10-21)
 - **What:** *Steel Salvo* (working title) — free naval battle browser game, PvE against endless waves of AI warships.
   Live: <https://michalstankiewicz4-cell.github.io/Battle/> · repo: <https://github.com/michalstankiewicz4-cell/Battle> (branch `main`,
   GitHub Pages deploys every push via `.github/workflows/static.yml`).
@@ -17,6 +17,8 @@ below in the same push (it is part of every release, like the changelog).
   repair; fires and citadels; islands as cover; enemy AI with waves; gun camera with binoculars (C); submarine diving
   (Z/X), battery, periscope, depth charges; salvo camera (picture-in-picture); procedural sound; EN/PL UI; graphics
   settings with High/Light presets; SEO + thumbnail.
+- **Labs map:** `docs/labs.md` — five areas (models, environment, graphics and filters, special effects, tools); current
+  focus: water and weather, graphics and filters, Błyskawica; the rest is "soon" on the labs page.
 - **Labs** (`labs.html`, linked from the main menu): **Ship Lab** (`labs/ship.html`) — ORP Błyskawica as built 1937, 1:1
   from published figures (ShipKit `js/shipkit/`, research `docs/ships/blyskawica.md`; positions reconstructed from text,
   image hosts are blocked in the sandbox). **Model Doctor** (`labs/doctor.html`, `py tools/doctor.py`, golden
@@ -42,6 +44,7 @@ below in the same push (it is part of every release, like the changelog).
 | 2026-10-19 | Model doctor like in Space, adapted to the game, with all options; Błyskawica analysed and fixed. |
 | 2026-10-19 | Water lab before putting Błyskawica into the game; labs linked from the main menu. |
 | 2026-10-19 | Ships fixed with the doctor (done, v0.7.1); then a **"transformer"** that optimizes a ship so it does not choke the GPU and the browser (done, v0.8.0). |
+| 2026-10-21 | Labs grouped into areas (models, environment incl. land/water/sky/weather/time of day/space, graphics and filters, special effects, tools). Now: water and weather, graphics and filters, Błyskawica; the rest soon. Bodycam/photoreal look via a Look Lab (proposed; lens effects mainly for first-person views — owner to confirm). |
 | 2026-10-21 | LOD yes; **many hitboxes**, because procedural destruction is planned. Primitives only as the far level, never instead of the detailed model. |
 
 ## How the owner works (preferences)

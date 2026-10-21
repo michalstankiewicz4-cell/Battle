@@ -5,6 +5,11 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.8.1] - 2026-10-21
+### Changed
+- Labs start screen grouped into five areas: **Models** (ORP Błyskawica; cruiser, submarine, aircraft and shore soon), **Environment** (water and weather; sky and clouds, weather in progress; time of day, land and coast, night sky and space soon), **Graphics and filters** (Look Lab next), **Special effects** (fire, water effects, smoke, destruction soon), **Tools** (Transformer, Model Doctor).
+- `docs/labs.md`: map of areas, labs, kits and status, and how they fit together; README, ARCHITECTURE, HANDOFF and TODO point to it.
+
 ## [0.8.0] - 2026-10-21
 ### Added
 - **Transformer** (`js/shipkit/transform.js`): turns a ShipKit lab ship into a game-ready `THREE.LOD` — LOD0 full detail merged per material (65 draw calls instead of 99), LOD1 from 170 m (12k triangles, 31 draw calls), LOD2 from 650 m made of primitives (2.7k triangles, 7 draw calls); mounts and guns stay their own groups and are driven on every level by `aim()`.

@@ -27,6 +27,7 @@ Start screen: ship selection (destroyer / cruiser / battleship / submarine with 
 - **Waves:** each wave is larger and the AI aims better. After a wave you get +25% HP and one repair charge back. Score = damage dealt + a bonus per ship sunk.
 
 ## Labs
+Five areas — models, environment, graphics and filters, special effects, tools — mapped in `docs/labs.md`.
 [`labs.html`](https://michalstankiewicz4-cell.github.io/Battle/labs.html) — model workshop: detailed 1:1 reconstructions of real warships built from code. First: **ORP Błyskawica (1937)** in the [Ship Lab](https://michalstankiewicz4-cell.github.io/Battle/labs/ship.html) (orbit, presets, dimensions, part toggles, trainable mounts, sources). Research: `docs/ships/`. The [Water Lab](https://michalstankiewicz4-cell.github.io/Battle/labs/water.html) compares variants of the sea and its interaction with the ship (sea states, reflections, foam, bow wave, wake, spray, ship motion) side by side — see `docs/water.md`. The [Transformer](https://michalstankiewicz4-cell.github.io/Battle/labs/transform.html) makes the lab ship game-ready — three levels of detail, 458 hitboxes for procedural destruction, damage in the shader, fleet test — see `docs/transform.md`. The [Model Doctor](https://michalstankiewicz4-cell.github.io/Battle/labs/doctor.html) examines every lab and game ship for repeating model mistakes (inside-out shapes, flicker, floating pieces, guns firing into their own ship, fittings through the hull, over budget) — see `docs/doctor.md`.
 
 ## Testing
