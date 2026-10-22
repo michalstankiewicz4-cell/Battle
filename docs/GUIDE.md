@@ -113,6 +113,11 @@ Procedural land and sea from a seed; sail through it.
 - **Map**: seed (*New random map*, *Generate*), shape (Islands, Archipelago, Coast, Fjords, Highlands), land share
   0–100 %, map size 4–32 km, detail, highest peaks, sea depth, roughness, erosion. The same seed and settings always give
   the same map.
+- **Water bodies**: *Layout* — one water body everywhere (pick it in *Water*), a river mouth, a lake with a canal, a
+  fjord entrance over its sill, a sheltered bay behind a spit, an ice edge, or *Mixed from the seed* (lakes, fjords,
+  *Rivers* 0–6, *Ice from the north*). *Transition* sets how wide the blend between two waters is. The list under it
+  gives each water's share; the chart tints the water by body and names the waters; the ship's status line says what
+  water it is in and the current.
 - **Map edge**: *Wrap-around (torus)* — sail out of one edge and you come in at the opposite one — or *Bounded* with a
   buoy line, a mountain range or an invisible wall.
 - **Chart**: the whole map; the yellow arrow is the ship, the white lines the camera's view; click to move the ship
@@ -121,7 +126,9 @@ Procedural land and sea from a seed; sail through it.
   ship runs aground in water shallower than 3.5 m and stops at a barrier.
 - **Camera**: Chase, Bridge, Overview, Free flight (**W/A/S/D**, **Q/E** down/up, **Shift** faster, drag to look).
 - **Light and weather**: weather, sun height and bearing.
-- Try: Fjords at 55 % land from the Bridge; Archipelago, bounded by buoys, from the Overview; 100 % land Highlands in
+- Try: the river mouth from the Chase camera — sail from the river through the brown plume into the sea; the harbour
+  entrance at Transition 60 m and at 1,600 m; Mixed with 4 rivers and 30 % ice in Free flight high up;
+  Fjords at 55 % land from the Bridge; Archipelago, bounded by buoys, from the Overview; 100 % land Highlands in
   Free flight; sail off the edge of a wrap-around map.
 
 ## Transformer — `labs/transform.html`

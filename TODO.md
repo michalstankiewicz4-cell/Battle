@@ -24,7 +24,8 @@ Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.8.1 Context: [`d
 - [ ] P2 Orzeł: check against a profile drawing/photos when available; May 1940 state; ORP Sęp variant; periscope wake in the Water Lab
 - [x] Quays (gravity, sheet-pile, piled deck; Błyskawica alongside) and breakwaters (rock, tetrapods, caissons + tetrapod berm; round head with a light) (v0.17.0)
 - [ ] P2 Structures next: piers and jetties, harbours (cranes, sheds), lighthouses; rig details (rack teeth, deck lighting, well-test flame); structures in the model doctor
-- [ ] P1 Land Lab mixes the water bodies by region (rivers and lakes from the terrain generator, estuaries, ice edge)
+- [x] Land Lab mixes the water bodies by region: layouts (river mouth, lake and canal, fjord sill, harbour bay, ice edge) and mixed from the seed (lakes, fjords, carved rivers with currents, ice edge), seamless transitions (v0.19.0)
+- [ ] P2 Regions next: land biomes (desert, tundra, tropical: terrain palette and vegetation by region), later other planets (sky, water and biome bundles); rivers that meander more at map scale; the game's map generator on top (scale, spawns, balance) — owner 2026-10-22
 - [ ] P2 Environment: fog banks, spray in high wind; sky and weather panels in the water lab
 - [ ] P1 Owner picks an ageing level and a look → into the game's materials and graphics settings (lens effects for first-person views)
 - [ ] P1 Procedural destruction on the transformer's hitboxes: damage model, spread to neighbours, debris, fire and smoke

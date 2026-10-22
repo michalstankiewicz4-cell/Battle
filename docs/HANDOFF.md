@@ -7,7 +7,7 @@ what the project is, what the owner decided, how work is done and what comes nex
 **Keep this file current:** when a decision is made, a feature lands or the next steps change, update the sections
 below in the same push (it is part of every release, like the changelog).
 
-## Snapshot (state as of v0.18.0, 2026-10-22)
+## Snapshot (state as of v0.19.0, 2026-10-22)
 - **What:** *Steel Salvo* (working title) — free naval battle browser game, PvE against endless waves of AI warships.
   Live: <https://michalstankiewicz4-cell.github.io/Battle/> · repo: <https://github.com/michalstankiewicz4-cell/Battle> (branch `main`,
   GitHub Pages deploys every push via `.github/workflows/static.yml`).
@@ -34,7 +34,8 @@ below in the same push (it is part of every release, like the changelog).
   (`js/shipkit/ageing.js`, baked occlusion/edges, no textures), cloudy sky with seven weathers that also set the sea, rain with squalls and sea fog,
   time of day from dawn to a moonlit night, lightning, navigation lights, gun flashes, SOS by searchlight shutters
   (`js/env/skykit.js`, `js/env/rainkit.js`, `js/shipkit/lights.js`), **Land Lab** (`labs/land.html`, `js/env/landkit.js`,
-  `docs/land.md`) — procedural land and sea 0–100 %, wrap-around (torus) or bounded map, sailing with grounding, camera look with presets Game clean / Cinematic / Bodycam (`js/render/look.js`), split compare, auto resolution.
+  `docs/land.md`) — procedural land and sea 0–100 %, wrap-around (torus) or bounded map, water bodies mixed by region
+  (`js/env/regionkit.js`: layouts + mixed from the seed with rivers, lakes, fjords, ice; currents), sailing with grounding, camera look with presets Game clean / Cinematic / Bodycam (`js/render/look.js`), split compare, auto resolution.
 - **Origin:** started from the engine of the owner's other game *Capital Quarantine* (repo `VS`), then diverged:
   the pixel-art pipeline was dropped, the look is now realistic only.
 
@@ -53,6 +54,7 @@ below in the same push (it is part of every release, like the changelog).
 | 2026-10-19 | Water lab before putting Błyskawica into the game; labs linked from the main menu. |
 | 2026-10-19 | Ships fixed with the doctor (done, v0.7.1); then a **"transformer"** that optimizes a ship so it does not choke the GPU and the browser (done, v0.8.0). |
 | 2026-10-21 | Labs grouped into areas (models, environment incl. land/water/sky/weather/time of day/space, graphics and filters, special effects, tools). Now: water and weather, graphics and filters, Błyskawica; the rest soon. Bodycam/photoreal look via a Look Lab (proposed; lens effects mainly for first-person views — owner to confirm). |
+| 2026-10-22 | Mixing water types = the region layer (transitions and joins), not yet the final map generator. Later: **biomes** (e.g. desert) and **other planets** too. |
 | 2026-10-22 | ORP Orzeł (submarine) with solid research after quays and breakwaters. Later: a Paint Lab — paint schemes and camouflage kept separate from the ship, fitted or reassigned to any ship. More labs are welcome where they make sense. |
 | 2026-10-21 | Everything built that touches the water (quays, piers, breakwaters, harbours) goes to a **waterside-buildings lab**; the Water Lab keeps the water itself (oil, ice). |
 | 2026-10-21 | Water types: one WaterKit, each body (ocean, fjord, lake, river, then harbour, ice) a preset + its own feature in the Water Lab; the Land Lab later mixes them by region. Keep a professional folder layout (`js/env` kits, `js/tools`, `js/labs` = one controller per page) and a user guide (`docs/GUIDE.md`). |
@@ -115,7 +117,8 @@ below in the same push (it is part of every release, like the changelog).
 
 ## Next steps (from TODO, highest first)
 00. Owner's order (2026-10-21/22): structures lab: jack-up rig, quays and breakwaters done (piers, harbours, lighthouses
-   later) → ORP Orzeł done (v0.18.0) → next mixing water bodies by region in the Land Lab; Paint Lab later; small fixes (ice look, fjord walls) later.
+   later) → ORP Orzeł done (v0.18.0) → water bodies mixed by region in the Land Lab done (v0.19.0; it is the layer for
+   transitions and joins, not the final map generator) → next: land biomes (desert…), later other planets; Paint Lab later; small fixes (ice look, fjord walls) later.
    More labs are welcome where they make sense.
 0. **P1** Owner looks at the Look Lab on a real GPU: which wear level and look go into the game, confirm lens effects only
    for first-person views, which weathers and times of day the game gets; then night lighting (navigation lights, gun flashes) and lightning.

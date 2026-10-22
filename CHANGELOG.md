@@ -5,6 +5,14 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.19.0] - 2026-10-22
+### Added
+- **Water bodies mixed by region** in the Land Lab (`js/env/regionkit.js`): a region map gives every place a blend of ocean, fjord, lake, river, harbour water and ice plus a flow; the sea blends their looks, waves, ripples, foam, oil, ice cover and current with no seams, and the ship feels it (smaller waves in sheltered water, carried by the current, its status says what water it is in).
+- Layouts: **river mouth** (river, estuary, brackish plume, sea), **lake with a canal** to the sea, **fjord entrance** over a sill with skerries, **sheltered bay** behind a sandy spit (harbour water with oil), **ice edge** (loose floes to pack ice with polynyas), and **mixed from the seed**: the terrain classified into open sea, lakes and fjords, with rivers carved from the hills to the sea (meandering, widening, current slowing to the mouth) and an ice edge from the north. *Transition* width 60–1,600 m.
+- Chart tinted by water body with the waters' names; the share of each water listed.
+### Changed
+- WaterKit: ice cover per place (`gIceK`), far floes drawn as their average cover (no flicker), ripples/foam/oil drift with a regional current, foam streaks along the local flow.
+
 ## [0.18.0] - 2026-10-22
 ### Added
 - **ORP Orzeł** (1939, as delivered) in the Ship Lab — the Polish ocean-going submarine from De Schelde, Vlissingen, 1:1 from published figures (84 × 6.70 × 4.17 m, 1,110 / 1,473 t): double hull with a flat casing, limber holes, raked stem with a net cutter and jumping wires, streamlined conning tower with an open bridge and periscope standard, "85A" and the bronze name on the tower, the bell, 105 mm/41 Bofors in a shielded mount forward of the tower, twin 40 mm Bofors on an elevator in a watertight well in the tower (with its cover), two trainable twin torpedo mounts between the hulls, bow and stern tube shutters, folding bow hydroplanes, stern planes, twin screws, rudder. Inside the outer hull (lab only): the pressure hull with its outside frames every 0.55 m, the tower trunk and the bow and stern tube nests. Research sheet `docs/ships/orzel.md`.
