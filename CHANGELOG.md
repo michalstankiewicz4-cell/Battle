@@ -5,6 +5,12 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.20.0] - 2026-10-22
+### Added
+- **Land biomes** in the Land Lab: **plains** (relief pressed to a few tens of metres, long low swells and hummocks; meadows and farmland strips with hedges, a narrow beach), **desert** (dune fields with crests across the wind and slip faces, stepped plateaus and mesas with cliffs, desert varnish, wind ripples close up), the **northern** look as before, and **zones** mixing all three by region with a zone transition of 0.2–4 km. Heights and the terrain palette blend by biome (RegionKit biome weights, LandKit `setBiome`); the chart and the share list show them.
+### Changed
+- Rivers in *Mixed* meander (a swinging course down a chamfer distance-to-the-sea field), work on low land too, and their valleys end in a narrower bank.
+
 ## [0.19.0] - 2026-10-22
 ### Added
 - **Water bodies mixed by region** in the Land Lab (`js/env/regionkit.js`): a region map gives every place a blend of ocean, fjord, lake, river, harbour water and ice plus a flow; the sea blends their looks, waves, ripples, foam, oil, ice cover and current with no seams, and the ship feels it (smaller waves in sheltered water, carried by the current, its status says what water it is in).

@@ -113,6 +113,9 @@ Procedural land and sea from a seed; sail through it.
 - **Map**: seed (*New random map*, *Generate*), shape (Islands, Archipelago, Coast, Fjords, Highlands), land share
   0–100 %, map size 4–32 km, detail, highest peaks, sea depth, roughness, erosion. The same seed and settings always give
   the same map.
+- **Biome**: *Northern*, *Plains* (flat, gently rolling lowland with meadows and fields), *Desert* (dunes, stony
+  plateaus, mesas with cliffs) or *Zones* (all three by region; *Zone transition* sets how wide the blend is). Ground
+  only — plants and rocks as objects come in their own labs.
 - **Water bodies**: *Layout* — one water body everywhere (pick it in *Water*), a river mouth, a lake with a canal, a
   fjord entrance over its sill, a sheltered bay behind a spit, an ice edge, or *Mixed from the seed* (lakes, fjords,
   *Rivers* 0–6, *Ice from the north*). *Transition* sets how wide the blend between two waters is. The list under it

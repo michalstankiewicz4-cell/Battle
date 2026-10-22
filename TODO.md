@@ -25,7 +25,10 @@ Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.8.1 Context: [`d
 - [x] Quays (gravity, sheet-pile, piled deck; Błyskawica alongside) and breakwaters (rock, tetrapods, caissons + tetrapod berm; round head with a light) (v0.17.0)
 - [ ] P2 Structures next: piers and jetties, harbours (cranes, sheds), lighthouses; rig details (rack teeth, deck lighting, well-test flame); structures in the model doctor
 - [x] Land Lab mixes the water bodies by region: layouts (river mouth, lake and canal, fjord sill, harbour bay, ice edge) and mixed from the seed (lakes, fjords, carved rivers with currents, ice edge), seamless transitions (v0.19.0)
-- [ ] P2 Regions next: land biomes (desert, tundra, tropical: terrain palette and vegetation by region), later other planets (sky, water and biome bundles); rivers that meander more at map scale; the game's map generator on top (scale, spawns, balance) — owner 2026-10-22
+- [x] Land biomes: northern, plains (flat, gently rolling, meadows and fields), desert (dunes, plateaus, mesas), zones; rivers meander (v0.20.0)
+- [ ] P1 **Plants Lab** (owner 2026-10-22): trees, bushes, grass as blades/tufts swaying in the wind, placed by biome and slope (instanced, impostors far away)
+- [ ] P1 **Rocks Lab** (owner 2026-10-22): boulders, scree, outcrops and cliff faces as objects, placed by biome and slope
+- [ ] P2 More biomes (tundra, tropical, volcanic…), later other planets (sky, water and biome bundles); the game's map generator on top (scale, spawns, balance)
 - [ ] P2 Environment: fog banks, spray in high wind; sky and weather panels in the water lab
 - [ ] P1 Owner picks an ageing level and a look → into the game's materials and graphics settings (lens effects for first-person views)
 - [ ] P1 Procedural destruction on the transformer's hitboxes: damage model, spread to neighbours, debris, fire and smoke
