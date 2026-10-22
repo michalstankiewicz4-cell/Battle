@@ -5,6 +5,13 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.18.0] - 2026-10-22
+### Added
+- **ORP Orzeł** (1939, as delivered) in the Ship Lab — the Polish ocean-going submarine from De Schelde, Vlissingen, 1:1 from published figures (84 × 6.70 × 4.17 m, 1,110 / 1,473 t): double hull with a flat casing, limber holes, raked stem with a net cutter and jumping wires, streamlined conning tower with an open bridge and periscope standard, "85A" and the bronze name on the tower, the bell, 105 mm/41 Bofors in a shielded mount forward of the tower, twin 40 mm Bofors on an elevator in a watertight well in the tower (with its cover), two trainable twin torpedo mounts between the hulls, bow and stern tube shutters, folding bow hydroplanes, stern planes, twin screws, rudder. Inside the outer hull (lab only): the pressure hull with its outside frames every 0.55 m, the tower trunk and the bow and stern tube nests. Research sheet `docs/ships/orzel.md`.
+- **Diving** in the Ship Lab: Surfaced, Decks awash, Periscope depth (keel 12 m) and Deep — at the real rate or fast; the 40 mm sinks into its well and the cover closes, the bow planes rig out, the periscopes rise, the ensign is struck; the status line gives the keel depth and how much periscope shows.
+- Ship Lab works per ship: camera presets, dimension labels and part names come from each ship module's `view`; the signal lamp shows only for a ship that has one; `labs/ship.html?ship=orzel` opens Orzeł; a tile on the labs page.
+- ShipKit parts: `deckGun105` (submarine deck gun), `lettering`, `ensign` (shared), `bofors40` without a splinter tub, `torpedoTubes` with any number and length of tubes.
+
 ## [0.17.0] - 2026-10-22
 ### Added
 - **Quay walls** in the Waterside Structures Lab: gravity block wall (precast blocks in courses on a rubble bed), steel sheet-pile wall (U-profile piles) or open piled deck (deck on Ø 1 m steel piles over a rock revetment); capping beam with a safety kerb, tee-head bollards every 15 m, cylindrical rubber fenders on chains, recessed ladders, crane rails, lighting masts, paved apron; length and cope level. **ORP Błyskawica moored alongside** on the fenders with bow and stern lines and springs.

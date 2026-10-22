@@ -26,14 +26,20 @@ each lab is for, how to drive it and what to try. Technical details are in the p
 
 ## Ship Lab — `labs/ship.html`
 
-ORP Błyskawica (1937) at real scale, built from code.
+ORP Błyskawica (1937) and ORP Orzeł (1939) at real scale, built from code; pick the ship in the top bar.
 
-- **Camera** presets (Bow ¾, Bridge, Funnel & tubes, Quarterdeck…); **F** frames the whole ship; double-click focuses.
+- **Camera** presets per ship (Błyskawica: Bow ¾, Bridge, Funnel & tubes, Quarterdeck…; Orzeł: Conning tower, Deck gun,
+  40 mm well, Bow and net cutter, Stern and screws…); **F** frames the whole ship; double-click focuses.
 - **View**: sea or dry dock, dimensions, 10 m grid, wireframe, auto-rotate, sun height and bearing, exposure.
 - **Parts**: switch hull, superstructure, guns, AA, torpedo tubes, fittings on and off.
 - **Armament**: train and elevate all mounts, **Action stations** (they sweep), **Stow**.
 - **Signal lamp**: type a short message (A–Z, 0–9; SOS by default) and press **Signal with the searchlight** — the
   camera moves in front of the lamp and its round shutter keys the message in Morse; press again to stop.
+- **Diving** (Orzeł): *Surfaced*, *Decks awash*, *Periscope depth*, *Deep (40 m)* — she sinks at the real rate (about
+  0.3 m/s; tick *Fast* to hurry), the 40 mm goes down into its well, the bow planes rig out, the periscopes come up at
+  periscope depth; the status line shows the keel depth and how much periscope is above the sea. The checkboxes raise
+  the periscopes, the 40 mm and the planes by hand. Untick *Sea* to see the hull under water; untick *Outer hull* to see
+  the pressure hull with its frames, the tube nests and the twin tubes between the hulls.
 - **Model**: detail level (rebuilds the ship), triangle and draw-call counts.
 - Try: compare the specifications and sources (left) with the model; find something wrong and report it.
 
