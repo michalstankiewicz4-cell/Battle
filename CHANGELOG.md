@@ -5,6 +5,12 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.21.0] - 2026-10-22
+### Added
+- **Plants Lab** (`labs/plants.html`): trees, palms, shrubs and grass grown from code at real scale — Norway spruce, Scots pine, silver birch, pedunculate oak, date palm, umbrella thorn acacia, common juniper, desert saltbush — with bark and foliage drawn on canvases, moving in the wind (trunks bend, gusts travel, leaves flutter, shadows follow), birch and oak turning in autumn.
+- **Specimen** mode: one plant from a seed, size, detail, season, its impostor beside it; **Landscape** mode: a 2.4 km world with lakes in any biome or zones, spruce/pine forests with birch edges and juniper heath, oak copses on the plains, palm oases and acacias in the desert; full models near the camera (instanced, shadows) and **impostors** beyond (8 views × 3 variants, colour and normal atlases, lit by the sun); **grass** blades in tufts on a tile that follows the camera, by biome, slope and water.
+- `js/env/plantkit.js` (species, growth, materials, wind) and `js/env/forestkit.js` (impostors, forest LOD, grass); research and rules in `docs/plants.md`.
+
 ## [0.20.0] - 2026-10-22
 ### Added
 - **Land biomes** in the Land Lab: **plains** (relief pressed to a few tens of metres, long low swells and hummocks; meadows and farmland strips with hedges, a narrow beach), **desert** (dune fields with crests across the wind and slip faces, stepped plateaus and mesas with cliffs, desert varnish, wind ripples close up), the **northern** look as before, and **zones** mixing all three by region with a zone transition of 0.2–4 km. Heights and the terrain palette blend by biome (RegionKit biome weights, LandKit `setBiome`); the chart and the share list show them.

@@ -134,6 +134,22 @@ Procedural land and sea from a seed; sail through it.
   Fjords at 55 % land from the Bridge; Archipelago, bounded by buoys, from the Overview; 100 % land Highlands in
   Free flight; sail off the edge of a wrap-around map.
 
+## Plants Lab — `labs/plants.html`
+
+Trees, palms, shrubs and grass grown from code. Two modes in the top bar.
+
+- **Specimen**: pick a *Species* (spruce, pine, birch, oak, date palm, umbrella thorn acacia, juniper, saltbush);
+  *Seed* / *Another one* grows a different individual; *Size*, *Detail*; *Season* turns birch yellow and oak russet;
+  *Its impostor beside it* shows the flat stand-in used far away, to compare. Cameras: Orbit, Under the crown, From above.
+- **Landscape**: a 2.4 km world with lakes in a *Biome* (northern, plains, desert or zones); *Plants* (density),
+  *Grass* (density) and *Grass radius*, *Full models to* (beyond: impostors), *Impostors* off to see the cost of full
+  models only. Cameras: Walk (W/A/S/D at eye height), Treetops, Low flight, Overview; drag to look, Q/E down/up, Shift
+  faster.
+- **Wind**: strength and direction — trees bend, leaves flutter, gusts roll across the grass. **Light and weather**:
+  weather, sun height and bearing.
+- Try: oak in Specimen with Season at 1 and strong wind; Northern landscape from Walk inside a spruce stand; Plains
+  from Treetops with *Full models to* at 30 m and at 400 m; Desert from Low flight over an oasis.
+
 ## Transformer — `labs/transform.html`
 
 The lab ship made game-ready: levels of detail and hitboxes.

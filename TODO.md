@@ -26,7 +26,8 @@ Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.8.1 Context: [`d
 - [ ] P2 Structures next: piers and jetties, harbours (cranes, sheds), lighthouses; rig details (rack teeth, deck lighting, well-test flame); structures in the model doctor
 - [x] Land Lab mixes the water bodies by region: layouts (river mouth, lake and canal, fjord sill, harbour bay, ice edge) and mixed from the seed (lakes, fjords, carved rivers with currents, ice edge), seamless transitions (v0.19.0)
 - [x] Land biomes: northern, plains (flat, gently rolling, meadows and fields), desert (dunes, plateaus, mesas), zones; rivers meander (v0.20.0)
-- [ ] P1 **Plants Lab** (owner 2026-10-22): trees, bushes, grass as blades/tufts swaying in the wind, placed by biome and slope (instanced, impostors far away)
+- [x] **Plants Lab** (v0.21.0): eight species, wind, autumn, impostors, forests by biome, grass blades
+- [ ] P2 Plants next: undergrowth (ferns, heather, reeds), dead wood, smooth model↔impostor cross-fade, autumn impostors, plants in the Land Lab and the game
 - [ ] P1 **Rocks Lab** (owner 2026-10-22): boulders, scree, outcrops and cliff faces as objects, placed by biome and slope
 - [ ] P2 More biomes (tundra, tropical, volcanic…), later other planets (sky, water and biome bundles); the game's map generator on top (scale, spawns, balance)
 - [ ] P2 Environment: fog banks, spray in high wind; sky and weather panels in the water lab

@@ -52,6 +52,14 @@
     </image:image>
   </url>
   <url>
+    <loc>https://michalstankiewicz4-cell.github.io/Battle/labs/plants.html</loc>
+    <lastmod>2026-10-22</lastmod>
+    <priority>0.5</priority>
+    <image:image>
+      <image:loc>https://michalstankiewicz4-cell.github.io/Battle/assets/labs/plants.jpg</image:loc>
+    </image:image>
+  </url>
+  <url>
     <loc>https://michalstankiewicz4-cell.github.io/Battle/labs/structures.html</loc>
     <lastmod>2026-10-21</lastmod>
     <priority>0.5</priority>
