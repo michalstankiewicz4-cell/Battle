@@ -7,7 +7,7 @@ what the project is, what the owner decided, how work is done and what comes nex
 **Keep this file current:** when a decision is made, a feature lands or the next steps change, update the sections
 below in the same push (it is part of every release, like the changelog).
 
-## Snapshot (state as of v0.21.0, 2026-10-22)
+## Snapshot (state as of v0.22.0, 2026-10-23)
 - **What:** *Steel Salvo* (working title) — free naval battle browser game, PvE against endless waves of AI warships.
   Live: <https://michalstankiewicz4-cell.github.io/Battle/> · repo: <https://github.com/michalstankiewicz4-cell/Battle> (branch `main`,
   GitHub Pages deploys every push via `.github/workflows/static.yml`).
@@ -39,6 +39,10 @@ below in the same push (it is part of every release, like the changelog).
   (northern, plains, desert, zones), sailing with grounding, camera look with presets Game clean / Cinematic / Bodycam (`js/render/look.js`), split compare, auto resolution.
 - **Plants Lab** (`labs/plants.html`, `js/env/plantkit.js`, `js/env/forestkit.js`, `docs/plants.md`): eight species grown
   from code, wind, autumn, impostors, forests by biome, grass blades.
+- **Pixel Studio** (`pixel/index.html`, `js/pixel/`, `css/pixel.css`, `docs/pixel.md`, check `py tools/pixel-check.py`):
+  a separate pixel-art project (owner 2026-10-23: own folder reachable via Pages like the labs, **not in the game**, not on
+  the labs page). Modes 3D model / Generate / Draw / hybrid, palettes, dither, selout, clean-up, Pixel Doctor, PNG/GIF export.
+  The game's "realistic only" rule does not apply to it.
 - **Origin:** started from the engine of the owner's other game *Capital Quarantine* (repo `VS`), then diverged:
   the pixel-art pipeline was dropped, the look is now realistic only.
 
@@ -49,7 +53,7 @@ below in the same push (it is part of every release, like the changelog).
 | 2026-10-13 | Repo `Battle`, GitHub Pages. **Every push is a new version** (bump + changelog + check script). |
 | 2026-10-13 | **English is the default language**, Polish only as an option in Options > Language. **All docs, code comments and UI source text in English.** |
 | 2026-10-13 | Documentation follows the VS repo layout (README, ARCHITECTURE, TODO with P1–P3, MULTIPLAYER, CLAUDE.md, CHANGELOG). |
-| 2026-10-18 | **Realistic graphics only.** Alternative styles (pixel, comic, watercolour) were tried and removed. Performance goes through settings (resolution, shadows, AA, glow, effects, water) and High/Light presets, not new styles. |
+| 2026-10-18 | **Realistic graphics only.** Alternative styles (pixel, comic, watercolour) were tried and removed. Performance goes through settings (resolution, shadows, AA, glow, effects, water) and High/Light presets, not new styles. (The separate Pixel Studio, 2026-10-23, is outside the game and not affected.) |
 | 2026-10-18 | Gun camera on C ("view above the gun"), binoculars as a double round view; submarine with diving and a periscope instead of binoculars; salvo camera top-right. |
 | 2026-10-18 | SEO and all metadata in English; start-screen thumbnail. |
 | 2026-10-19 | Model lab ("like the Space labs"): detailed 1:1 real warships; first ORP Błyskawica (1937, the configuration known from warship games). |
@@ -123,7 +127,7 @@ below in the same push (it is part of every release, like the changelog).
 00. Owner's order (2026-10-21/22): structures lab: jack-up rig, quays and breakwaters done (piers, harbours, lighthouses
    later) → ORP Orzeł done (v0.18.0) → water bodies mixed by region in the Land Lab done (v0.19.0; it is the layer for
    transitions and joins, not the final map generator) → biomes northern/plains/desert/zones done (v0.20.0) → next ideas:
-   Plants Lab done (v0.21.0) → next: Rocks Lab, more biomes, later other planets; Paint Lab later; small fixes (ice look, fjord walls) later.
+   Plants Lab done (v0.21.0) → Pixel Studio v1 (v0.22.0, separate project; owner wants to teach pixel art, iterate on it) → next: Rocks Lab, more biomes, later other planets; Paint Lab later; small fixes (ice look, fjord walls) later.
    More labs are welcome where they make sense.
 0. **P1** Owner looks at the Look Lab on a real GPU: which wear level and look go into the game, confirm lens effects only
    for first-person views, which weathers and times of day the game gets; then night lighting (navigation lights, gun flashes) and lightning.

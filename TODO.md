@@ -9,6 +9,9 @@ Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.8.1 Context: [`d
 - [ ] P2 Fixed simulation tick (30/60 Hz accumulator) + render interpolation between ticks; state hash for desync checks (see MULTIPLAYER.md §7)
 - [ ] P2 Lobby (room code), snapshots, interpolation, two-client tests
 
+## Pixel Studio (separate project, `docs/pixel.md`)
+- [ ] P2 Owner tries it; then: palette editor/import, layers, selection and move, per-frame timing, 3×3 tile preview, canopy normals for trees, more 3D subjects
+
 ## Labs (map: [`docs/labs.md`](docs/labs.md))
 - [x] Look Lab v0.9.0: procedural ageing with baked shading, cloudy sky and weather (wind → sea), tone/exposure/bloom, lens effects, bodycam look, automatic resolution
 - [x] Rain (streaks, rings on the sea, wet ship, curtains on the horizon, squalls) and sea fog with visibility in km (v0.10.0)

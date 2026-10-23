@@ -169,6 +169,19 @@ Checks every lab and game ship for the mistakes that keep coming back.
 - **Options** and **Budget**: what is checked and the game's limits per ship.
 - From the command line: `py tools/doctor.py` (compares with the golden file).
 
+## Pixel Studio — `pixel/` (separate project, not a lab)
+Open <https://michalstankiewicz4-cell.github.io/Battle/pixel/>. Pick a mode at the top: **3D model**, **Generate** or **Draw**.
+- Set the size on the right (width, height or a preset). The background is always transparent (shown as a checkerboard).
+- 3D model: subject, camera preset (Front, ¾, Side, Isometric, Top-down ¾, Top), light side and height, light steps,
+  hue shift; *Supersample* 3–4 gives cleaner shapes, *Inner lines* draws edges inside the shape.
+- Generate: generator, seed (*Another one*), colour sliders; tiles repeat seamlessly.
+- Right panel: palette (Auto = best colours for this image), dither, outline (Selective is softer), clean-up.
+- **Edit in Draw** takes the result into the editor. Draw: B pencil, E eraser, G fill, L line, R rectangle, I picker,
+  right button erases, Ctrl+Z undo, Space play/pause. *Drawing → text* / *Text → drawing* for sprites as text.
+- Pixel Doctor (bottom right): score and findings; **Show** marks the pixels, **Fix** repairs what can be repaired.
+- Export: scale, then *PNG frame*, *PNG sprite sheet* or *GIF animation*.
+Details: `docs/pixel.md`.
+
 ## When something looks wrong
 
 Take a screenshot (H hides the panels), note the lab, the camera preset and — if possible — *Copy settings (JSON)*,

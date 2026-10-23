@@ -22,6 +22,7 @@ Published at: repo <https://github.com/michalstankiewicz4-cell/Battle>, site <ht
 | `js/tools` | Quality tools that are not pages (model doctor) | used by labs and `tools/*.py` |
 | `js/labs` | One controller per lab page (`labs/<name>.html` → `js/labs/<name>.js`): UI, scene, test hooks (`window.__…`) | glue only — anything reusable goes to a kit |
 | `labs/`, `labs.html`, `css/lab.css` | Lab pages and their styles | |
+| `pixel/`, `js/pixel/`, `css/pixel.css` | Pixel Studio — separate pixel-art project, not part of the game (`docs/pixel.md`) | imports PlantKit/ShipKit read-only; the game never imports it |
 | `docs/` | Architecture, handoff, one document per lab/kit, `GUIDE.md` (how to use the labs) | updated with every push |
 | `tools/` | Python and Node checks (e2e, lab check, model doctor, version) | |
 

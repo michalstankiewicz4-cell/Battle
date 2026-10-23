@@ -5,6 +5,13 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.22.0] - 2026-10-23
+### Added
+- **Pixel Studio** (`pixel/index.html`, <https://michalstankiewicz4-cell.github.io/Battle/pixel/>) — a separate pixel-art project, not part of the game and not linked from it. Any size 4–256 px, transparent background, export to **PNG** (frame or sprite sheet, 1–16×) and animated **GIF**.
+- Four ways: **3D model** (models rendered small with hard hue-shifted light, palette, majority downsampling, inner lines from depth — crate, barrel, chest, sword, mushroom, house, rock, a walking adventurer, a PlantKit tree in the wind, a ShipKit ship rolling), **Generate** (planet, gem, potion, coin, tree, rock, fire, slime; seamless grass, sand, cobblestone, water and lava tiles), **Draw** (pixel editor with frames, onion skin, mirror, undo, sprites as text) and the **hybrid** (*Edit in Draw*).
+- Shared pipeline: auto (median cut, OKLab) or fixed palettes, ordered dithering, dark or selective outline, lone-pixel removal, pixel-perfect lines; **Pixel Doctor** (colours, alpha, orphans, doubled corners, pillow shading, banding, contrast, noise, silhouette) with Show and Fix.
+- `js/pixel/` (core, gif, render3d, generators, doctor, sprites, app), `css/pixel.css`, `docs/pixel.md`, headless `tools/pixel-check.py`.
+
 ## [0.21.0] - 2026-10-22
 ### Added
 - **Plants Lab** (`labs/plants.html`): trees, palms, shrubs and grass grown from code at real scale — Norway spruce, Scots pine, silver birch, pedunculate oak, date palm, umbrella thorn acacia, common juniper, desert saltbush — with bark and foliage drawn on canvases, moving in the wind (trunks bend, gusts travel, leaves flutter, shadows follow), birch and oak turning in autumn.

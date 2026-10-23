@@ -67,4 +67,7 @@
       <image:loc>https://michalstankiewicz4-cell.github.io/Battle/assets/labs/structures.jpg</image:loc>
     </image:image>
   </url>
+  <url>
+    <loc>https://michalstankiewicz4-cell.github.io/Battle/pixel/</loc>
+  </url>
 </urlset>
