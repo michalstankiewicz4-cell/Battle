@@ -180,6 +180,8 @@ Open <https://michalstankiewicz4-cell.github.io/Battle/pixel/>. Pick a mode at t
   right button erases, Ctrl+Z undo, Space play/pause. *Drawing → text* / *Text → drawing* for sprites as text.
 - Pixel Doctor (bottom right): score and findings; **Show** marks the pixels, **Fix** repairs what can be repaired.
 - Export: scale, then *PNG frame*, *PNG sprite sheet* or *GIF animation*.
+- Settings: *Copy settings* to send the exact setup (e.g. to Claude), *Apply pasted settings* to load one, *Reset* for defaults.
+- On a narrow window or a phone everything is one column: preview, then the mode's controls, then output.
 Details: `docs/pixel.md`.
 
 ## When something looks wrong

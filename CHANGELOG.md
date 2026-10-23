@@ -5,6 +5,12 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.23.0] - 2026-10-23
+### Added
+- Pixel Studio: **Copy settings / Apply pasted settings / Reset** — every slider as JSON, so a picture can be shared and reproduced exactly.
+### Fixed
+- Pixel Studio on narrow windows: one scrolling column (preview first, then the mode's controls, then output); on phones the left panel (3D model / Generate / Draw controls) was hidden and the panels slid under the top bar. The preview shrinks to fit the width.
+
 ## [0.22.0] - 2026-10-23
 ### Added
 - **Pixel Studio** (`pixel/index.html`, <https://michalstankiewicz4-cell.github.io/Battle/pixel/>) — a separate pixel-art project, not part of the game and not linked from it. Any size 4–256 px, transparent background, export to **PNG** (frame or sprite sheet, 1–16×) and animated **GIF**.

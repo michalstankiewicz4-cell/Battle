@@ -7,7 +7,7 @@ what the project is, what the owner decided, how work is done and what comes nex
 **Keep this file current:** when a decision is made, a feature lands or the next steps change, update the sections
 below in the same push (it is part of every release, like the changelog).
 
-## Snapshot (state as of v0.22.0, 2026-10-23)
+## Snapshot (state as of v0.23.0, 2026-10-23)
 - **What:** *Steel Salvo* (working title) — free naval battle browser game, PvE against endless waves of AI warships.
   Live: <https://michalstankiewicz4-cell.github.io/Battle/> · repo: <https://github.com/michalstankiewicz4-cell/Battle> (branch `main`,
   GitHub Pages deploys every push via `.github/workflows/static.yml`).
@@ -41,7 +41,9 @@ below in the same push (it is part of every release, like the changelog).
   from code, wind, autumn, impostors, forests by biome, grass blades.
 - **Pixel Studio** (`pixel/index.html`, `js/pixel/`, `css/pixel.css`, `docs/pixel.md`, check `py tools/pixel-check.py`):
   a separate pixel-art project (owner 2026-10-23: own folder reachable via Pages like the labs, **not in the game**, not on
-  the labs page). Modes 3D model / Generate / Draw / hybrid, palettes, dither, selout, clean-up, Pixel Doctor, PNG/GIF export.
+  the labs page). Modes 3D model / Generate / Draw / hybrid, palettes, dither, selout, clean-up, Pixel Doctor, PNG/GIF export; Copy/Apply settings (JSON) so the owner can send an exact setup; one-column layout on narrow screens.
+  Working loop agreed with the owner: Claude writes the rules and defaults, the owner tunes sliders and retouches in Draw,
+  then sends feedback / settings JSON / retouched sprite text, and Claude turns that into better rules or Doctor checks.
   The game's "realistic only" rule does not apply to it.
 - **Origin:** started from the engine of the owner's other game *Capital Quarantine* (repo `VS`), then diverged:
   the pixel-art pipeline was dropped, the look is now realistic only.
