@@ -5,6 +5,11 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.25.0] - 2026-10-24
+### Added
+- **Zombie Generator** in Pixel Studio (`pixel/zombies.html`, `js/pixel/zombie.js`, `js/pixel/zombieapp.js`): original zombies from a seed — body (height, build, hunch, limp, lost forearm), decaying skin, eyes, hair, six outfits (hazmat suit, office shirt and tie, overalls, T-shirt and jeans, hospital gown, rags) torn, dirty and bloodied — in five animations (shamble, lurch, lunge, idle, crawl) from eight directions; ray-marched on the GPU with soft shadows, or as pixel art through the Pixel Studio pipeline.
+- Unity sprite-sheet export: 12 frames of 512 × 512 in 6 × 2, hard alpha, pivot at the feet, 100 pixels per unit; JSON per sheet, an editor script that slices them (`ZombieSheetSlicer.cs`), all directions (and animations) in one ZIP (`js/pixel/zip.js`); GIF preview. Docs: `docs/zombies.md`; checked in `tools/pixel-check.py`.
+
 ## [0.24.0] - 2026-10-24
 ### Added
 - **Foam with memory** in the Water Lab (`js/env/foamkit.js`): a 1.5 km foam map in the water's frame updated on the GPU — whitecaps break where the sea folds, leave residual foam that opens up into lace (wind rows in a gale), the turbulent wake and the hull's foam lines stay for minutes, spread and leave a calm slick; drawn through a warped bubble-raft pattern.

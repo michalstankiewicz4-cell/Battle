@@ -7,7 +7,7 @@ what the project is, what the owner decided, how work is done and what comes nex
 **Keep this file current:** when a decision is made, a feature lands or the next steps change, update the sections
 below in the same push (it is part of every release, like the changelog).
 
-## Snapshot (state as of v0.24.0, 2026-10-24)
+## Snapshot (state as of v0.25.0, 2026-10-24)
 - **What:** *Steel Salvo* (working title) — free naval battle browser game, PvE against endless waves of AI warships.
   Live: <https://michalstankiewicz4-cell.github.io/Battle/> · repo: <https://github.com/michalstankiewicz4-cell/Battle> (branch `main`,
   GitHub Pages deploys every push via `.github/workflows/static.yml`).
@@ -47,6 +47,9 @@ below in the same push (it is part of every release, like the changelog).
   Working loop agreed with the owner: Claude writes the rules and defaults, the owner tunes sliders and retouches in Draw,
   then sends feedback / settings JSON / retouched sprite text, and Claude turns that into better rules or Doctor checks.
   The game's "realistic only" rule does not apply to it.
+  **Zombie Generator** (`pixel/zombies.html`, v0.25.0, `docs/zombies.md`): the owner wants to give it to the author of a
+  zombie game he plays (Unity, sprite sheets 512×512, 6×2, hard alpha, pivot 9 px, 100 ppu — studied from the owner's
+  installed demo; nothing of it is in the repo). Realistic (ray-marched SDF) or pixel art; Unity JSON + slicer + ZIP.
 - **Origin:** started from the engine of the owner's other game *Capital Quarantine* (repo `VS`), then diverged:
   the pixel-art pipeline was dropped, the look is now realistic only.
 

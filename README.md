@@ -35,7 +35,7 @@ Five areas — models, environment, graphics and filters, special effects, tools
 
 ## Testing
 ## Pixel Studio
-A separate pixel-art project in this repo, not part of the game: [Pixel Studio](https://michalstankiewicz4-cell.github.io/Battle/pixel/) — pixel art from 3D models, generators, a pixel editor and the hybrid of the three, checked by a Pixel Doctor, exported as PNG or GIF with a transparent background. See `docs/pixel.md`; check: `py tools/pixel-check.py`.
+A separate pixel-art project in this repo, not part of the game: [Pixel Studio](https://michalstankiewicz4-cell.github.io/Battle/pixel/) — pixel art from 3D models, generators, a pixel editor and the hybrid of the three, checked by a Pixel Doctor, exported as PNG or GIF with a transparent background. See `docs/pixel.md`; check: `py tools/pixel-check.py`. Inside it, the [Zombie Generator](https://michalstankiewicz4-cell.github.io/Battle/pixel/zombies.html) makes original zombies as Unity sprite sheets (realistic or pixel art) — `docs/zombies.md`.
 
 `py tools/e2e.py` runs a headless smoke test of the whole game (needs `pip install playwright` and `playwright install chromium`); `py tools/og-image.py` regenerates the thumbnail; `py tools/lab-check.py` checks the labs; `py tools/doctor.py` runs the model doctor against `tools/doctor.golden.json`. Details: "Testing" in `docs/ARCHITECTURE.md`.
 
