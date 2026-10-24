@@ -5,6 +5,10 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.28.2] - 2026-10-25
+### Fixed
+- Pixel Studio and the Zombie Generator: the middle area scrolls when its content is taller than the window (the sprite sheet under the preview could not be reached); it stays centred while it fits.
+
 ## [0.28.1] - 2026-10-25
 ### Added
 - Zombie Generator: **Reset to default** in the top bar — every setting and the zombie back to the defaults (pixel art, GPU, seed 17).
