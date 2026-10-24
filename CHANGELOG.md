@@ -5,6 +5,10 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.26.0] - 2026-10-24
+### Added
+- Zombie Generator: a **loader** over the preview while frames render — spinner, "Rendering frame 9 of 12" and a progress bar; the ZIP export shows the sheet, animation, direction and frame. Frames render one at a time with the page free in between (`renderZombieAsync`); a newer change cancels the render in progress.
+
 ## [0.25.1] - 2026-10-24
 ### Fixed
 - Zombie Generator: blood in patches (not a coat) and nearly black-brown when dried; dirt mostly from the ground up.
