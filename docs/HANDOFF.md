@@ -7,7 +7,7 @@ what the project is, what the owner decided, how work is done and what comes nex
 **Keep this file current:** when a decision is made, a feature lands or the next steps change, update the sections
 below in the same push (it is part of every release, like the changelog).
 
-## Snapshot (state as of v0.26.0, 2026-10-24)
+## Snapshot (state as of v0.26.1, 2026-10-24)
 - **What:** *Steel Salvo* (working title) — free naval battle browser game, PvE against endless waves of AI warships.
   Live: <https://michalstankiewicz4-cell.github.io/Battle/> · repo: <https://github.com/michalstankiewicz4-cell/Battle> (branch `main`,
   GitHub Pages deploys every push via `.github/workflows/static.yml`).
@@ -130,6 +130,8 @@ below in the same push (it is part of every release, like the changelog).
 - A one-line `//` comment inside a JS object literal swallows the rest of the line: keep such comments at line ends.
 - `FoamMap` needs float render targets (EXT_color_buffer_float; half floats lose the slow decay). Foam tests use
   `__water.simulate(sec)` (SwiftShader renders ~1 fps; a sim step without drawing is fast).
+- Ray-marched shaders on Windows (ANGLE → D3D): keep loop bounds non-constant (`uZero`) so the HLSL compiler does not
+  unroll them, call the distance field from one loop for normals, and draw long renders in bands (GPU timeout ~2 s).
 - Commits made from the Claude sandbox use `Claude <noreply@anthropic.com>` as author/committer (the sandbox flags other identities as unverified).
 
 ## Next steps (from TODO, highest first)

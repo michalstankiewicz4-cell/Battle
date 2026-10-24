@@ -5,6 +5,10 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.26.1] - 2026-10-24
+### Fixed
+- Zombie Generator froze the browser at "Preparing…" on Windows: the ray-march shader is now written so the compiler cannot unroll its loops (one copy of the distance field instead of many — ANGLE/D3D compiles took minutes), noise is only evaluated near the clothes, fewer march and shadow steps, the shader compiles in the background where the browser can (`compileAsync`), and each frame renders in bands so no GPU task runs long enough for Windows to reset the driver; a lost WebGL context is reported instead of hanging.
+
 ## [0.26.0] - 2026-10-24
 ### Added
 - Zombie Generator: a **loader** over the preview while frames render — spinner, "Rendering frame 9 of 12" and a progress bar; the ZIP export shows the sheet, animation, direction and frame. Frames render one at a time with the page free in between (`renderZombieAsync`); a newer change cancels the render in progress.
