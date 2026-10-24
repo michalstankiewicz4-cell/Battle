@@ -5,6 +5,11 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.25.1] - 2026-10-24
+### Fixed
+- Zombie Generator: blood in patches (not a coat) and nearly black-brown when dried; dirt mostly from the ground up.
+- `tools/pixel-check.py`: starts the Zombie Generator with a small render (the default 12 × 512² blocks SwiftShader).
+
 ## [0.25.0] - 2026-10-24
 ### Added
 - **Zombie Generator** in Pixel Studio (`pixel/zombies.html`, `js/pixel/zombie.js`, `js/pixel/zombieapp.js`): original zombies from a seed — body (height, build, hunch, limp, lost forearm), decaying skin, eyes, hair, six outfits (hazmat suit, office shirt and tie, overalls, T-shirt and jeans, hospital gown, rags) torn, dirty and bloodied — in five animations (shamble, lurch, lunge, idle, crawl) from eight directions; ray-marched on the GPU with soft shadows, or as pixel art through the Pixel Studio pipeline.
