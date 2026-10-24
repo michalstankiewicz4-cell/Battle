@@ -187,9 +187,10 @@ Open <https://michalstankiewicz4-cell.github.io/Battle/pixel/>. Pick a mode at t
 - On a narrow window or a phone everything is one column: preview, then the mode's controls, then output.
 Details: `docs/pixel.md`.
 
-**Zombie Generator** (`pixel/zombies.html`, link in Pixel Studio's top bar): *Another zombie* or a seed, then any trait on
+**Zombie Generator** (`pixel/zombies.html`, link in Pixel Studio's top bar): choose *GPU* or *CPU* in the top bar,
+then *Another zombie* or a seed and any trait on
 the left; animation, direction, camera, light, style (realistic or pixel art) and the sheet on the right; *PNG sheet*,
-*JSON*, *GIF preview*, *All 8 directions (ZIP)* and *Unity slicer (.cs)*. Details: `docs/zombies.md`.
+*JSON*, *GIF preview*, *All 8 directions (ZIP)* and *Unity slicer (.cs)*. Nothing renders until you press *Start render*. Details: `docs/zombies.md`.
 
 ## When something looks wrong
 

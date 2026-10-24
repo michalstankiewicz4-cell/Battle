@@ -5,6 +5,13 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.28.0] - 2026-10-25
+### Added
+- Zombie Generator: a **renderer menu** in the top bar — **GPU** (default: the distance field evaluated on the graphics card in batches — the grid round the surface and the taps for normals and occlusion — by one small shader, `js/pixel/zombie-gpu.js`; on Windows it compiles once in about 20 s, then the browser's shader cache makes it instant) or **CPU** (all in JavaScript); both give the same mesh.
+- **Start render**: nothing renders by itself any more; a change marks the frames out of date and the preview says so, with the button. PNG and GIF export ask for a render first; the ZIP renders its own sheets.
+### Changed
+- Pixel art is the default style.
+
 ## [0.27.0] - 2026-10-25
 ### Changed
 - Zombie Generator renders without a giant shader: the distance field is evaluated in JS, turned into a mesh per frame (surface nets over a narrow band, normals from the field's gradient), coloured per vertex (decay, wounds, dirt, blood, baked occlusion) and drawn with ordinary three.js materials — key light with soft shadows, sky and ground fill, rim light, ACES. On the owner's Windows PC (Direct3D 11) the ray-march shader of v0.26 had not finished compiling after 2.5 minutes.
