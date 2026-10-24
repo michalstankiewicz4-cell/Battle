@@ -5,6 +5,12 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.27.0] - 2026-10-25
+### Changed
+- Zombie Generator renders without a giant shader: the distance field is evaluated in JS, turned into a mesh per frame (surface nets over a narrow band, normals from the field's gradient), coloured per vertex (decay, wounds, dirt, blood, baked occlusion) and drawn with ordinary three.js materials — key light with soft shadows, sky and ground fill, rim light, ACES. On the owner's Windows PC (Direct3D 11) the ray-march shader of v0.26 had not finished compiling after 2.5 minutes.
+### Added
+- The version number next to the title in Pixel Studio and the Zombie Generator.
+
 ## [0.26.1] - 2026-10-24
 ### Fixed
 - Zombie Generator froze the browser at "Preparing…" on Windows: the ray-march shader is now written so the compiler cannot unroll its loops (one copy of the distance field instead of many — ANGLE/D3D compiles took minutes), noise is only evaluated near the clothes, fewer march and shadow steps, the shader compiles in the background where the browser can (`compileAsync`), and each frame renders in bands so no GPU task runs long enough for Windows to reset the driver; a lost WebGL context is reported instead of hanging.
