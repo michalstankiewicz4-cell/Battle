@@ -5,6 +5,13 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.24.0] - 2026-10-24
+### Added
+- **Foam with memory** in the Water Lab (`js/env/foamkit.js`): a 1.5 km foam map in the water's frame updated on the GPU — whitecaps break where the sea folds, leave residual foam that opens up into lace (wind rows in a gale), the turbulent wake and the hull's foam lines stay for minutes, spread and leave a calm slick; drawn through a warped bubble-raft pattern.
+- **Whitecap coverage calibrated** to Monahan & O'Muircheartaigh (1980) from the wind of the sea state; checked by `tools/lab-check.py` (within ±35 %).
+- **Shell splashes** (columns with a crown, froth, foam patches and rings that stay where they fell) and **torpedo tracks** (bubble track across the bow) in the Water Lab.
+- README credits [Open Water](https://github.com/Leonxlnx/open-water) (Leonxlnx, MIT) as the inspiration for the sea work.
+
 ## [0.23.0] - 2026-10-23
 ### Added
 - Pixel Studio: **Copy settings / Apply pasted settings / Reset** — every slider as JSON, so a picture can be shared and reproduced exactly.

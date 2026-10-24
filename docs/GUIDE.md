@@ -57,7 +57,10 @@ The ship on a procedural sea; two variants **A** and **B** side by side.
 - **Sea state**: presets from calm to gale or each value (wave height, length, choppiness, spread, direction, count).
 - **Look**: water colours, sun glitter, ripples, crest foam, reflection, planar reflection (ship and shores mirrored),
   translucent water.
-- **Ship and water**: speed, ship motion, bow wave, wake, foam along the hull, wet band, spray.
+- **Ship and water**: speed, ship motion, bow wave, wake, foam along the hull, wet band, spray; **Foam with memory**
+  (whitecaps leave lace that fades, the wake stays for minutes and leaves a calm slick); **Shell splashes** (four columns,
+  froth, foam patches and rings that stay where they fell) and **Torpedo track** (a bubble track running across ahead).
+  Compare A with the foam memory on and B with it off to see the difference.
 - **Performance**: render scale, anti-aliasing, glow, shadows, water mesh, per-pixel normals, time scale,
   *Measure the cost of each effect*.
 - Try: Ice at 100 % cover with 60 m floes (pack ice) from the Wake camera; harbour water at a low sun; Fjord at 5 kn with planar reflection; River at 3 kn against a 1.8 m/s current (the shore barely moves);

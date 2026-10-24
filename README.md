@@ -1,5 +1,7 @@
 # Steel Salvo
 
+> **Inspiration for the sea:** [Open Water](https://github.com/Leonxlnx/open-water) by Leonxlnx (MIT) — a physically based WebGL2 ocean. Ideas taken from it (written anew here, not copied): foam with memory in two stages (active breaking and residual lace), whitecap coverage calibrated to Monahan & O'Muircheartaigh, and the next steps on the list (sun glitter as sparkles, FFT waves, cloud shadows and rain cells, AgX tone mapping).
+
 Naval battle at sea: command a destroyer, cruiser, battleship or submarine against waves of AI warships (PvE). Isometric view with a gun camera and periscope, realistic 3D (three.js, PBR materials, procedural water). Started from the engine of [Capital Quarantine](https://github.com/michalstankiewicz4-cell/VS). Play: <https://michalstankiewicz4-cell.github.io/Battle/>
 
 "Steel Salvo" is a working title.

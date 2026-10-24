@@ -7,7 +7,7 @@ what the project is, what the owner decided, how work is done and what comes nex
 **Keep this file current:** when a decision is made, a feature lands or the next steps change, update the sections
 below in the same push (it is part of every release, like the changelog).
 
-## Snapshot (state as of v0.23.0, 2026-10-23)
+## Snapshot (state as of v0.24.0, 2026-10-24)
 - **What:** *Steel Salvo* (working title) — free naval battle browser game, PvE against endless waves of AI warships.
   Live: <https://michalstankiewicz4-cell.github.io/Battle/> · repo: <https://github.com/michalstankiewicz4-cell/Battle> (branch `main`,
   GitHub Pages deploys every push via `.github/workflows/static.yml`).
@@ -25,7 +25,9 @@ below in the same push (it is part of every release, like the changelog).
   `tools/doctor.golden.json`, `docs/doctor.md`) — 13 checks incl. inward-facing surfaces, holes (see-through), gun arcs, waterline, hull side, budget; every lab and
   game model is clean, Błyskawica only exceeds the in-game budget (33k triangles, 99 draw calls). **Water Lab**
   (`labs/water.html`, WaterKit, `docs/water.md`) — Gerstner sea, variants A/B side by side, cost of each effect; water
-  bodies ocean / fjord / lake / river (shores from LandKit, current) / harbour water (oil) / ice (floes, lane).
+  bodies ocean / fjord / lake / river (shores from LandKit, current) / harbour water (oil) / ice (floes, lane);
+  **foam with memory** (`js/env/foamkit.js`, v0.24.0: whitecaps → lace, wake for minutes, shell splashes, torpedo tracks;
+  whitecap coverage calibrated to Monahan, checked in lab-check; inspired by Open Water, credited at the top of README).
   **Waterside Structures Lab** (`labs/structures.html`, `js/structkit/`, `docs/structures.md`) — jack-up drilling rig
   (Super 300 class, researched: `docs/structures/super300.md`), jacking, cantilever, cranes, underwater view; quays and
   breakwaters (`docs/structures/coastal.md`) with tetrapods/rock instanced, Błyskawica alongside. **Transformer** (`labs/transform.html`,
@@ -123,6 +125,8 @@ below in the same push (it is part of every release, like the changelog).
   (`uSkyFog`); change it in `applySky()` only, or ship, sea and sky stop agreeing.
 - GLSL 3: `out`, `in`, `sample` are reserved words — never name a variable so (a shader then fails to compile).
 - A one-line `//` comment inside a JS object literal swallows the rest of the line: keep such comments at line ends.
+- `FoamMap` needs float render targets (EXT_color_buffer_float; half floats lose the slow decay). Foam tests use
+  `__water.simulate(sec)` (SwiftShader renders ~1 fps; a sim step without drawing is fast).
 - Commits made from the Claude sandbox use `Claude <noreply@anthropic.com>` as author/committer (the sandbox flags other identities as unverified).
 
 ## Next steps (from TODO, highest first)
@@ -131,6 +135,8 @@ below in the same push (it is part of every release, like the changelog).
    transitions and joins, not the final map generator) → biomes northern/plains/desert/zones done (v0.20.0) → next ideas:
    Plants Lab done (v0.21.0) → Pixel Studio v1 (v0.22.0, separate project; owner wants to teach pixel art, iterate on it) → next: Rocks Lab, more biomes, later other planets; Paint Lab later; small fixes (ice look, fjord walls) later.
    More labs are welcome where they make sense.
+   Sea after Open Water (owner 2026-10-24, "po kolei"): foam with memory + Beaufort/Monahan calibration done (v0.24.0)
+   → sun glitter as sparkles → FFT waves as the High preset → cloud shadows and rain cells → AgX tone mapping.
 0. **P1** Owner looks at the Look Lab on a real GPU: which wear level and look go into the game, confirm lens effects only
    for first-person views, which weathers and times of day the game gets; then night lighting (navigation lights, gun flashes) and lightning.
 1. **P1** Procedural destruction on top of the transformer's hitboxes (damage model, spread to neighbours, falling

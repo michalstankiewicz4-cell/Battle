@@ -39,7 +39,9 @@ Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.8.1 Context: [`d
 - [ ] P2 Transformer: instancing of repeated fittings and merged mount materials on LOD0 (~30 draw calls)
 - [ ] P1 Owner picks a water variant in the water lab → put that sea into the game (Gerstner waves shared by ships and the shader, wake, bow wave, foam; cheaper settings for Light)
 - [ ] P1 Błyskawica as the player's destroyer in the game (transformer output, scale, mounts, tubes)
-- [ ] P2 Water lab: ship shadows on water, persistent foam map, underwater view, shore interaction
+- [x] Water lab: foam with memory (FoamKit: whitecaps → lace, wake for minutes, shell splashes, torpedo tracks), whitecaps calibrated to Monahan (v0.24.0)
+- [ ] P1 Sea after Open Water (owner's order 2026-10-24): sun glitter as sparkles + slope-variance roughness → FFT waves as the High preset → cloud shadows and rain cells → AgX tone mapping
+- [ ] P2 Water lab: ship shadows on water, underwater view, shore interaction
 - [ ] P2 Check Błyskawica positions against a profile drawing; 1941/1942 configurations as variants
 - [ ] P3 Doctor: mount sweep check, elevation/blast zones, unused materials
 - [ ] P3 More real ships in the lab
