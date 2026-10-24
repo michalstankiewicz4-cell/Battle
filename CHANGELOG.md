@@ -5,6 +5,10 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.28.1] - 2026-10-25
+### Added
+- Zombie Generator: **Reset to default** in the top bar — every setting and the zombie back to the defaults (pixel art, GPU, seed 17).
+
 ## [0.28.0] - 2026-10-25
 ### Added
 - Zombie Generator: a **renderer menu** in the top bar — **GPU** (default: the distance field evaluated on the graphics card in batches — the grid round the surface and the taps for normals and occlusion — by one small shader, `js/pixel/zombie-gpu.js`; on Windows it compiles once in about 20 s, then the browser's shader cache makes it instant) or **CPU** (all in JavaScript); both give the same mesh.
