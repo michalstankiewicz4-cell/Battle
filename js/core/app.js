@@ -12,7 +12,7 @@ import { read, write, KEYS } from './storage.js';
 import { setLang, onLang, t } from '../i18n/index.js';
 import { createHud } from '../ui/hud.js';
 import { createMenu } from '../ui/menu.js';
-import { CLASS_KEYS } from '../world/constants.js';
+import { CLASS_KEYS, U } from '../world/constants.js';
 import { depthLevel } from '../world/ships.js';
 import { VERSION } from '../version.js';
 
@@ -34,7 +34,7 @@ export function createApp({ appEl, uiEl }) {
   let muted = false;
   const sound = createSound(() => (muted ? 0 : settings.data.vol));
   const scene = new THREE.Scene();
-  const world = createWorld(scene, { sound });
+  const world = createWorld(scene, { sound, renderer });
   const S = world.S;
   const input = new Input(canvas);
   const pipe = new PostPipeline(renderer);
@@ -212,7 +212,7 @@ export function createApp({ appEl, uiEl }) {
     // camera looks a little toward the aim point, like a gunnery officer
     const tgt = { x: p.x, z: p.z };
     if (playing && aim && p.alive) {
-      const dx = aim.x - p.x, dz = aim.z - p.z, d = Math.hypot(dx, dz), k = Math.min(d * 0.22, 26) / (d || 1);
+      const dx = aim.x - p.x, dz = aim.z - p.z, d = Math.hypot(dx, dz), k = Math.min(d * 0.22, 26 * U) / (d || 1);
       tgt.x += dx * k; tgt.z += dz * k;
     }
     if (rig.view === 'gun' && !p.alive) setGunView(false);
@@ -226,7 +226,7 @@ export function createApp({ appEl, uiEl }) {
     // perspective views see the horizon: closer fog hides the edge of the sea grid, the sky dome fills the rest
     const persp = rig.camera.isPerspectiveCamera;
     const viewFog = (pv, cam) => {
-      scene.fog.near = pv ? 170 : 400; scene.fog.far = pv ? 410 : 900;
+      scene.fog.near = (pv ? 170 : 400) * U; scene.fog.far = (pv ? 410 : 900) * U;
       world.sky.visible = pv;
       if (pv) world.sky.position.copy(cam.position);
     };

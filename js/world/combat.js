@@ -1,7 +1,7 @@
 // Shells (ballistic arcs with dispersion; islands block low trajectories) and torpedoes.
 import * as THREE from '../../vendor/three.module.js';
 import { hullHit, toWorld, fwdOf, turretPos, shellable, torpable, depthLevel } from './ships.js';
-import { CHARGE } from './constants.js';
+import { CHARGE, U } from './constants.js';
 import { wrapAngle } from '../core/util.js';
 import { torpGeo } from './models.js';
 import { mat } from '../render/materials.js';
@@ -25,7 +25,7 @@ export function intercept(px, pz, v, tx, tz, vx, vz) {
   return t > 0 ? t : null;
 }
 
-export function createCombat({ scene, fx, islands, ships, onHit, sound }) {
+export function createCombat({ scene, fx, islands, ships, onHit, sound, sea }) {
   const shells = [];
   const torps = [];
   const tmesh = new THREE.InstancedMesh(torpGeo(), mat(0xffffff, 'fx'), MAXT);
@@ -44,7 +44,7 @@ export function createCombat({ scene, fx, islands, ships, onHit, sound }) {
       if (tr.reload > 0 || !tr.aimed) continue;
       const p = turretPos(s, tr);
       let dx = ax - p.x, dz = az - p.z, dist = Math.hypot(dx, dz);
-      if (dist < 4) continue;
+      if (dist < 4 * U) continue;
       const k = Math.min(1, g.range / dist);
       dx *= k; dz *= k; dist = Math.min(dist, g.range);
       const ux = dx / dist, uz = dz / dist;
@@ -53,13 +53,13 @@ export function createCombat({ scene, fx, islands, ships, onHit, sound }) {
         const lat = tri() * R, lon = tri() * R * 0.7;
         const tx = p.x + dx + uz * lat + ux * lon, tz = p.z + dz - ux * lat + uz * lon;
         const d = Math.hypot(tx - p.x, tz - p.z);
-        shells.push({ x0: p.x, z0: p.z, y0: s.cls.H + 0.6, x1: tx, z1: tz, t: -b * 0.05 - Math.random() * 0.05, T: d / g.speed, apex: d * g.apex,
-          owner: s, g, x: p.x, y: 1, z: p.z });
+        shells.push({ x0: p.x, z0: p.z, y0: s.cls.H + 0.6 * U, x1: tx, z1: tz, t: -b * 0.05 - Math.random() * 0.05, T: d / g.speed, apex: d * g.apex,
+          owner: s, g, x: p.x, y: U, z: p.z });
       }
       tr.reload = g.reload * (0.97 + Math.random() * 0.06);
       s.stats.shots += tr.spec.barrels;
       const a = s.th + tr.yaw, mx = Math.sin(a), mz = Math.cos(a);
-      fx.muzzle(p.x + mx * tr.spec.size * 1.6, s.cls.H + tr.spec.y + 0.5, p.z + mz * tr.spec.size * 1.6, mx, mz, tr.spec.size * 1.2);
+      fx.muzzle(p.x + mx * tr.spec.size * 1.6, s.cls.H + tr.spec.y + 0.5 * U, p.z + mz * tr.spec.size * 1.6, mx, mz, tr.spec.size / U * 1.2);
       n++;
     }
     if (n) sound?.gun(g.cal, s.side === 'player');
@@ -121,16 +121,16 @@ export function createCombat({ scene, fx, islands, ships, onHit, sound }) {
       }
       if (u < 1) continue;
       shells.splice(i, 1);
-      const target = hitShips(sh.owner, sh.x1, sh.z1, 0.15, 'shell');
+      const target = hitShips(sh.owner, sh.x1, sh.z1, 0.15 * U, 'shell');
       if (target) {
         const g = sh.g;
         const cit = Math.random() < g.cit;
         const fire = !cit && Math.random() < g.fire;
         const dmg = g.dmg * (0.85 + Math.random() * 0.3) * (cit ? 3 : 1);
-        fx.explosion(sh.x1, target.cls.H + 0.6, sh.z1, 0.5 + g.cal);
+        fx.explosion(sh.x1, target.cls.H + 0.6 * U, sh.z1, 0.5 + g.cal);
         onHit(sh.owner, target, dmg, cit ? 'cit' : fire ? 'fire' : 'hit');
       } else {
-        fx.splash(sh.x1, sh.z1, 0.5 + sh.g.cal * 1.4);
+        fx.splash(sh.x1, sh.z1, 0.5 + sh.g.cal * 1.4); sea?.splash(sh.x1, sh.z1, 0.5 + sh.g.cal * 1.4);
         sound?.splash(sh.g.cal);
       }
     }
@@ -140,13 +140,13 @@ export function createCombat({ scene, fx, islands, ships, onHit, sound }) {
       const f = fwdOf(tp.th), step = tp.speed * dt;
       tp.x += f.x * step; tp.z += f.z * step; tp.dist += step;
       tp.wake -= dt;
-      if (tp.wake <= 0) { tp.wake = 0.07; fx.foam(tp.x - f.x * 0.6, tp.z - f.z * 0.6, 0.45, 2.2); }
+      if (tp.wake <= 0) { tp.wake = 0.07; if (sea?.foam) sea.track(tp.x - f.x * 0.6 * U, tp.z - f.z * 0.6 * U); else fx.foam(tp.x - f.x * 0.6 * U, tp.z - f.z * 0.6 * U, 0.45, 2.2); }
       let gone = tp.dist > tp.range;
-      if (!gone && islands.isLand(tp.x, tp.z)) { fx.dirt(tp.x, 0.5, tp.z, 1); gone = true; }
-      if (!gone && tp.dist > 5) {
-        const s = hitShips(tp.owner, tp.x, tp.z, 0.25, 'torp');
+      if (!gone && islands.isLand(tp.x, tp.z)) { fx.dirt(tp.x, 0.5 * U, tp.z, 1); gone = true; }
+      if (!gone && tp.dist > 5 * U) {
+        const s = hitShips(tp.owner, tp.x, tp.z, 0.25 * U, 'torp');
         if (s) {
-          fx.explosion(tp.x, 0.4, tp.z, 2); fx.splash(tp.x, tp.z, 2.4);
+          fx.explosion(tp.x, 0.4 * U, tp.z, 2); fx.splash(tp.x, tp.z, 2.4); sea?.splash(tp.x, tp.z, 2.4);
           onHit(tp.owner, s, tp.dmg * (0.9 + Math.random() * 0.2), 'torp');
           gone = true;
         }
@@ -158,10 +158,10 @@ export function createCombat({ scene, fx, islands, ships, onHit, sound }) {
       c.t -= dt;
       if (c.t > 0) continue;
       charges.splice(i, 1);
-      fx.splash(c.x, c.z, 2.2); fx.foam(c.x, c.z, 4, 3);
+      fx.splash(c.x, c.z, 2.2); fx.foam(c.x, c.z, 4, 3); sea?.splash(c.x, c.z, 3);
       sound?.hit('torp', false);
       for (const s of ships) {
-        if (!s.alive || s.side === c.owner.side || !s.sub || s.sub.y > -0.35) continue;
+        if (!s.alive || s.side === c.owner.side || !s.sub || s.sub.y > -0.35 * U) continue;
         const d = Math.hypot(s.x - c.x, s.z - c.z);
         if (d < CHARGE.radius) onHit(c.owner, s, CHARGE.dmg * (1 - d / CHARGE.radius) * (depthLevel(s) === 2 ? 0.8 : 1), 'charge');
       }
@@ -170,7 +170,7 @@ export function createCombat({ scene, fx, islands, ships, onHit, sound }) {
       const tp = torps[i];
       if (!tp) { tmesh.setMatrixAt(i, ZERO); continue; }
       E.set(0, tp.th, 0); Q.setFromEuler(E);
-      M.compose(P.set(tp.x, 0.05, tp.z), Q, S1);
+      M.compose(P.set(tp.x, 0.05 * U, tp.z), Q, S1);
       tmesh.setMatrixAt(i, M);
       tmesh.setColorAt(i, col.set(tp.owner.side === 'player' ? 0x203040 : 0x6a1a1a));
     }
@@ -186,7 +186,7 @@ export function createCombat({ scene, fx, islands, ships, onHit, sound }) {
     for (const tp of torps) {
       if (tp.owner.side === s.side) continue;
       const dx = s.x - tp.x, dz = s.z - tp.z, d = Math.hypot(dx, dz);
-      if (d > 70) continue;
+      if (d > 70 * U) continue;
       const f = fwdOf(tp.th), along = dx * f.x + dz * f.z, perp = Math.abs(dx * f.z - dz * f.x);
       if (along > 0 && perp < s.cls.L * 0.7 && (best < 0 || d < best)) best = d;
     }

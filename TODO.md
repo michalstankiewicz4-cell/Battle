@@ -37,7 +37,9 @@ Legend: **P1** next, **P2** later, **P3** ideas. State as of v0.8.1 Context: [`d
 - [ ] P1 Owner picks an ageing level and a look → into the game's materials and graphics settings (lens effects for first-person views)
 - [ ] P1 Procedural destruction on the transformer's hitboxes: damage model, spread to neighbours, debris, fire and smoke
 - [ ] P2 Transformer: instancing of repeated fittings and merged mount materials on LOD0 (~30 draw calls)
-- [ ] P1 Owner picks a water variant in the water lab → put that sea into the game (Gerstner waves shared by ships and the shader, wake, bow wave, foam; cheaper settings for Light)
+- [x] Ships and sea in the game: metres, WaterKit sea with foam memory, Błyskawica (destroyer) and Orzeł (submarine) (v0.29.0)
+- [ ] P1 Real models for the cruiser and battleship; the transformer's hitboxes and damage texture in battle (per ship, not shared)
+- [ ] P2 Owner picks a water variant in the water lab → put that sea into the game (Gerstner waves shared by ships and the shader, wake, bow wave, foam; cheaper settings for Light)
 - [ ] P1 Błyskawica as the player's destroyer in the game (transformer output, scale, mounts, tubes)
 - [x] Water lab: foam with memory (FoamKit: whitecaps → lace, wake for minutes, shell splashes, torpedo tracks), whitecaps calibrated to Monahan (v0.24.0)
 - [ ] P1 Sea after Open Water (owner's order 2026-10-24): sun glitter as sparkles + slope-variance roughness → FFT waves as the High preset → cloud shadows and rain cells → AgX tone mapping

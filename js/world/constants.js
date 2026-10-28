@@ -1,9 +1,13 @@
 // World constants and ship class definitions.
-// Units: 1 u ≈ 10 m. Heading `th`: forward = (sin th, cos th); turning left = th increasing.
+// Units: metres (1 u = 1 m, since v0.29; ShipKit and WaterKit work in metres). Heading `th`: forward = (sin th, cos th);
+// turning left = th increasing. The class tables below are written in the old game units of 10 m (easier to compare
+// with the history) and converted by U at load; speeds stay game speeds (the battle runs about 5× faster than real
+// time, so the displayed knots are game knots: KNOTS converts m/s of the game to them).
+export const U = 10;                  // metres per old game unit
 
-export const EDGE = 330;              // playable half-size of the sea (ships are pushed back beyond it)
-export const SAFE_R = 70;             // radius around the start kept free of islands
-export const KNOTS = 4;               // display factor: u/s -> "knots"
+export const EDGE = 330 * U;          // playable half-size of the sea (ships are pushed back beyond it)
+export const SAFE_R = 70 * U;         // radius around the start kept free of islands
+export const KNOTS = 4 / U;           // display factor: m/s of the game -> game knots
 
 const DEG = Math.PI / 180;
 const FWD = { c: 0, w: 150 * DEG };           // forward turret arc (centre, half-width)
@@ -59,17 +63,24 @@ export const CLASSES = {
   },
 };
 export const CLASS_KEYS = ['dd', 'ca', 'bb', 'ss'];
+// old units of 10 m -> metres: every length, speed and acceleration (times, angles, damage and ratios stay)
+for (const c of Object.values(CLASSES)) {
+  for (const k of ['L', 'W', 'H', 'speed', 'accel']) c[k] *= U;
+  for (const t of c.turrets) { t.z *= U; t.y *= U; t.size *= U; }
+  for (const k of ['speed', 'range', 'disp']) c.guns[k] *= U;
+  if (c.torps) for (const k of ['speed', 'range']) c.torps[k] *= U;
+}
 
-// Submarine depth levels: target keel offset (u), max speed factor, battery drain per second (negative = charge),
+// Submarine depth levels: target keel offset (m), max speed factor, battery drain per second (negative = charge),
 // and how close an enemy must be to detect the boat.
 export const DEPTHS = [
   { name: 'surface', y: 0, speed: 1, drain: -1 / 60, detect: Infinity },
-  { name: 'periscope', y: -1.3, speed: 0.75, drain: 1 / 150, detect: 55 },
-  { name: 'deep', y: -4.2, speed: 0.6, drain: 1 / 100, detect: 26 },
+  { name: 'periscope', y: -1.3 * U, speed: 0.75, drain: 1 / 150, detect: 55 * U },
+  { name: 'deep', y: -4.2 * U, speed: 0.6, drain: 1 / 100, detect: 26 * U },
 ];
-export const DIVE_RATE = 0.7;                  // u/s vertical speed when changing depth
+export const DIVE_RATE = 0.7 * U;              // m/s vertical speed when changing depth
 // Depth charges dropped by destroyers on a detected submerged submarine.
-export const CHARGE = { fuse: 1.6, radius: 8, dmg: 520, cd: 2.6, dropR: 6 };
+export const CHARGE = { fuse: 1.6, radius: 8 * U, dmg: 520, cd: 2.6, dropR: 6 * U };
 
 // Fire (burning) parameters.
 export const FIRE = { max: 2, time: 18, dps: 0.0028 };

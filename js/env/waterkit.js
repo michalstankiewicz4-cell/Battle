@@ -96,11 +96,12 @@ uniform vec4 uWA[MAXW];   // dir.x, dir.z, k, A
 uniform vec4 uWB[MAXW];   // omega, phase, Q, -
 uniform int uWN;
 uniform float uTime, uShift;
+uniform vec4 uLodC;      // x, z of the grid's centre and 1 when the grid does not sit under the camera (the game's views)
 vec3 gerstner(vec2 p, out vec3 nrm, out float fold) {
   vec3 d = vec3(p.x, 0.0, p.y); vec3 tx = vec3(1.0, 0.0, 0.0), tz = vec3(0.0, 0.0, 1.0); fold = 0.0;
   // waves too short for the grid at this distance fade out (the polar grid's cells grow ~6 % of the range):
   // without it short waves alias into rings and moiré far from the camera
-  float range = length(p - cameraPosition.xz);
+  float range = length(p - (uLodC.z > 0.5 ? uLodC.xy : cameraPosition.xz));
   for (int i = 0; i < MAXW; i++) {
     if (i >= uWN) break;
     vec4 a = uWA[i], b = uWB[i];
@@ -163,14 +164,17 @@ uniform sampler2D uHull;
 uniform vec4 uHullZ;      // zMin, zMax, max half-breadth, -
 uniform vec4 uShip;       // speed (m/s), bow z, stern z, half beam
 uniform vec4 uShipFx;     // bow wave, wake, hull foam, foam map (0/1: the map carries the wake, see FoamKit)
+uniform vec4 uShipXf;     // where the ship is: x, z, sin and cos of its heading (the labs keep it at the origin heading +z)
+vec2 shipFrame(vec2 p) { vec2 d = p - uShipXf.xy; return vec2(d.x * uShipXf.w - d.y * uShipXf.z, d.x * uShipXf.z + d.y * uShipXf.w); }
 float hullHW(float z) {
   float u = (z - uHullZ.x) / (uHullZ.y - uHullZ.x);
   if (u < 0.0 || u > 1.0) return -1.0;
   return texture2D(uHull, vec2(u, 0.5)).r * uHullZ.z;
 }
 // extra surface height made by the moving hull: bow wave crest, Kelvin transverse waves, hull-side trough
-float shipWave(vec2 p) {
+float shipWave(vec2 p0) {
   float v = uShip.x; if (v < 0.3 || uShipFx.x < 0.5) return 0.0;
+  vec2 p = shipFrame(p0);
   float ub = uShip.y - p.y, ax = abs(p.x), hw = hullHW(p.y), h = 0.0;
   float side = max(ax - max(hw, 0.0), 0.0);
   h += 0.0032 * v * v * exp(-pow((ub - 5.0) / 7.0, 2.0)) * exp(-side / 3.5);             // bow wave along the flare
@@ -184,7 +188,8 @@ float shipWave(vec2 p) {
   if (hw > 0.0) h -= 0.0005 * v * v * exp(-side / 3.0) * smoothstep(uShip.y - 10.0, uShip.y - 30.0, p.y) * smoothstep(uShip.z + 2.0, uShip.z + 20.0, p.y);
   return h;
 }
-float shipFoam(vec2 p, float n) {
+float shipFoam(vec2 p0, float n) {
+  vec2 p = shipFrame(p0);
   float v = uShip.x, vk = clamp(v / 18.0, 0.0, 1.4), f = 0.0;
   float ax = abs(p.x), hw = hullHW(p.y), ub = uShip.y - p.y, us = uShip.z - p.y;
   if (uShipFx.y > 0.5 && v > 0.3) {
@@ -265,7 +270,8 @@ export function waterUniforms() {
     uWB: { value: Array.from({ length: MAXW }, () => new THREE.Vector4()) },
     uWN: { value: 0 }, uTime: { value: 0 }, uShift: { value: 0 },
     uHull: { value: null }, uHullZ: { value: new THREE.Vector4(-60, 60, 6, 0) },
-    uShip: { value: new THREE.Vector4(0, 54, -56, 5.6) }, uShipFx: { value: new THREE.Vector4(1, 1, 1, 0) },
+    uShip: { value: new THREE.Vector4(0, 54, -56, 5.6) }, uShipFx: { value: new THREE.Vector4(1, 1, 1, 0) }, uShipXf: { value: new THREE.Vector4(0, 0, 0, 1) },
+    uLodC: { value: new THREE.Vector4(0, 0, 0, 0) },
     uSun: { value: new THREE.Vector3(0, 1, 0) }, uSunCol: { value: new THREE.Color(1, 0.95, 0.85) },
     uSkyH: { value: new THREE.Color() }, uSkyZ: { value: new THREE.Color() }, uSkySea: { value: new THREE.Color() },
     uDeep: { value: new THREE.Color() }, uScatter: { value: new THREE.Color() },
@@ -360,7 +366,10 @@ export function waterMaterial(u, opt = {}) {
         cDeep = rg.deep; cScat = rg.scat; cRip = rg.p.y; cCrest = rg.p.z * mix(1.0, uCrest / 0.55, rg.p.x); cShine = rg.p.w * uShine / 900.0;
         cRefl = rg.q.z * uReflect; cOil = uOil * rg.q.x; gIceK = rg.q.y; cFlow = rg.flow; cCur = length(cFlow);
 #endif
-        if (uPixelN > 0.5 && dist < 900.0) { vec3 n2; float f2; gerstner(vXZ, n2, f2);
+        // detail fades with how much sea one pixel covers: the camera's distance in the labs (perspective near the water);
+        // in the game (orthographic from high up) the pixel's footprint, as the distance that would give it
+        float dl = uLodC.z > 0.5 ? length(fwidth(vXZ)) / 0.0025 : dist;
+        if (uPixelN > 0.5 && dl < 900.0) { vec3 n2; float f2; gerstner(vXZ, n2, f2);
           float sh = vShipH, e = 0.8; vec2 sl = vec2(shipWave(vXZ + vec2(e, 0.0)) - sh, shipWave(vXZ + vec2(0.0, e)) - sh) / e;
           N = normalize(n2 + vec3(-sl.x, 0.0, -sl.y)); fold = f2; }
         // detail ripples (two scrolling layers), fading with distance
@@ -375,9 +384,9 @@ export function waterMaterial(u, opt = {}) {
           oil = smoothstep(0.5, 0.64, oilN + cOil * 0.18 - 0.09) * min(1.0, cOil * 1.6);
         }
         vec4 fmap = foamMapAt(q);                                 // foam with memory (FoamKit)
-        vec2 rip = (r1.xy + r2.xy) * cRip * 0.35 * exp(-dist / 350.0) * (1.0 - oil * 0.85) * (1.0 - 0.65 * smoothstep(0.03, 0.4, fmap.b + fmap.r));   // the slick behind a ship is calm
+        vec2 rip = (r1.xy + r2.xy) * cRip * 0.35 * exp(-dl / 350.0) * (1.0 - oil * 0.85) * (1.0 - 0.65 * smoothstep(0.03, 0.4, fmap.b + fmap.r));   // the slick behind a ship is calm
         // rings spreading from shell splashes
-        if (dist < 900.0) for (int i = 0; i < 4; i++) {
+        if (dl < 900.0) for (int i = 0; i < 4; i++) {
           vec4 sp = uSplash[i]; float age = uTime - sp.z;
           if (sp.w > 0.0 && age > 0.0 && age < 16.0) {
             vec2 dv = q - sp.xy; float r = length(dv), ring = r - (1.0 + age * 3.4) * sp.w;
@@ -456,7 +465,7 @@ export function waterMaterial(u, opt = {}) {
           rq += (vec2(texture2D(tFoam, q / 31.0).r, texture2D(tFoam, q / 31.0 + 0.5).r) - 0.5) * 9.0;   // warped: no honeycomb
           vec3 cell = icVoro(rq / 2.6); vec3 cell2 = icVoro(rq / 0.9 + 11.0);
           float P = (1.0 - smoothstep(0.02, 0.2, cell.x)) * 0.38 + (1.0 - smoothstep(0.02, 0.28, cell2.x)) * 0.22 + fn * 0.22 + fn2 * 0.25;
-          float far = smoothstep(140.0, 520.0, dist); P = mix(P, 0.55, far);
+          float far = smoothstep(140.0, 520.0, dl); P = mix(P, 0.55, far);
           float fa = smoothstep(0.3, 0.62, fmap.r + (P - 0.5) * 0.55);                 // froth: solid core, frayed rim
           float dr = fmap.g * 1.2, ds = fmap.b * 1.5 - 0.15;
           float fr = mix(smoothstep(1.0 - dr - 0.1, 1.0 - dr + 0.1, P), clamp(dr, 0.0, 1.0), far);
@@ -507,7 +516,7 @@ export function addWetHull(material, u) {
   const prev = material.onBeforeCompile;
   material.onBeforeCompile = (sh, r) => {
     if (prev) prev(sh, r);
-    for (const k of ['uWA', 'uWB', 'uWN', 'uTime', 'uShift', 'uHull', 'uHullZ', 'uShip', 'uShipFx', 'uWet', 'uWetOn']) sh.uniforms[k] = u[k];
+    for (const k of ['uWA', 'uWB', 'uWN', 'uTime', 'uShift', 'uHull', 'uHullZ', 'uShip', 'uShipFx', 'uShipXf', 'uLodC', 'uWet', 'uWetOn']) sh.uniforms[k] = u[k];
     sh.vertexShader = 'varying vec3 vWorldW;\n' + sh.vertexShader.replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvWorldW = (modelMatrix * vec4(transformed, 1.0)).xyz;');
     sh.fragmentShader = GLSL_WAVES + GLSL_SHIP + 'uniform float uWet, uWetOn; varying vec3 vWorldW;\n' + sh.fragmentShader
       .replace('#include <roughnessmap_fragment>', '#include <roughnessmap_fragment>\nfloat wl = waveHeight(vWorldW.xz) + shipWave(vWorldW.xz);\nfloat wet = uWetOn * smoothstep(wl + uWet, wl, vWorldW.y);\ndiffuseColor.rgb *= 1.0 - 0.45 * wet;\nroughnessFactor = mix(roughnessFactor, 0.18, wet);');

@@ -41,7 +41,7 @@ A separate pixel-art project in this repo, not part of the game: [Pixel Studio](
 
 ## Structure
 - `js/main.js` – entry point; `js/core/` – app shell and mode state machine, camera rig, settings, storage, procedural sound,
-- `js/world/` – ocean, islands, ship models and entities, shells and torpedoes, enemy AI, particle effects, wave director,
+- `js/world/` – sea (WaterKit), islands, real ships (ShipKit) and older models, ship entities, shells and torpedoes, enemy AI, particle effects, wave director,
 - `js/render/` – materials and procedural textures (`materials.js`) and the post-process (`post.js`: bloom, tone mapping),
 - `js/input/` – keyboard and mouse,
 - `js/i18n/` – English (default) and Polish strings,

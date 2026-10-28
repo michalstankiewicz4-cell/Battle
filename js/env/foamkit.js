@@ -11,7 +11,7 @@
 // Inspired by the two-stage foam of Open Water (github.com/Leonxlnx/open-water, MIT); written for ships here.
 import * as THREE from '../../vendor/three.module.js';
 
-export const MAX_STAMPS = 12;
+export const MAX_STAMPS = 12, MAX_FLEET = 16;
 
 // Whitecaps by the book: wind speed from the significant wave height of a fully developed sea (Hs ≈ 0.0246 U²,
 // the relation the Look Lab uses for "wind sets the sea"), whitecap coverage from Monahan & O'Muircheartaigh (1980):
@@ -67,6 +67,9 @@ uniform vec4 uRate;       // dt, residual life (s), ship-foam life (s), residual
 uniform vec4 uSpread;     // diffusion of residual and ship foam (m²/s), -, -
 uniform vec2 uBreak;      // breaking threshold of the fold, its sigma
 uniform vec4 uStamp[${MAX_STAMPS}]; uniform vec4 uStampK[${MAX_STAMPS}]; uniform int uStampN;
+// a fleet (the game): every ship's wake and hull foam — position x, z, sin and cos of the heading; speed (m/s, as it
+// looks), half length, half beam. With uFleetN = 0 the single ship of the labs (uShip, at the origin) is used.
+uniform int uFleetN; uniform vec4 uFP[${MAX_FLEET}]; uniform vec4 uFV[${MAX_FLEET}];
 float foldAt(vec2 p) {
   float fold = 0.0;
   for (int i = 0; i < MAXW; i++) { if (i >= uWN) break;
@@ -95,7 +98,18 @@ void main() {
   // the ship: turbulent wake behind the stern (a source a few tens of metres long — the memory makes the trail),
   // and the foam lines the bow wave leaves along the hull
   float s = c.b * exp(-dt / uRate.z);
-  float v = uShip.x;
+  float v = uFleetN > 0 ? 0.0 : uShip.x;
+  for (int i = 0; i < ${MAX_FLEET}; i++) { if (i >= uFleetN) break;
+    vec4 P = uFP[i], Q = uFV[i]; vec2 d = q - P.xy;
+    float zl = d.x * P.z + d.y * P.w, xl = d.x * P.w - d.y * P.z, hl = Q.y, hb = Q.z, sv = Q.x;   // forward, starboard
+    if (sv < 0.3 || abs(zl) > hl + 40.0 || abs(xl) > hb + 30.0) continue;
+    float vk = clamp(sv / 18.0, 0.0, 1.4), ax = abs(xl), us = -hl - zl;
+    if (us > -3.0 && us < 30.0) { float u2 = max(us, 0.0), w = hb * 0.85 + u2 * 0.032 + sqrt(u2) * 0.35;
+      s = max(s, smoothstep(w, w * 0.15, ax) * (0.55 + 0.45 * n) * min(1.0, 0.35 + vk) * smoothstep(-3.0, 2.0, us)); }
+    float zf = clamp(zl / hl, -1.0, 1.0), hw = hb * sqrt(max(0.0, 1.0 - zf * zf * zf * zf)) * (zf > 0.0 ? 1.0 - 0.6 * zf * zf : 1.0);
+    if (abs(zl) < hl) { float dd = ax - hw, bowk = smoothstep(hl * 0.4, hl, zl);
+      s = max(s, smoothstep(0.6 + 1.8 * vk, 0.0, dd) * (0.2 + 0.5 * vk * (0.4 + bowk)) * smoothstep(0.3, 0.8, n + 0.2 * bowk)); }
+  }
   if (v > 0.3) {
     float vk = clamp(v / 18.0, 0.0, 1.4), ax = abs(p.x), us = uShip.z - p.y, hw = hullHW(p.y);
     if (uShipFx.y > 0.5 && us > -3.0 && us < 30.0) {
@@ -132,7 +146,8 @@ export class FoamMap {
     this.cur = 0; this.origin = null; this.precision = full ? 'float' : 'half'; void gl;
     this.mat = new THREE.ShaderMaterial({
       uniforms: {
-        uWA: u.uWA, uWB: u.uWB, uWN: u.uWN, uTime: u.uTime, uShift: u.uShift, uHull: u.uHull, uHullZ: u.uHullZ, uShip: u.uShip, uShipFx: u.uShipFx,
+        uWA: u.uWA, uWB: u.uWB, uWN: u.uWN, uTime: u.uTime, uShift: u.uShift, uHull: u.uHull, uHullZ: u.uHullZ, uShip: u.uShip, uShipFx: u.uShipFx, uShipXf: u.uShipXf,
+        uFleetN: { value: 0 }, uFP: { value: Array.from({ length: MAX_FLEET }, () => new THREE.Vector4()) }, uFV: { value: Array.from({ length: MAX_FLEET }, () => new THREE.Vector4()) },
         tPrev: { value: null }, tNoise: u.tFoam, uScroll: { value: new THREE.Vector2(0, 0) }, uN: { value: new THREE.Vector2(res, res) },
         uWin: { value: new THREE.Vector4(0, 0, size, this.texel) }, uRate: { value: new THREE.Vector4(0.016, 5, 150, 0.5) }, uSpread: { value: new THREE.Vector4(0.4, 1.6, 0, 0) }, uBreak: { value: new THREE.Vector2(99, 1) },
         uStamp: { value: Array.from({ length: MAX_STAMPS }, () => new THREE.Vector4()) }, uStampK: { value: Array.from({ length: MAX_STAMPS }, () => new THREE.Vector4()) }, uStampN: { value: 0 },
@@ -158,7 +173,8 @@ export class FoamMap {
   // a splash or a stretch of a torpedo track (water frame): radius (m), active froth, ship-type foam, ring, frames it lasts
   stamp(x, z, radius, { active = 1, foam = 0.9, ring = 0, life = 0.05 } = {}) { this.stamps.push({ x, z, radius, active, foam, ring, life }); }
   // centre: the ship's water-frame position; aft: the share of the window behind it (the wake trail)
-  update(dt, { centre, heading = [0, 1], residualLife = 5, shipLife = 150, brk = null, windDir = [0, 1], windRows = 0, on = true }) {
+  // fleet: [{ x, z, th, v, halfL, halfB }] (the game) — every ship's wake and hull foam; leave it out in the labs
+  update(dt, { centre, heading = [0, 1], residualLife = 5, shipLife = 150, brk = null, windDir = [0, 1], windRows = 0, on = true, fleet = null }) {
     const u = this.u;
     u.uFoamWin.value.w = on ? 1 : 0;
     if (!on) return;
@@ -174,6 +190,8 @@ export class FoamMap {
     // that it is lace (thin, long-lived), and the whitecap coverage stays on Monahan (calibrated)
     m.uRate.value.set(Math.min(dt, 0.1), residualLife, shipLife, Math.min(1, 0.42 * Math.exp(RESIDUAL_T / residualLife)));
     if (brk) m.uBreak.value.set(brk.thr, brk.sig);
+    const fl = fleet ? fleet.slice(0, MAX_FLEET) : []; m.uFleetN.value = fl.length;
+    fl.forEach((f, i) => { m.uFP.value[i].set(f.x, f.z, Math.sin(f.th), Math.cos(f.th)); m.uFV.value[i].set(f.v, f.halfL, f.halfB, 0); });
     const st = this.stamps.slice(0, 12); m.uStampN.value = st.length;
     st.forEach((s, i) => { m.uStamp.value[i].set(s.x, s.z, s.radius, 0); m.uStampK.value[i].set(s.active, s.foam, s.ring, 0); });
     this.stamps = this.stamps.filter((s) => (s.life -= dt) > 0);

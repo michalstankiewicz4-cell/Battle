@@ -2,7 +2,7 @@
 // avoid islands with feeler probes, lead the player with guns and (destroyers/cruisers) torpedoes.
 import { wrapAngle, clamp } from '../core/util.js';
 import { fwdOf, depthLevel, shellable } from './ships.js';
-import { DEPTHS, CHARGE } from './constants.js';
+import { DEPTHS, CHARGE, U } from './constants.js';
 import { intercept } from './combat.js';
 
 export function initAi(s, skill) {
@@ -26,7 +26,7 @@ export function stepAi(s, dt, player, combat, isLand) {
   const lvl = depthLevel(player);
   const spotted = !player.sub || lvl === 0 || dist < DEPTHS[lvl].detect;
   if (spotted) ai.seen = { x: player.x, z: player.z };
-  else if (ai.seen) { dx = ai.seen.x - s.x; dz = ai.seen.z - s.z; if (Math.hypot(dx, dz) < 15) ai.seen = null; }
+  else if (ai.seen) { dx = ai.seen.x - s.x; dz = ai.seen.z - s.z; if (Math.hypot(dx, dz) < 15 * U) ai.seen = null; }
   const bear = Math.atan2(dx, dz);
   const hunting = player.sub && lvl > 0 && player.alive;   // a submerged boat: destroyers hunt it, big ships keep away
   ai.chargeCd = Math.max(0, ai.chargeCd - dt);
@@ -44,16 +44,16 @@ export function stepAi(s, dt, player, combat, isLand) {
   else want = bear + Math.PI * 0.5 * ai.side;                                       // broadside
   // feelers: steer away from land ahead
   const L = s.cls.L;
-  const probe = (a, d) => { const f = fwdOf(a); return isLand(s.x + f.x * d, s.z + f.z * d, 3); };
-  if (probe(s.th, L * 1.2 + 12) || probe(s.th, L * 0.7 + 4)) {
-    const l = probe(s.th + 0.6, L + 10), r = probe(s.th - 0.6, L + 10);
+  const probe = (a, d) => { const f = fwdOf(a); return isLand(s.x + f.x * d, s.z + f.z * d, 3 * U); };
+  if (probe(s.th, L * 1.2 + 12 * U) || probe(s.th, L * 0.7 + 4 * U)) {
+    const l = probe(s.th + 0.6, L + 10 * U), r = probe(s.th - 0.6, L + 10 * U);
     ai.avoid = 1.5; ai.avoidDir = l && !r ? -1 : !l && r ? 1 : (ai.avoidDir || 1);
   }
   if (ai.avoid > 0) {
     ai.avoid -= dt;
     want = s.th + ai.avoidDir * 1.2;
     s.throttle = 3;
-  } else s.throttle = dist < 40 && s.cls.key !== 'dd' ? 3 : 5;
+  } else s.throttle = dist < 40 * U && s.cls.key !== 'dd' ? 3 : 5;
   const err = wrapAngle(want - s.th);
   s.steer = clamp(err * 2.5, -1, 1);
 
@@ -68,8 +68,8 @@ export function stepAi(s, dt, player, combat, isLand) {
   let ax = player.x, az = player.z;
   const tFly = intercept(s.x, s.z, g.speed, player.x, player.z, player.vx, player.vz);
   if (tFly) {
-    ax = player.x + player.vx * (tFly + ai.aimErr.x * 0.6) + ai.aimErr.z * 3;
-    az = player.z + player.vz * (tFly + ai.aimErr.x * 0.6) - ai.aimErr.x * 3;
+    ax = player.x + player.vx * (tFly + ai.aimErr.x * 0.6) + ai.aimErr.z * 3 * U;
+    az = player.z + player.vz * (tFly + ai.aimErr.x * 0.6) - ai.aimErr.x * 3 * U;
   }
   s.aimX = ax; s.aimZ = az;
   // depth charge: a destroyer passing over a detected submerged boat
@@ -77,7 +77,7 @@ export function stepAi(s, dt, player, combat, isLand) {
   if (hunting && spotted && s.cls.key === 'dd' && dist < CHARGE.dropR && ai.chargeCd <= 0) {
     ai.chargeCd = CHARGE.cd;
     // rolled off the stern / thrown from the sides: lands about where the destroyer is now, with some spread
-    const a = Math.random() * Math.PI * 2, r = Math.random() * 3;
+    const a = Math.random() * Math.PI * 2, r = Math.random() * 3 * U;
     charge = { x: s.x + Math.cos(a) * r, z: s.z + Math.sin(a) * r };
   }
   const visible = spotted && shellable(player);

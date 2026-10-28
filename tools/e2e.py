@@ -1,4 +1,4 @@
-"""Headless end-to-end smoke test (Playwright + Chromium with SwiftShader WebGL, no GPU needed).
+"""Headless end-to-end smoke test (world in metres since v0.29: distances below are m) (Playwright + Chromium with SwiftShader WebGL, no GPU needed).
 
 Usage (from the repo root):   py tools/e2e.py            (Linux/macOS: python3 tools/e2e.py)
 Options:  --shots DIR   where to save screenshots (default: tools/out, git-ignored)
@@ -23,7 +23,9 @@ ARGS.add_argument('--shots', default=os.path.join(ROOT, 'tools', 'out'))
 ARGS.add_argument('--full', action='store_true')
 A = ARGS.parse_args()
 
-LIGHT = "{gfx:{scale:0.5,shadows:false,aa:false,bloom:true,fx:0.5,water:true,pip:true,bright:1.2}}"
+# simple water by default (SwiftShader draws the detailed sea and its foam memory at a frame or two a second);
+# "detailed water" is switched on for one check below
+LIGHT = "{gfx:{scale:0.5,shadows:false,aa:false,bloom:true,fx:0.5,water:false,pip:true,bright:1.2}}"
 INIT = """(()=>{%s
 let T=1000;const q=[];const pn=performance.now.bind(performance);performance.now=()=>window.__fake?T:pn();
 const raf0=window.requestAnimationFrame.bind(window);
@@ -44,7 +46,7 @@ FIGHT = """(n) => { const w = __app.world, p = w.player; let t = window.__t || 1
 # Bring the wave's enemies to a set distance in front of the player.
 NEAR = """(d) => { const w = __app.world, p = w.player;
   w.ships.filter(s => s.side === 'enemy' && s.alive).forEach((s, i) => { const a = p.th + .15 + i * .35;
-    s.x = p.x + Math.sin(a) * (d + i * 20); s.z = p.z + Math.cos(a) * (d + i * 20); s.th = p.th + 1.6; }); }"""
+    s.x = p.x + Math.sin(a) * (d + i * 200); s.z = p.z + Math.cos(a) * (d + i * 200); s.th = p.th + 1.6; }); }"""
 # Turn the gun camera toward the first enemy (simulated mouse movement).
 # (the look sensitivity drops with the optics' zoom, so close the gap in a few passes)
 LOOK = """() => { const A = __app, w = A.world, p = w.player; const e = w.ships.find(s => s.side === 'enemy' && s.alive);
@@ -92,14 +94,22 @@ def main():
             pg.evaluate("__app.settings.update((x) => { x.gfx.sat = 1; })")
             check('colour saturation setting', abs(sat - 0.5) < 1e-6, str(sat))
 
+            # the sea: WaterKit with the foam memory when "detailed water" is on; ships float on it
+            pg.evaluate("__app.startRun('dd')"); pg.evaluate("__app.settings.update((x) => { x.gfx.water = true; })")
+            pg.evaluate(SIM, [60, {'thr': 0}]); pg.evaluate('__step(2)')
+            sea = pg.evaluate("(()=>{const w=__app.world,p=w.player;return {foam:!!w.sea.foam, pixN:w.sea.u.uPixelN.value, wake:w.sea.foam?w.sea.foam.sample(p.x-20,p.z-20,p.x+20,p.z+20)[2]:0, y:p.model.body.position.y, real:p.model.real||''}})()")
+            check('sea with foam memory, real destroyer', sea['foam'] and sea['pixN'] == 1 and sea['real'] == 'blyskawica', str(sea))
+            shot('01b-sea')
+            pg.evaluate("__app.settings.update((x) => { x.gfx.water = false; })")
+
             # every class fights a wave
             for cls in ['dd', 'ca', 'bb', 'ss']:
-                pg.evaluate(f"__app.startRun('{cls}')"); pg.evaluate(SIM, [70, {}]); pg.evaluate(NEAR, 70)
+                pg.evaluate(f"__app.startRun('{cls}')"); pg.evaluate(SIM, [70, {}]); pg.evaluate(NEAR, 700)
                 r = pg.evaluate(FIGHT, 300)
                 check(f'{cls} fights', r['shots'] > 0 and r['wave'] >= 1, str(r))
 
             # gun camera + binoculars (cruiser)
-            pg.evaluate("__app.startRun('ca')"); pg.evaluate(SIM, [70, {}]); pg.evaluate(NEAR, 60)
+            pg.evaluate("__app.startRun('ca')"); pg.evaluate(SIM, [70, {}]); pg.evaluate(NEAR, 600)
             pg.keyboard.press('KeyC'); pg.evaluate(LOOK); pg.evaluate('__step(4)')
             optic = pg.evaluate("document.getElementById('scope').className")
             check('gun camera + binoculars', pg.evaluate('__app.rig.view') == 'gun' and optic == 'bino', f'zoom {pg.evaluate("__app.rig.zoom")}')
@@ -111,8 +121,8 @@ def main():
             check('back to iso view', pg.evaluate('__app.rig.view') == 'iso')
 
             # submarine: periscope, torpedoes, deep dive, depth charges
-            pg.evaluate("__app.startRun('ss')"); pg.evaluate(SIM, [70, {}]); pg.evaluate(NEAR, 60)
-            pg.evaluate("(()=>{const s=__app.world.player.sub;s.level=1;s.y=-1.3})()")
+            pg.evaluate("__app.startRun('ss')"); pg.evaluate(SIM, [70, {}]); pg.evaluate(NEAR, 600)
+            pg.evaluate("(()=>{const s=__app.world.player.sub;s.level=1;s.y=-13})()")
             pg.keyboard.press('KeyC'); pg.evaluate(LOOK); pg.evaluate('__step(4)')
             check('periscope', pg.evaluate("document.getElementById('scope').className") == '' and pg.evaluate("!document.getElementById('scope').hidden"))
             pg.keyboard.press('Digit2'); pg.mouse.move(400, 225); pg.mouse.down(); pg.evaluate('__step(4)'); pg.mouse.up(); pg.evaluate('__step(10)')
@@ -123,7 +133,7 @@ def main():
             check('deep dive closes periscope', pg.evaluate('__app.rig.view') == 'iso' and pg.evaluate('__app.world.player.sub.ghost'))
             lost = pg.evaluate("""()=>{const w=__app.world,p=w.player;let t=window.__t;let lost=0;
               for(let k=0;k<3;k++){const dd=w.ships.find(s=>s.side==='enemy'&&s.alive&&s.cls.key==='dd');if(!dd)break;
-                dd.x=p.x+15;dd.z=p.z+2;dd.th=Math.atan2(p.x-dd.x,p.z-dd.z);const h=p.hp;
+                dd.x=p.x+150;dd.z=p.z+20;dd.th=Math.atan2(p.x-dd.x,p.z-dd.z);const h=p.hp;
                 for(let i=0;i<160;i++){t+=.05;w.update(.05,t,{thr:0,steer:0,aim:null,fire:false,weapon:'guns',repair:false});}lost+=h-p.hp;}
               window.__t=t;return Math.round(lost)}""")
             check('depth charges hit a submerged boat', lost > 0, f'{lost} HP lost')

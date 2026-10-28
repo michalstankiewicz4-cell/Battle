@@ -5,6 +5,15 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.29.0] - 2026-10-28
+### Changed
+- **The game is in metres** (1 u = 1 m, as ShipKit and WaterKit): every length, speed and distance converted (the class tables keep the old 10 m units and are multiplied by `U` at load); the battle keeps its pace (speeds stay game speeds, shown as game knots), so balance is unchanged.
+- **The Water Lab's sea in the game** (`js/world/sea.js`): WaterKit — open ocean, moderate (Beaufort 4), North Atlantic look — with the islands as its shore (shallow water clears and turns green, waves die down, surf), whitecaps and every ship's wake in the foam memory (FoamKit; shell splashes, depth charges and torpedo tracks too), the player's bow wave and Kelvin waves; ships ride its waves (pitch, heave and roll). *Detailed water* in Options switches per-pixel normals, the denser grid and the foam memory. The old ocean (`js/world/ocean.js`) is gone.
+- **Real ships**: the destroyer is ORP Błyskawica and the submarine ORP Orzeł from the Ship Lab (`js/world/realships.js`, through the transformer: levels of detail chosen by on-screen size; the game's turrets drive the real 120 mm / 105 mm mounts); both classes take the real length and beam. The cruiser and the battleship keep the older models until they get their own.
+### Added
+- WaterKit: `uShipXf` (the ship anywhere, at any heading), `uLodC` (grid centre not under the camera) and detail by pixel footprint for high orthographic views; FoamKit: a `fleet` of up to 16 ships with their wakes and hull foam.
+- `tools/e2e.py`: a check for the sea with its foam memory and the real destroyer (the rest runs with simple water, which SwiftShader draws faster).
+
 ## [0.28.2] - 2026-10-25
 ### Fixed
 - Pixel Studio and the Zombie Generator: the middle area scrolls when its content is taller than the window (the sprite sheet under the preview could not be reached); it stays centred while it fits.

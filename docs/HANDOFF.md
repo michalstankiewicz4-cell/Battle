@@ -7,7 +7,7 @@ what the project is, what the owner decided, how work is done and what comes nex
 **Keep this file current:** when a decision is made, a feature lands or the next steps change, update the sections
 below in the same push (it is part of every release, like the changelog).
 
-## Snapshot (state as of v0.28.2, 2026-10-25)
+## Snapshot (state as of v0.29.0, 2026-10-28)
 - **What:** *Steel Salvo* (working title) — free naval battle browser game, PvE against endless waves of AI warships.
   Live: <https://michalstankiewicz4-cell.github.io/Battle/> · repo: <https://github.com/michalstankiewicz4-cell/Battle> (branch `main`,
   GitHub Pages deploys every push via `.github/workflows/static.yml`).
@@ -75,6 +75,7 @@ below in the same push (it is part of every release, like the changelog).
 | 2026-10-21 | Water types: one WaterKit, each body (ocean, fjord, lake, river, then harbour, ice) a preset + its own feature in the Water Lab; the Land Lab later mixes them by region. Keep a professional folder layout (`js/env` kits, `js/tools`, `js/labs` = one controller per page) and a user guide (`docs/GUIDE.md`). |
 | 2026-10-21 | Next lab: land and terrain (procedural, sea and land mixed), map as a torus (wrap-around) or bounded by barriers — to choose in the lab. |
 | 2026-10-21 | Labs continue first; their results will later be merged into another project (owner's plan). Fixed simulation tick + render interpolation noted for multiplayer (later, `MULTIPLAYER.md` §7); no frame generation. |
+| 2026-10-28 | **Ships and sea into the game**: the game in **metres** (1 u = 1 m; speeds stay game speeds, balance unchanged); destroyer = ORP Błyskawica, submarine = ORP Orzeł (real models); **cruiser and battleship keep the old models** until new ones; sea = the Water Lab's default (open ocean, moderate, North Atlantic, foam memory). |
 | 2026-10-21 | LOD yes; **many hitboxes**, because procedural destruction is planned. Primitives only as the far level, never instead of the detailed model. |
 
 ## How the owner works (preferences)
@@ -108,7 +109,9 @@ below in the same push (it is part of every release, like the changelog).
 - Shells and torpedoes use their own reach rules for submarines (`shellable()`, `torpable()` in `ships.js`); new weapons must
   respect them.
 - Flat foam particles sit at y = 0.47, above the highest wave crest (the four waves sum to 0.45); lower and waves cut them.
-- The island outline is wobbly (`wobble()`); the ocean shader, `isLand()` and `heightAt()` must keep using the same function.
+- The island outline is wobbly (`wobble()`); the sea's shore (`landH` in `sea.js`), `isLand()` and `heightAt()` must keep using the same function.
+- World units are metres since v0.29; `U` (= 10) converts the old 10 m numbers still written in `constants.js`, `models.js` (older models drawn small and scaled) and the effect sizes in `fx.js`.
+- Never `pgrep -f`/`pkill -f` a pattern that is in your own command line (it matches the shell itself); use a bracket like `tools/e2[e].py`.
 - CSP forbids inline styles: set sizes via `el.style.*` (CSSOM), never `style=` attributes; no `innerHTML`.
 - GitHub push from the Claude sandbox needs the Claude GitHub App on the repo; a 403 means access lapsed — ask the owner to
   reconnect GitHub in claude.ai settings (Connectors), do not work around it.
@@ -141,6 +144,8 @@ below in the same push (it is part of every release, like the changelog).
    transitions and joins, not the final map generator) → biomes northern/plains/desert/zones done (v0.20.0) → next ideas:
    Plants Lab done (v0.21.0) → Pixel Studio v1 (v0.22.0, separate project; owner wants to teach pixel art, iterate on it) → next: Rocks Lab, more biomes, later other planets; Paint Lab later; small fixes (ice look, fjord walls) later.
    More labs are welcome where they make sense.
+   Ships and sea in the game (owner 2026-10-28): metres, WaterKit sea, Błyskawica and Orzeł done (v0.29.0) → next: damage from
+   the transformer's hitboxes in battle, real models for the cruiser and battleship, real-GPU performance check.
    Sea after Open Water (owner 2026-10-24, "po kolei"): foam with memory + Beaufort/Monahan calibration done (v0.24.0)
    → sun glitter as sparkles → FFT waves as the High preset → cloud shadows and rain cells → AgX tone mapping.
 0. **P1** Owner looks at the Look Lab on a real GPU: which wear level and look go into the game, confirm lens effects only

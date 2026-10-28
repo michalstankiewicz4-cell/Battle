@@ -1,16 +1,19 @@
 // Ship entity: movement (telegraph throttle, rudder), wave bobbing, turret traverse within arcs,
 // firing solutions, damage, fires, repair party and sinking.
 import * as THREE from '../../vendor/three.module.js';
-import { CLASSES, THROTTLE, THROTTLE_STOP, FIRE, EDGE, DEPTHS, DIVE_RATE } from './constants.js';
+import { CLASSES, THROTTLE, THROTTLE_STOP, FIRE, EDGE, DEPTHS, DIVE_RATE, U } from './constants.js';
 import { buildShip } from './models.js';
-import { waveAt } from './ocean.js';
+import { REAL, buildReal } from './realships.js';
+// the sea's height at (x, z, t): set by the world to the WaterKit sea (sea.js); flat until then
+let seaH = () => 0;
+export function setSeaHeight(fn) { seaH = fn; }
 import { clamp, wrapAngle } from '../core/util.js';
 
 let nextId = 1;
 
 export function createShip(scene, clsKey, side, x, z, th) {
   const cls = CLASSES[clsKey];
-  const model = buildShip(cls, side);
+  const model = REAL[clsKey] ? buildReal(cls) : buildShip(cls, side);
   scene.add(model.group);
   const ship = {
     id: nextId++, cls, side, name: '', x, z, th, vx: 0, vz: 0,
@@ -34,11 +37,11 @@ export function createShip(scene, clsKey, side, x, z, th) {
 export function depthLevel(s) {
   if (!s.sub) return 0;
   const y = s.sub.y;
-  return y > -0.35 ? 0 : y > -2.6 ? 1 : 2;
+  return y > -0.35 * U ? 0 : y > -2.6 * U ? 1 : 2;
 }
 // Can shells hit / torpedoes hit / guns fire? (submarines only partly; everyone else always)
-export const shellable = (s) => !s.sub || s.sub.y > -0.6;
-export const torpable = (s) => !s.sub || s.sub.y > -2.6;
+export const shellable = (s) => !s.sub || s.sub.y > -0.6 * U;
+export const torpable = (s) => !s.sub || s.sub.y > -2.6 * U;
 
 // Forward and starboard unit vectors.
 export const fwdOf = (th) => ({ x: Math.sin(th), z: Math.cos(th) });
@@ -63,14 +66,16 @@ function place(s, t) {
   const g = s.model.group, b = s.model.body;
   g.position.set(s.x, 0, s.z);
   g.rotation.y = s.th;
-  const L = s.cls.L;
+  const L = s.cls.L, W = s.cls.W;
   const f = fwdOf(s.th);
-  const hb = waveAt(s.x + f.x * L * 0.4, s.z + f.z * L * 0.4, t), hs = waveAt(s.x - f.x * L * 0.4, s.z - f.z * L * 0.4, t);
+  // the surface under the bow, the stern and both sides (a long hull averages short waves out)
+  const hb = seaH(s.x + f.x * L * 0.4, s.z + f.z * L * 0.4, t), hs = seaH(s.x - f.x * L * 0.4, s.z - f.z * L * 0.4, t);
+  const hp = seaH(s.x - f.z * W * 0.5, s.z + f.x * W * 0.5, t), hr = seaH(s.x + f.z * W * 0.5, s.z - f.x * W * 0.5, t);
   const sink = s.sinkT;
-  const sy = s.sub ? s.sub.y : 0, ride = s.sub ? clamp(1 + sy / 1.3, 0, 1) : 1;   // submerged boats stop riding the waves
-  b.position.y = (hb + hs) * 0.5 * 0.7 * ride + sy - sink * 0.45;
+  const sy = s.sub ? s.sub.y : 0, ride = s.sub ? clamp(1 + sy / (1.3 * U), 0, 1) : 1;   // submerged boats stop riding the waves
+  b.position.y = (hb + hs) * 0.5 * 0.7 * ride + sy - sink * 0.45 * U;
   b.rotation.x = -Math.atan2(hb - hs, L * 0.8) * 0.6 * ride + sink * 0.05;
-  b.rotation.z = s.rudder * clamp(s.speed / s.cls.speed, -1, 1) * 0.07 + sink * 0.12;
+  b.rotation.z = s.rudder * clamp(s.speed / s.cls.speed, -1, 1) * 0.07 + sink * 0.12 + Math.atan2(hp - hr, W) * 0.35 * ride;
 }
 
 // Movement step. land(x,z,pad) -> bool. Returns true if the ship scraped land this frame.
@@ -149,6 +154,7 @@ export function aimTurrets(s, dt, ax, az) {
     tr.aimed = tr.inArc && Math.abs(wrapAngle(want - tr.yaw)) < 0.03;
     tr.pivot.rotation.y = tr.yaw;
   }
+  if (s.model.sync) s.model.sync();                   // real models: the mounts follow the game turrets
 }
 
 // Applies damage; returns the damage dealt.
@@ -171,7 +177,7 @@ export function useRepair(s) {
 
 export function removeShip(scene, s) {
   scene.remove(s.model.group);
-  s.model.group.traverse((o) => { if (o.isMesh) o.geometry.dispose(); });
+  if (!s.model.shared) s.model.group.traverse((o) => { if (o.isMesh) o.geometry.dispose(); });   // real models share theirs
 }
 
 export const throttleFrac = (s) => THROTTLE[s.throttle];

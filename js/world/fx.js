@@ -1,6 +1,7 @@
 // Particle effects on two instanced pools: "glow" (unlit: fire, muzzle flashes, explosions, tracers)
 // and "lit" (smoke, water splashes, wake foam). Particles are soft camera-facing billboards; flat ones lie on the water.
 import * as THREE from '../../vendor/three.module.js';
+import { U } from './constants.js';
 
 
 const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), P = new THREE.Vector3(), S = new THREE.Vector3();
@@ -90,7 +91,7 @@ function pool(scene, n, material) {
 const TMP = new THREE.Color();
 const fxRef = { density: 1 };
 // Height of flat foam: above the highest wave crest so waves never cut it.
-const SURF = 0.47;
+const SURF = 0.47 * U;
 const R = (a = 1) => (Math.random() * 2 - 1) * a;
 
 export function createFx(scene) {
@@ -107,58 +108,59 @@ export function createFx(scene) {
     camera: null,
     clear() { glow.clear(); lit.clear(); },
 
+    // Sizes are in the old game units (about 10 m, ~ calibre); positions in metres; every length and speed below × U.
     // Water column from a shell hitting the sea (size ~ calibre).
     splash(x, z, size = 1) {
       const n = 6 + Math.round(size * 6);
       for (let i = 0; i < n; i++) {
-        lit.add({ x: x + R(0.6 * size), y: 0.2, z: z + R(0.6 * size), vx: R(1.2), vy: (5 + Math.random() * 6) * Math.sqrt(size), vz: R(1.2),
-          g: 14, life: 1 + Math.random() * 0.6, s0: 0.5 * size, s1: 0.9 * size, sy: 1.6, c0: 0xf2fbff, c1: 0x9ccbe0 });
+        lit.add({ x: x + R(0.6 * size * U), y: 0.2 * U, z: z + R(0.6 * size * U), vx: R(1.2 * U), vy: (5 + Math.random() * 6) * Math.sqrt(size) * U, vz: R(1.2 * U),
+          g: 14 * U, life: 1 + Math.random() * 0.6, s0: 0.5 * size * U, s1: 0.9 * size * U, sy: 1.6, c0: 0xf2fbff, c1: 0x9ccbe0 });
       }
       for (let i = 0; i < 8; i++) {
         const a = i / 8 * 6.28;
-        lit.add({ x, y: SURF, z, vx: Math.cos(a) * 3 * size, vz: Math.sin(a) * 3 * size, drag: 2.5, life: 2.2, s0: 0.6 * size, s1: 1.4 * size, sy: 0.12, c0: 0xe6f6f8, c1: 0x5f9fbf });
+        lit.add({ x, y: SURF, z, vx: Math.cos(a) * 3 * size * U, vz: Math.sin(a) * 3 * size * U, drag: 2.5, life: 2.2, s0: 0.6 * size * U, s1: 1.4 * size * U, sy: 0.12, c0: 0xe6f6f8, c1: 0x5f9fbf });
       }
     },
     // Dust and rock from a shell hitting an island.
     dirt(x, y, z, size = 1) {
       for (let i = 0; i < 10; i++) {
-        lit.add({ x: x + R(0.5), y: y + 0.3, z: z + R(0.5), vx: R(3), vy: 3 + Math.random() * 5, vz: R(3), g: 12, life: 1.2, s0: 0.5 * size, s1: 0.2, c0: 0x8a7a5a, c1: 0x5a4a3a });
+        lit.add({ x: x + R(0.5 * U), y: y + 0.3 * U, z: z + R(0.5 * U), vx: R(3 * U), vy: (3 + Math.random() * 5) * U, vz: R(3 * U), g: 12 * U, life: 1.2, s0: 0.5 * size * U, s1: 0.2 * U, c0: 0x8a7a5a, c1: 0x5a4a3a });
       }
-      fx.smoke(x, y + 0.5, z, 3, 0.8 * size);
+      fx.smoke(x, y + 0.5 * U, z, 3, 0.8 * size);
     },
     // Fireball + debris + smoke.
     explosion(x, y, z, size = 1) {
       for (let i = 0; i < 10 + size * 6; i++) {
-        glow.add({ x: x + R(0.4), y: y + R(0.3), z: z + R(0.4), vx: R(4 * size), vy: 2 + Math.random() * 4 * size, vz: R(4 * size), drag: 3, g: 2,
-          life: 0.4 + Math.random() * 0.5, s0: 0.9 * size, s1: 0.2, c0: 0xfff2a0, c1: 0xd0401a });
+        glow.add({ x: x + R(0.4 * U), y: y + R(0.3 * U), z: z + R(0.4 * U), vx: R(4 * size * U), vy: (2 + Math.random() * 4 * size) * U, vz: R(4 * size * U), drag: 3, g: 2 * U,
+          life: 0.4 + Math.random() * 0.5, s0: 0.9 * size * U, s1: 0.2 * U, c0: 0xfff2a0, c1: 0xd0401a });
       }
-      fx.smoke(x, y + 0.5, z, 6, size);
+      fx.smoke(x, y + 0.5 * U, z, 6, size);
     },
     // Short bright flash + puff at a gun muzzle; (dx,dz) = firing direction.
     muzzle(x, y, z, dx, dz, size = 1) {
       for (let i = 0; i < 4; i++) {
-        glow.add({ x: x + dx * i * 0.3 * size, y, z: z + dz * i * 0.3 * size, vx: dx * 6, vy: 0.5, vz: dz * 6, drag: 6, life: 0.18, s0: 0.8 * size, s1: 0.2, c0: 0xffffd0, c1: 0xff8a30 });
+        glow.add({ x: x + dx * i * 0.3 * size * U, y, z: z + dz * i * 0.3 * size * U, vx: dx * 6 * U, vy: 0.5 * U, vz: dz * 6 * U, drag: 6, life: 0.18, s0: 0.8 * size * U, s1: 0.2 * U, c0: 0xffffd0, c1: 0xff8a30 });
       }
       for (let i = 0; i < 3; i++) {
-        lit.add({ x: x + dx * 1.2 * size, y, z: z + dz * 1.2 * size, vx: dx * 4 + R(1), vy: 0.8, vz: dz * 4 + R(1), drag: 1.5, life: 1.6, s0: 0.6 * size, s1: 1.8 * size, c0: 0xd8d8d0, c1: 0x8a8f96 });
+        lit.add({ x: x + dx * 1.2 * size * U, y, z: z + dz * 1.2 * size * U, vx: (dx * 4 + R(1)) * U, vy: 0.8 * U, vz: (dz * 4 + R(1)) * U, drag: 1.5, life: 1.6, s0: 0.6 * size * U, s1: 1.8 * size * U, c0: 0xd8d8d0, c1: 0x8a8f96 });
       }
     },
     smoke(x, y, z, n = 3, size = 1, dark = false) {
       for (let i = 0; i < n; i++) {
-        lit.add({ x: x + R(0.4 * size), y, z: z + R(0.4 * size), vx: R(0.6) + 0.8, vy: 1.2 + Math.random(), vz: R(0.6) + 0.4, drag: 0.4,
-          life: 2.5 + Math.random() * 1.5, s0: 0.5 * size, s1: 2.2 * size, c0: dark ? 0x2a2a2e : 0x6a6a70, c1: dark ? 0x55565c : 0xa6a8ae });
+        lit.add({ x: x + R(0.4 * size * U), y, z: z + R(0.4 * size * U), vx: (R(0.6) + 0.8) * U, vy: (1.2 + Math.random()) * U, vz: (R(0.6) + 0.4) * U, drag: 0.4,
+          life: 2.5 + Math.random() * 1.5, s0: 0.5 * size * U, s1: 2.2 * size * U, c0: dark ? 0x2a2a2e : 0x6a6a70, c1: dark ? 0x55565c : 0xa6a8ae });
       }
     },
     fire(x, y, z, size = 1) {
-      glow.add({ x: x + R(0.3), y, z: z + R(0.3), vy: 1.5 + Math.random() * 1.5, life: 0.5, s0: 0.6 * size, s1: 0.15, c0: 0xffd060, c1: 0xc02a10 });
+      glow.add({ x: x + R(0.3 * U), y, z: z + R(0.3 * U), vy: (1.5 + Math.random() * 1.5) * U, life: 0.5, s0: 0.6 * size * U, s1: 0.15 * U, c0: 0xffd060, c1: 0xc02a10 });
     },
     // Foam patch left on the water (ship wake, torpedo wake).
     foam(x, z, size = 1, life = 3) {
-      lit.add({ x, y: SURF - 0.02, z, life, s0: 0.6 * size, s1: 1.6 * size, sy: 0.1, c0: 0xf0fafa, c1: 0x3f7fa0 });
+      lit.add({ x, y: SURF - 0.02 * U, z, life, s0: 0.6 * size * U, s1: 1.6 * size * U, sy: 0.1, c0: 0xf0fafa, c1: 0x3f7fa0 });
     },
     // Bright tracer streak (shell in flight).
     tracer(x, y, z, size = 0.3) {
-      glow.add({ x, y, z, life: 0.12, s0: size, s1: size * 0.4, c0: 0xffe9a0, c1: 0xff8040 });
+      glow.add({ x, y, z, life: 0.12, s0: size * U, s1: size * 0.4 * U, c0: 0xffe9a0, c1: 0xff8040 });
     },
   };
   return fx;

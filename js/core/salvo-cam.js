@@ -3,6 +3,7 @@
 // Rendered through a second, small post pipeline, so it matches the main view.
 import * as THREE from '../../vendor/three.module.js';
 import { PostPipeline } from '../render/post.js';
+import { U } from '../world/constants.js';
 
 // Size follows the CSS frame (#pip in hud.css): 320×180, or 200×113 on windows up to 900 px wide.
 export const PIP = { w: 320, h: 180, margin: 12 };
@@ -10,7 +11,7 @@ const pipSize = () => (innerWidth <= 900 ? [200, 113] : [320, 180]);
 const HOLD = 1.8;                                  // seconds to keep looking at the impact
 
 export function createSalvoCam(renderer) {
-  const cam = new THREE.PerspectiveCamera(46, 16 / 9, 0.3, 900);
+  const cam = new THREE.PerspectiveCamera(46, 16 / 9, 1, 900 * U);
   const pipe = new PostPipeline(renderer);
   let size = pipSize();
   pipe.resize(size[0], size[1]);
@@ -48,12 +49,12 @@ export function createSalvoCam(renderer) {
         if (kind === 'shell') {
           const s = follow, dx = s.x1 - s.x0, dz = s.z1 - s.z0, d = Math.hypot(dx, dz) || 1, ux = dx / d, uz = dz / d;
           const u = Math.min(1, s.t / s.T), slope = (-s.y0 + 4 * s.apex * (1 - 2 * u)) / d;   // dy per unit of horizontal travel
-          want.set(s.x - ux * 6, s.y + 1.4 - slope * 6, s.z - uz * 6);
-          lookWant.set(s.x + ux * 20, s.y + slope * 20, s.z + uz * 20);
+          want.set(s.x - ux * 6 * U, s.y + 1.4 * U - slope * 6 * U, s.z - uz * 6 * U);
+          lookWant.set(s.x + ux * 20 * U, s.y + slope * 20 * U, s.z + uz * 20 * U);
         } else {
           const tp = follow, ux = Math.sin(tp.th), uz = Math.cos(tp.th);
-          want.set(tp.x - ux * 5, 1.2, tp.z - uz * 5);
-          lookWant.set(tp.x + ux * 25, 0.2, tp.z + uz * 25);
+          want.set(tp.x - ux * 5 * U, 1.2 * U, tp.z - uz * 5 * U);
+          lookWant.set(tp.x + ux * 25 * U, 0.2 * U, tp.z + uz * 25 * U);
         }
         if (fresh) { pos.copy(want); look.copy(lookWant); fresh = false; }
         else { pos.lerp(want, 1 - Math.exp(-12 * dt)); look.lerp(lookWant, 1 - Math.exp(-8 * dt)); }

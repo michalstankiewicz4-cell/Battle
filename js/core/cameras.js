@@ -4,17 +4,18 @@
 import * as THREE from '../../vendor/three.module.js';
 import { clamp, wrapAngle } from './util.js';
 import { toWorld } from '../world/ships.js';
+import { U } from '../world/constants.js';
 
-const VIEW_H = 60;                                  // visible world height at zoom 1
-const ISO_OFFSET = new THREE.Vector3(0, 70, 52);
+const VIEW_H = 60 * U;                              // visible world height at zoom 1 (m)
+const ISO_OFFSET = new THREE.Vector3(0, 70 * U, 52 * U);
 const UP = new THREE.Vector3(0, 1, 0);
 const GUN_FOV = 52;                                 // gun camera field of view at zoom ×1
 const PITCH_MIN = -0.6, PITCH_MAX = 0.08;
-const TOP = { dd: 1.7, ca: 2.8, bb: 4.0, ss: 1.0 };          // superstructure height above the deck per class
+const TOP = { dd: 1.7 * U, ca: 2.8 * U, bb: 4.0 * U, ss: 1.0 * U };   // superstructure height above the deck per class (m)
 
 export function createCameraRig({ settings, input }) {
-  const ortho = new THREE.OrthographicCamera(-1, 1, 1, -1, -150, 350);
-  const persp = new THREE.PerspectiveCamera(42, 1, 0.3, 1200);
+  const ortho = new THREE.OrthographicCamera(-1, 1, 1, -1, -150 * U, 350 * U);
+  const persp = new THREE.PerspectiveCamera(42, 1, 1, 1200 * U);
   let camera = ortho;
   let yaw = 0.35, userZoom = 1, initialised = false, orbit = 0;
   let view = 'iso';                                 // 'iso' | 'gun' (during play)
@@ -46,15 +47,15 @@ export function createCameraRig({ settings, input }) {
   }
 
   // Height of the gun camera above the sea for a ship (used to start the view looking at the current aim point).
-  const gunHeight = (ship) => (ship.cls.sub ? 1.5 : ship.cls.H + TOP[ship.cls.key] + 0.9);
+  const gunHeight = (ship) => (ship.cls.sub ? 1.5 * U : ship.cls.H + TOP[ship.cls.key] + 0.9 * U);
 
   // Enter/leave the gun camera. aim: current aim point (the view starts looking at it).
   function setView(v, ship, aim) {
     if (v === view) return;
     view = v;
     if (v === 'gun' && ship) {
-      const ax = aim ? aim.x : ship.x + Math.sin(ship.th) * 60, az = aim ? aim.z : ship.z + Math.cos(ship.th) * 60;
-      const d = Math.max(20, Math.hypot(ax - ship.x, az - ship.z));
+      const ax = aim ? aim.x : ship.x + Math.sin(ship.th) * 60 * U, az = aim ? aim.z : ship.z + Math.cos(ship.th) * 60 * U;
+      const d = Math.max(20 * U, Math.hypot(ax - ship.x, az - ship.z));
       gYaw = Math.atan2(ax - ship.x, az - ship.z);
       gPitch = clamp(-Math.atan2(gunHeight(ship), d), PITCH_MIN, PITCH_MAX);
       gZoom = ship.cls.sub ? 1.5 : 2; gInit = false;            // ships start looking through binoculars
@@ -75,9 +76,9 @@ export function createCameraRig({ settings, input }) {
       if (persp.fov !== 42) { persp.fov = 42; persp.updateProjectionMatrix(); }
       orbit += dt * 0.05;
       const s = ctx.ship, a = s.th + 2.2 + Math.sin(orbit) * 0.5;
-      const d = 26 + s.L * 1.1;
-      persp.position.set(s.x + Math.sin(a) * d, 6 + s.L * 0.25, s.z + Math.cos(a) * d);
-      tmp.set(s.x, 2, s.z);
+      const d = 26 * U + s.L * 1.1;
+      persp.position.set(s.x + Math.sin(a) * d, 6 * U + s.L * 0.25, s.z + Math.cos(a) * d);
+      tmp.set(s.x, 2 * U, s.z);
       persp.up.copy(UP);
       persp.lookAt(tmp);
       persp.rotateY(0.28);                          // keep the ship right of centre (the menu is on the left)
@@ -88,14 +89,14 @@ export function createCameraRig({ settings, input }) {
       gYaw = wrapAngle(gYaw + (input.isDown('KeyE') - input.isDown('KeyQ')) * 0.9 * dt / gZoom);
       if (p.cls.sub) {
         // periscope: eye at the top of the attack periscope, a few decimetres above the waves at periscope depth
-        const base = toWorld(p, 0.08, 0.75);
-        gWant.set(base.x, p.model.body.position.y + p.cls.H + 0.95 + 1.25 + 0.08 + Math.sin(t * 1.3) * 0.06, base.z);
+        const base = toWorld(p, 0.08 * U, 0.75 * U);
+        gWant.set(base.x, p.model.body.position.y + p.cls.H + (0.95 + 1.25 + 0.08 + Math.sin(t * 1.3) * 0.06) * U, base.z);
       } else {
         // above and a little behind the turret, high enough to clear the superstructure
         const tr = pickTurret(p);
         const base = toWorld(p, 0, tr.spec.z);
         const back = tr.spec.size * 3.2;
-        const up = p.cls.H + TOP[p.cls.key] + 0.9 + p.model.body.position.y * 0.5;
+        const up = p.cls.H + TOP[p.cls.key] + 0.9 * U + p.model.body.position.y * 0.5;
         gWant.set(base.x - Math.sin(gYaw) * back, up, base.z - Math.cos(gYaw) * back);
       }
       if (!gInit) { gPos.copy(gWant); gInit = true; } else gPos.lerp(gWant, 1 - Math.exp(-6 * dt));

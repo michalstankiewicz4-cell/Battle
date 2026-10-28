@@ -3,6 +3,7 @@
 // Detail: railings, AA mounts, lifeboats, masts with radar, bridge windows, funnel caps; submarine casing details.
 import * as THREE from '../../vendor/three.module.js';
 import { mat, mergeBoxes } from '../render/materials.js';
+import { U } from './constants.js';
 
 const COLORS = {
   player: { hull: 0x6c7884, deck: 0x8f7c5e, top: 0x7e8a96, turret: 0x77838f, stripe: 0x2a3a4a },
@@ -141,7 +142,9 @@ function addDetail(body, cls, side, c) {
 }
 
 // Returns { group, body (rolls/pitches), turrets: [pivot] }
-export function buildShip(cls, side) {
+// These models are drawn in the old game units of 10 m and scaled up by U (the world is in metres since v0.29).
+export function buildShip(clsM, side) {
+  const cls = { ...clsM, L: clsM.L / U, W: clsM.W / U, H: clsM.H / U, turrets: clsM.turrets.map((t) => ({ ...t, z: t.z / U, y: t.y / U, size: t.size / U })) };
   const c = COLORS[side];
   const { L, W, H } = cls;
   const group = new THREE.Group();
@@ -211,6 +214,7 @@ export function buildShip(cls, side) {
     return p;
   });
   group.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  body.scale.setScalar(U);
   return { group, body, turrets };
 }
 
@@ -240,4 +244,4 @@ export function setGhost(model, on, opacity = 0.5) {
   });
 }
 
-export const torpGeo = () => new THREE.BoxGeometry(0.22, 0.18, 1.1);
+export const torpGeo = () => new THREE.BoxGeometry(0.22 * U, 0.18 * U, 1.1 * U);
