@@ -1,10 +1,11 @@
 // Camera rig: isometric orthographic follow camera (play), gun camera (C: perspective view from above
 // the turret that bears on the view direction, mouse look with pointer lock, wheel = binocular zoom)
-// and a low perspective showcase camera for the start screen.
+// deck walk (F: first person on the own deck, deck-cam.js) and a low perspective showcase camera for the start screen.
 import * as THREE from '../../vendor/three.module.js';
 import { clamp, wrapAngle } from './util.js';
 import { toWorld } from '../world/ships.js';
 import { U } from '../world/constants.js';
+import { createDeckCam } from './deck-cam.js';
 
 const VIEW_H = 60 * U;                              // visible world height at zoom 1 (m)
 const ISO_OFFSET = new THREE.Vector3(0, 70 * U, 52 * U);
@@ -18,7 +19,8 @@ export function createCameraRig({ settings, input }) {
   const persp = new THREE.PerspectiveCamera(42, 1, 1, 1200 * U);
   let camera = ortho;
   let yaw = 0.35, userZoom = 1, initialised = false, orbit = 0;
-  let view = 'iso';                                 // 'iso' | 'gun' (during play)
+  let view = 'iso';                                 // 'iso' | 'gun' | 'deck' (during play)
+  const deck = createDeckCam({ settings, input });
   let gYaw = 0, gPitch = -0.05, gZoom = 1, gInit = false;
   const gPos = new THREE.Vector3(), gWant = new THREE.Vector3();
   const look = new THREE.Vector3(), tmp = new THREE.Vector3();
@@ -30,14 +32,16 @@ export function createCameraRig({ settings, input }) {
   };
   input.onWheel = (dy) => {
     const z = Math.exp(-dy * 0.0012 * settings.data.mouse.zoomSens);
-    if (view === 'gun') gZoom = clamp(gZoom * z, 1, 8);
+    if (view === 'deck') deck.wheel(dy);
+    else if (view === 'gun') gZoom = clamp(gZoom * z, 1, 8);
     else userZoom = clamp(userZoom * z, 0.4, 2.2);
   };
   input.onDrag = (dx, dy) => {
     if (view === 'gun') turnView(dx, dy);
+    else if (view === 'deck') deck.look(dx, dy);
     else if (camera === ortho) yaw -= dx * 0.006 * settings.data.mouse.rotSens;
   };
-  input.onLook = (dx, dy) => { if (view === 'gun') turnView(dx, dy); };
+  input.onLook = (dx, dy) => { if (view === 'gun') turnView(dx, dy); else if (view === 'deck') deck.look(dx, dy); };
 
   function resize(w, h) {
     const a = w / h;
@@ -52,7 +56,9 @@ export function createCameraRig({ settings, input }) {
   // Enter/leave the gun camera. aim: current aim point (the view starts looking at it).
   function setView(v, ship, aim) {
     if (v === view) return;
+    const from = view === 'deck' ? deck.yaw : view === 'gun' ? gYaw : null;
     view = v;
+    if (v === 'deck' && ship) deck.enter(ship, from ?? ship.th);
     if (v === 'gun' && ship) {
       const ax = aim ? aim.x : ship.x + Math.sin(ship.th) * 60 * U, az = aim ? aim.z : ship.z + Math.cos(ship.th) * 60 * U;
       const d = Math.max(20 * U, Math.hypot(ax - ship.x, az - ship.z));
@@ -83,6 +89,9 @@ export function createCameraRig({ settings, input }) {
       persp.lookAt(tmp);
       persp.rotateY(0.28);                          // keep the ship right of centre (the menu is on the left)
       initialised = false;
+    } else if (view === 'deck' && ctx.mode === 'play' && ctx.player) {
+      camera = persp;
+      deck.update(dt, persp);
     } else if (view === 'gun' && ctx.mode === 'play' && ctx.player) {
       camera = persp;
       const p = ctx.player;
@@ -123,8 +132,9 @@ export function createCameraRig({ settings, input }) {
     update, resize, setView,
     get camera() { return camera; },
     get yaw() { return yaw; },
-    get zoom() { return view === 'gun' ? gZoom : userZoom; },
+    get zoom() { return view === 'gun' ? gZoom : view === 'deck' ? deck.zoom : userZoom; },
     get view() { return view; },
-    get gunYaw() { return gYaw; },
+    get gunYaw() { return view === 'deck' ? deck.yaw : gYaw; },
+    deck,
   };
 }

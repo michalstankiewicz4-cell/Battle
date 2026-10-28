@@ -80,19 +80,23 @@ export function createApp({ appEl, uiEl }) {
 
   // Gun camera on/off (C). Entering locks the pointer (the key press is the required user gesture).
   let ownUnlock = false;
-  function setGunView(on) {
-    if (on === (rig.view === 'gun')) return;
-    if (on && depthLevel(world.player) === 2) { hud.feed(t('ev.tooDeep'), 'rep'); return; }   // periscope under water
-    rig.setView(on ? 'gun' : 'iso', world.player, aim);
+  function setGunView(on) { setView(on ? 'gun' : 'iso'); }
+  // Views: 'iso' (the map), 'gun' (C) and 'deck' (F: walking on the own deck; a submarine only while surfaced).
+  function setView(v) {
+    if (v === rig.view) return;
+    if (v === 'gun' && depthLevel(world.player) === 2) { hud.feed(t('ev.tooDeep'), 'rep'); return; }   // periscope under water
+    if (v === 'deck' && depthLevel(world.player) > 0) { hud.feed(t('ev.deckWet'), 'rep'); return; }
+    rig.setView(v, world.player, aim);
+    const on = v !== 'iso';
     if (on) input.lock(); else if (input.locked) { ownUnlock = true; input.unlock(); }
     hud.setGunView(on);
   }
   // Esc releases the pointer lock in the browser before the page sees the key: treat that as "pause".
   input.onLockChange = (locked) => {
-    if (!locked && !ownUnlock && mode === 'play' && !paused && rig.view === 'gun') pause();
+    if (!locked && !ownUnlock && mode === 'play' && !paused && rig.view !== 'iso') pause();
     ownUnlock = false;
   };
-  input.onCanvasDown = () => { if (mode === 'play' && !paused && rig.view === 'gun' && !input.locked) input.lock(); };
+  input.onCanvasDown = () => { if (mode === 'play' && !paused && rig.view !== 'iso' && !input.locked) input.lock(); };
 
   // Options > Gameplay > Immortal ship: the player's ship takes no damage (set on every new ship and on change)
   function applyGod() { if (world.player) world.player.god = settings.data.play.god; }
@@ -133,7 +137,14 @@ export function createApp({ appEl, uiEl }) {
   });
   input.onPress = (code) => {
     if (code === 'KeyM') { muted = !muted; return; }
+    if (code === 'KeyG') {                                 // immortal ship on/off (same as Options > Gameplay)
+      settings.update((x) => { x.play.god = !x.play.god; });
+      if (mode === 'play') hud.feed(t(settings.data.play.god ? 'ev.godOn' : 'ev.godOff'), 'rep');
+      return;
+    }
     if (paused || mode !== 'play') return;
+    if (code === 'KeyF' && world.player.alive) { setView(rig.view === 'deck' ? 'iso' : 'deck'); return; }
+    if (rig.view === 'deck' && /^(Key[WASD]|Arrow)/.test(code)) return;           // on deck these walk
     if (code === 'KeyW' || code === 'ArrowUp') thrStep = 1;
     else if (code === 'KeyS' || code === 'ArrowDown') thrStep = -1;
     else if (code === 'Digit1') weapon = 'guns';
@@ -200,8 +211,9 @@ export function createApp({ appEl, uiEl }) {
     let ctl = NO_CTL;
     if (playing) {
       aim = seaAt();
-      const steer = input.isDown('KeyA', 'ArrowLeft') - input.isDown('KeyD', 'ArrowRight');
-      ctl = { thr: thrStep, steer, aim, fire: input.firing, weapon, repair: repairReq, depth: depthStep };
+      const onDeck = rig.view === 'deck';                    // walking: the ship holds her course and speed, guns hold fire
+      const steer = onDeck ? 0 : input.isDown('KeyA', 'ArrowLeft') - input.isDown('KeyD', 'ArrowRight');
+      ctl = { thr: thrStep, steer, aim: onDeck ? null : aim, fire: !onDeck && input.firing, weapon, repair: repairReq, depth: depthStep };
     } else if (mode === 'menu') ctl = { ...NO_CTL };
     thrStep = 0; repairReq = false; depthStep = 0;
     world.fx.camera = rig.camera;
@@ -218,8 +230,10 @@ export function createApp({ appEl, uiEl }) {
       const dx = aim.x - p.x, dz = aim.z - p.z, d = Math.hypot(dx, dz), k = Math.min(d * 0.22, 26 * U) / (d || 1);
       tgt.x += dx * k; tgt.z += dz * k;
     }
-    if (rig.view === 'gun' && !p.alive) setGunView(false);
+    if (rig.view !== 'iso' && !p.alive) setGunView(false);
+    if (rig.view === 'deck' && depthLevel(p) > 0) { setGunView(false); hud.feed(t('ev.deckWet'), 'rep'); }
     if (rig.view === 'gun' && depthLevel(p) === 2) { setGunView(false); hud.feed(t('ev.tooDeep'), 'rep'); }
+    if (rig.view === 'deck') { hud.setBearing((rig.gunYaw - p.th) * 180 / Math.PI); hud.setOptic(rig.deck.bino ? 'bino' : null); }
     if (rig.view === 'gun') {
       hud.setBearing((rig.gunYaw - p.th) * 180 / Math.PI);       // relative bearing from the bow
       // optics: periscope on a submarine; binoculars on ships once zoomed in (×1.5 and more), wide view below that
@@ -252,7 +266,7 @@ export function createApp({ appEl, uiEl }) {
       frames = 0; fpsT = now;
     }
     hudT += dt;
-    if (hudT > 0.1 && mode !== 'menu') { hudT = 0; hud.text(world, weapon, { repair: 'R', depth: 'Z/X', gun: rig.view === 'gun', locked: input.locked, zoom: rig.zoom }); }
+    if (hudT > 0.1 && mode !== 'menu') { hudT = 0; hud.text(world, weapon, { repair: 'R', depth: 'Z/X', gun: rig.view !== 'iso', deck: rig.view === 'deck', locked: input.locked, zoom: rig.zoom }); }
     requestAnimationFrame(frame);
   }
 

@@ -38,7 +38,8 @@ Kits are what moves into the game (or into another project) once a lab's result 
 | `js/main.js` | Entry point: `createApp()` |
 | `js/version.js` | `VERSION` (semver) — must stay at this path (the check script reads it) |
 | `js/core/app.js` | App shell: renderer, pipeline, world, camera rig, mode state machine (`menu`/`play`/`dead`), pause, aim ray, world events → HUD, frame loop |
-| `js/core/cameras.js` | Camera rig: isometric ortho follow camera, gun camera / periscope (C), menu showcase (perspective orbit) |
+| `js/core/cameras.js` | Camera rig: isometric ortho follow camera, gun camera / periscope (C), deck walk (F), menu showcase (perspective orbit) |
+| `js/core/deck-cam.js` | Deck walk: first person on the own deck in the ship's frame (rays against the model for floor and walls), RMB binoculars |
 | `js/core/salvo-cam.js` | Salvo camera: picture-in-picture behind the newest player shell/torpedo, second small post pipeline |
 | `js/core/settings.js`, `storage.js`, `util.js` | Sanitised settings store, localStorage wrappers, small helpers (`clamp`, `wrapAngle`, `mulberry32`) |
 | `js/core/sound.js` | Procedural Web Audio effects (no sound files) |
@@ -88,7 +89,7 @@ Kits are what moves into the game (or into another project) once a lab's result 
 **Esc** never ends a battle: in `play` it pauses (`paused = true`, the world and camera get `dt = 0`) and opens the pause menu (Resume / Options / Quit to main menu); inside Options it goes back to the pause menu; on the pause menu it resumes. In `menu` mode Esc goes back one screen. No effect on the results screen.
 World modes (`world.reset(mode, cls)`): `menu` (player ship circling slowly, no enemies), `play`. `reset()` removes all ships, shells, torpedoes and particles and creates the player ship at (0, 0); `reset('menu', cls, true)` (a ship card clicked on the start screen) puts the new class's ship in the old one's place, heading and way.
 Controls go to the world as one object per frame: `ctl = { thr, steer, aim, fire, weapon, repair, depth }` (`thr` and `depth` = ±1 steps on key-down edges).
-Keys handled in `app.js`: W/S telegraph, A/D rudder, 1/2 weapon, R repair, C gun camera/periscope, Z/X rise/dive, M mute, Esc pause; Q/E camera yaw in `cameras.js`.
+Keys handled in `app.js`: W/S telegraph, A/D rudder, 1/2 weapon, R repair, C gun camera/periscope, F deck walk (on deck WASD walk instead of steering, `deck-cam.js`), Z/X rise/dive, G immortal ship on/off (`settings.play.god`), M mute, Esc pause; Q/E camera yaw in `cameras.js`.
 
 ## UI and i18n
 All UI is built with `h(tag, props, ...kids)` (`js/ui/dom.js`) — no `innerHTML`, no `style=` attributes (CSP `style-src 'self'`; dynamic sizes are set through `el.style.*`). Static text uses `bind(el, key)` / `tx(key)` and follows the language automatically; dynamic text (HUD, results) is recomputed with `t(key, params)`. **English is the default**; Polish is selected in Options > Language. Missing keys fall back to English, then to the key itself. Add a language: new dictionary in `js/i18n/`, register in `index.js` (`dicts`, `LANGS`) and in the settings sanitiser.

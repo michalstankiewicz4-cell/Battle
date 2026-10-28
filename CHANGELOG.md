@@ -5,6 +5,12 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.31.0] - 2026-10-28
+### Added
+- **Deck walk (F)**: first person on your own deck (the sailor is not drawn) — WASD walk, Shift run, mouse look (click to lock the pointer), **right button = binoculars** (wheel = their zoom ×3–10), F or Esc back. The sailor walks on what the model has underfoot (decks, steps up to 0.6 m), is stopped by walls and cannot step off the hull; he rides with the ship. Meanwhile the ship holds her course and speed and the guns hold fire. Submarines: only while surfaced. New `js/core/deck-cam.js`.
+- **G** toggles the immortal ship (the same switch as Options > Gameplay), with a note in the feed.
+- `tools/e2e.py`: deck walk + binoculars check; G toggles immortality.
+
 ## [0.30.0] - 2026-10-28
 ### Added
 - Start screen: choosing a ship card swaps the ship sailing behind the menu for that class's model (in place, same heading and way).

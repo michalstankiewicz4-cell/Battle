@@ -7,7 +7,7 @@ what the project is, what the owner decided, how work is done and what comes nex
 **Keep this file current:** when a decision is made, a feature lands or the next steps change, update the sections
 below in the same push (it is part of every release, like the changelog).
 
-## Snapshot (state as of v0.30.0, 2026-10-28)
+## Snapshot (state as of v0.31.0, 2026-10-28)
 - **What:** *Steel Salvo* (working title) — free naval battle browser game, PvE against endless waves of AI warships.
   Live: <https://michalstankiewicz4-cell.github.io/Battle/> · repo: <https://github.com/michalstankiewicz4-cell/Battle> (branch `main`,
   GitHub Pages deploys every push via `.github/workflows/static.yml`).
@@ -147,6 +147,7 @@ below in the same push (it is part of every release, like the changelog).
    Ships and sea in the game (owner 2026-10-28): metres, WaterKit sea, Błyskawica and Orzeł done (v0.29.0) → next: damage from
    the transformer's hitboxes in battle, real models for the cruiser and battleship, real-GPU performance check.
    v0.30.0: ship cards swap the menu model; Options > Gameplay > Immortal ship (owner wants it for testing, then balance).
+   v0.31.0: deck walk (F, first person, sailor not drawn, RMB binoculars) — owner's request; later ideas: ladders/doors, firing from the deck.
    Sea after Open Water (owner 2026-10-24, "po kolei"): foam with memory + Beaufort/Monahan calibration done (v0.24.0)
    → sun glitter as sparkles → FFT waves as the High preset → cloud shadows and rain cells → AgX tone mapping.
 0. **P1** Owner looks at the Look Lab on a real GPU: which wear level and look go into the game, confirm lens effects only

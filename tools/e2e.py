@@ -7,7 +7,7 @@ Options:  --shots DIR   where to save screenshots (default: tools/out, git-ignor
 What it does: copies the site to a temp folder, appends `window.__app = app;` to js/main.js, serves it on a
 local port and drives the game with a fake fixed-step clock (so game time does not depend on render speed).
 Checks: page loads without errors, language switch, every ship class can fight a wave, gun camera with
-binoculars, submarine periscope + torpedoes + salvo camera, deep dive closes the periscope, depth charges hurt
+binoculars, deck walk (F), submarine periscope + torpedoes + salvo camera, deep dive closes the periscope, depth charges hurt
 a submerged boat, sinking shows the results screen. Prints PASS/FAIL per check; exit code 1 on any failure.
 Needs: pip install playwright (Chromium is pre-installed in the Claude sandbox; locally run `playwright install chromium`).
 """
@@ -121,7 +121,21 @@ def main():
             pg.evaluate("__app.startRun('dd')"); pg.evaluate(SIM, [70, {}]); pg.evaluate(NEAR, 700)
             r = pg.evaluate(FIGHT, 300); r['hp'] = pg.evaluate('__app.world.player.hp'); r['max'] = pg.evaluate('__app.world.player.maxHp')
             check('immortal ship option', r['alive'] and r['hp'] == r['max'], str(r))
+            pg.keyboard.press('g'); g1 = pg.evaluate('__app.settings.data.play.god'); pg.keyboard.press('g'); g2 = pg.evaluate('__app.settings.data.play.god')
+            check('G toggles immortality', g1 is False and g2 is True, f'{g1} {g2}')
             pg.evaluate("__app.settings.update((x) => { x.play.god = false; })")
+
+            # deck walk (F): first person on the own deck, WASD walks along it, the right button holds binoculars
+            pg.evaluate("__app.startRun('dd')"); pg.evaluate('__step(10)')
+            pg.keyboard.press('f'); pg.evaluate('__step(3)')
+            d0 = pg.evaluate("({v: __app.rig.view, p: __app.rig.deck.pos})")
+            pg.keyboard.down('w'); pg.evaluate('__step(30)'); pg.keyboard.up('w')
+            d1 = pg.evaluate('__app.rig.deck.pos')
+            pg.mouse.down(button='right'); pg.evaluate('__step(4)'); bz = pg.evaluate('__app.rig.zoom'); shot('02b-deck-bino'); pg.mouse.up(button='right')
+            pg.evaluate('__step(2)'); shot('02a-deck')
+            pg.keyboard.press('f'); pg.evaluate('__step(2)')
+            moved = ((d1['x'] - d0['p']['x']) ** 2 + (d1['z'] - d0['p']['z']) ** 2) ** 0.5
+            check('deck walk + binoculars', d0['v'] == 'deck' and 1 < moved < 6 and d1['y'] > 1 and bz > 2 and pg.evaluate('__app.rig.view') == 'iso', f'moved {moved:.1f} m, deck {d1["y"]:.1f} m, bino ×{bz}')
 
             # gun camera + binoculars (cruiser)
             pg.evaluate("__app.startRun('ca')"); pg.evaluate(SIM, [70, {}]); pg.evaluate(NEAR, 600)

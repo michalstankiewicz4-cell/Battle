@@ -6,7 +6,7 @@ Naval battle at sea: command a destroyer, cruiser, battleship or submarine again
 
 "Steel Salvo" is a working title.
 
-Controls: W/S engine telegraph, A/D rudder, mouse aim, left mouse fire, 1 main battery, 2 torpedoes, R repair party, C gun camera (periscope on a submarine), Z/X rise/dive (submarine), Q/E or right-mouse drag rotate the camera, wheel zoom, M mute, Esc pause.
+Controls: W/S engine telegraph, A/D rudder, mouse aim, left mouse fire, 1 main battery, 2 torpedoes, R repair party, C gun camera (periscope on a submarine), F walk the deck in first person (WASD, Shift run, right mouse binoculars), Z/X rise/dive (submarine), Q/E or right-mouse drag rotate the camera, wheel zoom, M mute, G immortal ship (testing), Esc pause.
 
 **Documentation:** [`docs/HANDOFF.md`](docs/HANDOFF.md) (start here when resuming work) · [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) (context and files) · [`TODO.md`](TODO.md) · [`docs/MULTIPLAYER.md`](docs/MULTIPLAYER.md) · [`CLAUDE.md`](CLAUDE.md) (assistant rules) · [`CHANGELOG.md`](CHANGELOG.md)
 
