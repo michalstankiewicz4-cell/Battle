@@ -119,7 +119,7 @@ export function stepShip(s, dt, t, land) {
   // fires and repair
   for (let i = s.fires.length - 1; i >= 0; i--) {
     s.fires[i].t -= dt;
-    s.hp -= s.maxHp * FIRE.dps * dt;
+    if (!s.god) s.hp -= s.maxHp * FIRE.dps * dt;
     if (s.fires[i].t <= 0) s.fires.splice(i, 1);
   }
   if (s.repair) {
@@ -160,6 +160,7 @@ export function aimTurrets(s, dt, ax, az) {
 // Applies damage; returns the damage dealt.
 export function damage(s, amount, kind) {
   if (!s.alive) return 0;
+  if (s.god) { s.hitFlash = 0.15; return 0; }            // immortal (Options > Gameplay): hit, but no damage or fire
   const d = Math.min(s.hp, amount);
   s.hp -= amount;
   s.hitFlash = 0.15;

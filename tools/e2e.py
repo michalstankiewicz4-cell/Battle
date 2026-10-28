@@ -81,6 +81,14 @@ def main():
 
             hrefs = pg.evaluate("[...document.querySelectorAll('.labs a')].map(a=>a.getAttribute('href'))")
             check('labs links in the main menu', hrefs == ['labs/ship.html', 'labs/water.html', 'labs.html'], str(hrefs))
+            # choosing a ship card swaps the ship sailing on the start screen (in place)
+            got = []
+            for i in range(4):
+                pg.click(f'.cards .card >> nth={i}'); pg.evaluate('__step(2)')
+                got.append(pg.evaluate("(()=>{const p=__app.world.player;return p.cls.key+(p.model.real?':'+p.model.real:'')})()"))
+            n = pg.evaluate('__app.world.ships.length')
+            check('ship cards swap the menu model', len(set(got)) == 4 and n == 1, str(got))
+            pg.click('.cards .card >> nth=1'); pg.evaluate('__step(2)')
             # language switch (Options > Language) and back
             pg.click('.screen:not([hidden]) .stack button >> nth=2')
             pg.click('.screen:not([hidden]) >> text=Polski'); pg.click('.screen:not([hidden]) .stack button >> nth=0')
@@ -107,6 +115,13 @@ def main():
                 pg.evaluate(f"__app.startRun('{cls}')"); pg.evaluate(SIM, [70, {}]); pg.evaluate(NEAR, 700)
                 r = pg.evaluate(FIGHT, 300)
                 check(f'{cls} fights', r['shots'] > 0 and r['wave'] >= 1, str(r))
+
+            # Options > Gameplay > Immortal ship: the destroyer survives the same fight untouched
+            pg.evaluate("__app.settings.update((x) => { x.play.god = true; })")
+            pg.evaluate("__app.startRun('dd')"); pg.evaluate(SIM, [70, {}]); pg.evaluate(NEAR, 700)
+            r = pg.evaluate(FIGHT, 300); r['hp'] = pg.evaluate('__app.world.player.hp'); r['max'] = pg.evaluate('__app.world.player.maxHp')
+            check('immortal ship option', r['alive'] and r['hp'] == r['max'], str(r))
+            pg.evaluate("__app.settings.update((x) => { x.play.god = false; })")
 
             # gun camera + binoculars (cruiser)
             pg.evaluate("__app.startRun('ca')"); pg.evaluate(SIM, [70, {}]); pg.evaluate(NEAR, 600)

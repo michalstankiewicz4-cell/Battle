@@ -74,7 +74,7 @@ export function createApp({ appEl, uiEl }) {
   let mode = 'menu', paused = false, weapon = 'guns', thrStep = 0, repairReq = false, deadT = 0, depthStep = 0;
   const hud = createHud(uiEl);
   const menu = createMenu(uiEl, {
-    actions: { start: (cls) => startRun(cls), resume: () => resume(), quit: () => goMenu() },
+    actions: { start: (cls) => startRun(cls), pick: (cls) => { if (mode === 'menu' && cls !== world.player.cls.key) world.reset('menu', cls, true); applyGod(); }, resume: () => resume(), quit: () => goMenu() },
     settings, progress,
   });
 
@@ -94,17 +94,20 @@ export function createApp({ appEl, uiEl }) {
   };
   input.onCanvasDown = () => { if (mode === 'play' && !paused && rig.view === 'gun' && !input.locked) input.lock(); };
 
+  // Options > Gameplay > Immortal ship: the player's ship takes no damage (set on every new ship and on change)
+  function applyGod() { if (world.player) world.player.god = settings.data.play.god; }
+  settings.onChange(applyGod);
   function goMenu() {
     setGunView(false);
     mode = 'menu'; paused = false;
-    world.reset('menu', progress.cls); input.clear();
+    world.reset('menu', progress.cls); applyGod(); input.clear();
     hud.show(false); menu.show('main');
   }
   function startRun(cls) {
     progress.cls = cls; progress.save();
     setGunView(false);
     mode = 'play'; paused = false; weapon = 'guns'; deadT = 0;
-    world.reset('play', cls); input.clear();
+    world.reset('play', cls); applyGod(); input.clear();
     menu.hide(); hud.show(true);
     hud.banner(t('ev.start'), t('cls.' + cls), 2.5);
   }

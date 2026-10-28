@@ -27,7 +27,7 @@ export default {
   'opt.scale': 'Render resolution', 'opt.fx': 'Effects density', 'opt.shadows': 'Shadows', 'opt.aa': 'Anti-aliasing',
   'opt.bloom': 'Glow (bloom)', 'opt.water': 'Detailed water (ripples, foam)',
   'opt.title': 'Options', 'opt.lang': 'Language', 'opt.gfx': 'Graphics', 
-  'opt.bright': 'Brightness', 'opt.sat': 'Colour saturation', 'opt.fps': 'Show FPS', 'opt.audio': 'Audio', 'opt.vol': 'Volume',
+  'opt.bright': 'Brightness', 'opt.sat': 'Colour saturation', 'opt.fps': 'Show FPS', 'opt.play': 'Gameplay', 'opt.god': 'Immortal ship (testing)', 'opt.audio': 'Audio', 'opt.vol': 'Volume',
   'opt.mouse': 'Mouse', 'opt.zoom': 'Zoom sensitivity', 'opt.rot': 'Rotate sensitivity', 'opt.reset': 'Reset to defaults',
   'cls.dd': 'Destroyer', 'cls.ca': 'Cruiser', 'cls.bb': 'Battleship',
   'cls.short.dd': 'DD', 'cls.short.ca': 'CA', 'cls.short.bb': 'BB',

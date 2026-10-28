@@ -5,6 +5,14 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.30.0] - 2026-10-28
+### Added
+- Start screen: choosing a ship card swaps the ship sailing behind the menu for that class's model (in place, same heading and way).
+- Options > Gameplay > **Immortal ship (testing)**: the player's ship is hit but takes no damage and does not burn (off by default; for trying things out before balancing).
+- `tools/e2e.py`: checks that the four cards swap the menu model and that the immortal destroyer survives a fight untouched.
+### Fixed
+- `tools/doctor.golden.json`: the game models' sizes are in metres (×10 since v0.29.0; triangles and draw calls unchanged).
+
 ## [0.29.0] - 2026-10-28
 ### Changed
 - **The game is in metres** (1 u = 1 m, as ShipKit and WaterKit): every length, speed and distance converted (the class tables keep the old 10 m units and are multiplied by `U` at load); the battle keeps its pace (speeds stay game speeds, shown as game knots), so balance is unchanged.

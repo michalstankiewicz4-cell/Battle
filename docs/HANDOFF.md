@@ -7,7 +7,7 @@ what the project is, what the owner decided, how work is done and what comes nex
 **Keep this file current:** when a decision is made, a feature lands or the next steps change, update the sections
 below in the same push (it is part of every release, like the changelog).
 
-## Snapshot (state as of v0.29.0, 2026-10-28)
+## Snapshot (state as of v0.30.0, 2026-10-28)
 - **What:** *Steel Salvo* (working title) — free naval battle browser game, PvE against endless waves of AI warships.
   Live: <https://michalstankiewicz4-cell.github.io/Battle/> · repo: <https://github.com/michalstankiewicz4-cell/Battle> (branch `main`,
   GitHub Pages deploys every push via `.github/workflows/static.yml`).
@@ -146,6 +146,7 @@ below in the same push (it is part of every release, like the changelog).
    More labs are welcome where they make sense.
    Ships and sea in the game (owner 2026-10-28): metres, WaterKit sea, Błyskawica and Orzeł done (v0.29.0) → next: damage from
    the transformer's hitboxes in battle, real models for the cruiser and battleship, real-GPU performance check.
+   v0.30.0: ship cards swap the menu model; Options > Gameplay > Immortal ship (owner wants it for testing, then balance).
    Sea after Open Water (owner 2026-10-24, "po kolei"): foam with memory + Beaufort/Monahan calibration done (v0.24.0)
    → sun glitter as sparkles → FFT waves as the High preset → cloud shadows and rain cells → AgX tone mapping.
 0. **P1** Owner looks at the Look Lab on a real GPU: which wear level and look go into the game, confirm lens effects only
@@ -154,7 +155,7 @@ below in the same push (it is part of every release, like the changelog).
    debris, fire/smoke emitters) — owner's plan; scale decision: game to metres or model ×0.1 (asked 2026-10-21).
 2. **P1** The owner picks a sea in the Water Lab ("Copy settings (JSON)") → that sea goes into the game.
 3. **P1** Błyskawica as the player's destroyer (transformer output, scale 1 u ≈ 10 m, mounts and tubes mapped to the game).
-4. **P1** Balance on a real GPU (class HP, reloads, dispersion, AI skill curve, wave size); real-GPU performance check.
+4. **P1** Balance on a real GPU (owner will think it over after playing with the immortal ship) (class HP, reloads, dispersion, AI skill curve, wave size); real-GPU performance check.
    Hint from `tools/e2e.py`: early AI seems too accurate / too deadly at close range.
 5. **P1** Spotting / detection for surface ships; graphics: shadow-map size option, auto Light preset at low FPS.
 6. Owner tasks: Google Search Console + sitemap; `vX.Y.Z` tags in Releases.

@@ -114,14 +114,17 @@ export function createWorld(scene, { sound, renderer } = {}) {
     sound?.bell();
   }
 
-  function reset(mode, clsKey) {
+  // keep: in the menu, the new ship takes the old one's place, heading and way (choosing a ship on the start screen)
+  function reset(mode, clsKey, keep = false) {
+    const was = keep && player ? { x: player.x, z: player.z, th: player.th, speed: player.speed } : null;
     for (const s of ships) removeShip(scene, s);
     ships.length = 0;
     combat.clear(); fx.clear();
     S.mode = mode; S.wave = 0; S.score = 0; S.kills = 0; S.dmg = 0; S.time = 0; S.breather = mode === 'play' ? 3 : 0;
     S.events.length = 0; S.popups.length = 0; S.threat = -1;
     if (clsKey) S.cls = clsKey;
-    player = createShip(scene, S.cls, 'player', 0, 0, Math.PI * 0.85);
+    player = createShip(scene, S.cls, 'player', was ? was.x : 0, was ? was.z : 0, was ? was.th : Math.PI * 0.85);
+    if (was) player.speed = Math.min(was.speed, player.cls.speed);
     player.name = 'You';
     ships.push(player);
     if (mode === 'menu') { player.throttle = 3; player.steer = 0.25; }
