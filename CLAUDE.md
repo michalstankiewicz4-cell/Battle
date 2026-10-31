@@ -15,6 +15,6 @@ Project: browser game "Steel Salvo" (working title) — naval battle, PvE first 
 ## Practice
 - The remote `main` may be ahead (workflow changes): `git pull --rebase origin main`.
 - Test before pushing: `py tools/e2e.py` (headless, slow without a GPU — use the fake clock, see "Testing" in `docs/ARCHITECTURE.md`); add a check for each new feature.
-- After any change to a model (ShipKit or `js/world/models.js`) run `py tools/doctor.py`; update `tools/doctor.golden.json` (`--update`) only for intended changes.
+- The labs, Pixel Studio and the model doctor moved to GameLaboratory (repo `michalstankiewicz4-cell/GameLaboratory`). After a model change (ShipKit or `js/world/models.js`) check it with GameLaboratory's model doctor.
 - With every push also update `docs/HANDOFF.md` (snapshot, decisions, next steps) and the other docs touched by the change.
 - Do not use `pkill -f` with a pattern that appears in your own command line (it kills the shell); kill by PID.

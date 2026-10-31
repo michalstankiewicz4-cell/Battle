@@ -80,7 +80,7 @@ def main():
             shot('01-menu')
 
             hrefs = pg.evaluate("[...document.querySelectorAll('.labs a')].map(a=>a.getAttribute('href'))")
-            check('labs links in the main menu', hrefs == ['labs/ship.html', 'labs/water.html', 'labs.html'], str(hrefs))
+            check('labs links in the main menu', hrefs == ['https://michalstankiewicz4-cell.github.io/GameLaboratory/labs/warship.html', 'https://michalstankiewicz4-cell.github.io/GameLaboratory/labs/water.html', 'https://michalstankiewicz4-cell.github.io/GameLaboratory/'], str(hrefs))
             # choosing a ship card swaps the ship sailing on the start screen (in place)
             got = []
             for i in range(4):

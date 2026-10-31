@@ -7,7 +7,10 @@ what the project is, what the owner decided, how work is done and what comes nex
 **Keep this file current:** when a decision is made, a feature lands or the next steps change, update the sections
 below in the same push (it is part of every release, like the changelog).
 
-## Snapshot (state as of v0.31.0, 2026-10-28)
+## Snapshot (state as of v0.32.0, 2026-10-31)
+- **Labs moved (v0.32.0):** the labs, Pixel Studio and the model doctor now live in **GameLaboratory**
+  (repo `michalstankiewicz4-cell/GameLaboratory`, with their history; site https://michalstankiewicz4-cell.github.io/GameLaboratory/); this repository keeps the game only.
+  The main menu's lab links point there. The lab bullets below are history.
 - **What:** *Steel Salvo* (working title) — free naval battle browser game, PvE against endless waves of AI warships.
   Live: <https://michalstankiewicz4-cell.github.io/Battle/> · repo: <https://github.com/michalstankiewicz4-cell/Battle> (branch `main`,
   GitHub Pages deploys every push via `.github/workflows/static.yml`).

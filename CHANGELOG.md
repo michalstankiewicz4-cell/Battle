@@ -5,6 +5,11 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.32.0] - 2026-10-31
+### Changed
+- **The labs moved to GameLaboratory** (https://michalstankiewicz4-cell.github.io/GameLaboratory/, repo `michalstankiewicz4-cell/GameLaboratory`, with their history): Ship Lab, Water, Land, Plants, Look and Waterside Structures labs, Transformer, Model Doctor, Pixel Studio and the Zombie Generator. Removed here: `labs/`, `labs.html`, `pixel/`, `js/labs/`, `js/pixel/`, `js/tools/`, `js/structkit/`, the lab-only kits (`js/env/` sky, rain, land, region, plants, forest; `js/render/look.js`; `js/shipkit/ageing.js`, `lights.js`), `css/lab.css`, `css/pixel.css`, `assets/labs/`, `tools/doctor.py`, `doctor.golden.json`, `lab-check.py`, `pixel-check.py` and the labs' docs (`docs/GUIDE.md` went to GameLaboratory as `docs/guide-sea.md`). The game uses none of them.
+- Main menu: the ship lab, water lab and "all labs" links open GameLaboratory; `tools/e2e.py` checks the new links; sitemap without the lab pages; README, ARCHITECTURE, HANDOFF, TODO, CLAUDE.md updated.
+
 ## [0.31.0] - 2026-10-28
 ### Added
 - **Deck walk (F)**: first person on your own deck (the sailor is not drawn) — WASD walk, Shift run, mouse look (click to lock the pointer), **right button = binoculars** (wheel = their zoom ×3–10), F or Esc back. The sailor walks on what the model has underfoot (decks, steps up to 0.6 m), is stopped by walls and cannot step off the hull; he rides with the ship. Meanwhile the ship holds her course and speed and the guns hold fire. Submarines: only while surfaced. New `js/core/deck-cam.js`.
