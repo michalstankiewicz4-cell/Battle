@@ -5,6 +5,10 @@ The owner creates `vX.Y.Z` tags in GitHub Releases on commits from this history;
 Bug fix = PATCH, new feature = MINOR, big change to gameplay or the save format = MAJOR.
 Before every push run `node tools/check-version.mjs`; the `pre-push` hook in `.githooks/` runs it automatically (`git config core.hooksPath .githooks`).
 
+## [0.32.1] - 2026-11-02
+### Fixed
+- Main menu: the ship lab link opens GameLaboratory's renamed page `labs/vehicles-water.html` (was `labs/warship.html`, gone since GameLaboratory 0.20.2); `tools/e2e.py` checks the new link; `docs/ships/blyskawica.md` and `orzel.md` point to it.
+
 ## [0.32.0] - 2026-10-31
 ### Changed
 - **The labs moved to GameLaboratory** (https://michalstankiewicz4-cell.github.io/GameLaboratory/, repo `michalstankiewicz4-cell/GameLaboratory`, with their history): Ship Lab, Water, Land, Plants, Look and Waterside Structures labs, Transformer, Model Doctor, Pixel Studio and the Zombie Generator. Removed here: `labs/`, `labs.html`, `pixel/`, `js/labs/`, `js/pixel/`, `js/tools/`, `js/structkit/`, the lab-only kits (`js/env/` sky, rain, land, region, plants, forest; `js/render/look.js`; `js/shipkit/ageing.js`, `lights.js`), `css/lab.css`, `css/pixel.css`, `assets/labs/`, `tools/doctor.py`, `doctor.golden.json`, `lab-check.py`, `pixel-check.py` and the labs' docs (`docs/GUIDE.md` went to GameLaboratory as `docs/guide-sea.md`). The game uses none of them.
